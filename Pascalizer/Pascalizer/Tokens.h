@@ -1,8 +1,8 @@
 #pragma once
 #include <string>
 
-// All tokens: lexem types, present in the program
-enum Token
+// All token types: lexem types, present in the program
+enum TokenType
 {
 	// Basic
 	NAME,
@@ -30,10 +30,10 @@ enum Token
 	PROGRAM_END
 };
 
-struct TokenizedElement
+struct Token
 {
-	// Element's token - type
-	Token token;
+	// Element's token type
+	TokenType type;
 
 	// Element's value
 	std::string value;
