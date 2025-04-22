@@ -25,6 +25,7 @@ struct ExpressionElement
 	ExpressionElementType type;
 
 	// Element itself, might be a String, Value or an ExpressionOperation
+	// TO BE REPLACED BY SOME C++ SHENANIGANS
 	void* element;
 };
 
