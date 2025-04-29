@@ -52,6 +52,17 @@ public:
 			return std::make_shared<DoubleValue>( DoubleValue(value + rhs_double->value) );
 	}
 
+	virtual std::shared_ptr<Value> Subtract(const Value& rhs) const override
+	{
+		// Int case
+		if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
+			return std::make_shared<IntValue>(IntValue(value - rhs_int->value));
+
+		// Double case
+		if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
+			return std::make_shared<DoubleValue>(DoubleValue(value - rhs_double->value));
+	}
+
 	virtual std::shared_ptr<Value> Multiply(const Value& rhs) const override
 	{
 		// Int case
@@ -74,6 +85,16 @@ public:
 		}
 	}
 
+	virtual std::shared_ptr<Value> Divide(const Value& rhs) const override
+	{
+		// Int case
+		if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
+			return std::make_shared<IntValue>(IntValue(value / rhs_int->value));
+
+		// Double case
+		if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
+			return std::make_shared<DoubleValue>(DoubleValue(value / rhs_double->value));
+	}
 };
 
 
@@ -84,6 +105,50 @@ public:
 	double value;
 
 	DoubleValue(double initialValue): value(initialValue) {}
+
+	virtual std::shared_ptr<Value> Add(const Value& rhs) const override
+	{
+		// Int case
+		if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
+			return std::make_shared<DoubleValue>(DoubleValue(value + rhs_int->value));
+
+		// Double case
+		if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
+			return std::make_shared<DoubleValue>(DoubleValue(value + rhs_double->value));
+	}
+
+	virtual std::shared_ptr<Value> Subtract(const Value& rhs) const override
+	{
+		// Int case
+		if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
+			return std::make_shared<DoubleValue>(DoubleValue(value - rhs_int->value));
+
+		// Double case
+		if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
+			return std::make_shared<DoubleValue>(DoubleValue(value - rhs_double->value));
+	}
+
+	virtual std::shared_ptr<Value> Multiply(const Value& rhs) const override
+	{
+		// Int case
+		if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
+			return std::make_shared<DoubleValue>(DoubleValue(value * rhs_int->value));
+
+		// Double case
+		if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
+			return std::make_shared<DoubleValue>(DoubleValue(value * rhs_double->value));
+	}
+
+	virtual std::shared_ptr<Value> Divide(const Value& rhs) const override
+	{
+		// Int case
+		if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
+			return std::make_shared<DoubleValue>(DoubleValue(value / rhs_int->value));
+
+		// Double case
+		if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
+			return std::make_shared<DoubleValue>(DoubleValue(value / rhs_double->value));
+	}
 };
 
 
@@ -94,4 +159,31 @@ public:
 	std::string value;
 
 	StringValue(std::string initialValue) : value(initialValue) {}
+
+	virtual std::shared_ptr<Value> Add(const Value& rhs) const override
+	{
+		// String case
+		if (auto rhs_string = dynamic_cast<const StringValue*>(&rhs))
+		{
+			StringValue newValue("");
+
+			newValue = value + rhs_string->value;
+
+			return std::make_shared<StringValue>(newValue);
+		}
+	}
+
+	virtual std::shared_ptr<Value> Multiply(const Value& rhs) const override
+	{
+		// Int case
+		if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
+		{
+			StringValue newValue("");
+
+			for (int i = 0; i < rhs_int->value; i++)
+				newValue.value += value;
+
+			return std::make_shared<StringValue>(newValue);
+		}
+	}
 };

@@ -27,5 +27,5 @@ public:
 
 	// Fetching debug info
 	const std::vector<std::string>& GetCachedLog() { return interpreter.GetCachedLog(); }
-	const ValuesTable& GetCachedValuesTable() { return interpreter.GetCachedTable(); }
+	const std::map<std::string, Value>& GetCachedValuesTable() { return interpreter.GetCachedTable(); }
 };

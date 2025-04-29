@@ -12,7 +12,7 @@ struct ProgramState
 	const HierarchicalList<class Instruction*> code;
 
 	// Table of values (constants and variable)
-	std::map<std::string, Value> valuesTable;
+	std::map<std::string, std::shared_ptr<Value>> valuesTable;
 
 	// Pointer to the currently executing instruction
 	HListNode<class Instruction*>* instructionPointer;
