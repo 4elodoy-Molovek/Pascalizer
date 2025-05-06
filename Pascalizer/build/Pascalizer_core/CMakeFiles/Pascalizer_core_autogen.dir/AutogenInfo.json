@@ -96,7 +96,8 @@
 	"MOC_DEFINITIONS" : [],
 	"MOC_DEFINITIONS_Debug" : 
 	[
-		"PASCALIZER_CORE_EXPORT=",
+		")",
+		"PASCALIZER_CORE_EXPORT=__declspec",
 		"Pascalizer_core_EXPORTS",
 		"QT_CORE_LIB",
 		"QT_GUI_LIB",
@@ -106,11 +107,13 @@
 		"WIN64",
 		"_ENABLE_EXTENDED_ALIGNED_STORAGE",
 		"_UNICODE",
-		"_WIN64"
+		"_WIN64",
+		"dllexport"
 	],
 	"MOC_DEFINITIONS_MinSizeRel" : 
 	[
-		"PASCALIZER_CORE_EXPORT=",
+		")",
+		"PASCALIZER_CORE_EXPORT=__declspec",
 		"Pascalizer_core_EXPORTS",
 		"QT_CORE_LIB",
 		"QT_GUI_LIB",
@@ -121,11 +124,13 @@
 		"WIN64",
 		"_ENABLE_EXTENDED_ALIGNED_STORAGE",
 		"_UNICODE",
-		"_WIN64"
+		"_WIN64",
+		"dllexport"
 	],
 	"MOC_DEFINITIONS_RelWithDebInfo" : 
 	[
-		"PASCALIZER_CORE_EXPORT=",
+		")",
+		"PASCALIZER_CORE_EXPORT=__declspec",
 		"Pascalizer_core_EXPORTS",
 		"QT_CORE_LIB",
 		"QT_GUI_LIB",
@@ -136,11 +141,13 @@
 		"WIN64",
 		"_ENABLE_EXTENDED_ALIGNED_STORAGE",
 		"_UNICODE",
-		"_WIN64"
+		"_WIN64",
+		"dllexport"
 	],
 	"MOC_DEFINITIONS_Release" : 
 	[
-		"PASCALIZER_CORE_EXPORT=",
+		")",
+		"PASCALIZER_CORE_EXPORT=__declspec",
 		"Pascalizer_core_EXPORTS",
 		"QT_CORE_LIB",
 		"QT_GUI_LIB",
@@ -151,7 +158,8 @@
 		"WIN64",
 		"_ENABLE_EXTENDED_ALIGNED_STORAGE",
 		"_UNICODE",
-		"_WIN64"
+		"_WIN64",
+		"dllexport"
 	],
 	"MOC_DEPEND_FILTERS" : 
 	[

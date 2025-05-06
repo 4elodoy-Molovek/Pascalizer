@@ -102,12 +102,12 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SupportJustMyCode></SupportJustMyCode>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;PASCALIZER_CORE_EXPORT=;QT_CORE_LIB;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR="Debug";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;PASCALIZER_CORE_EXPORT=__declspec;(;dllexport;);QT_CORE_LIB;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR="Debug";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;PASCALIZER_CORE_EXPORT=;QT_CORE_LIB;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR=\"Debug\";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;PASCALIZER_CORE_EXPORT=__declspec;(;dllexport;);QT_CORE_LIB;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR=\"Debug\";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_Debug;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;C:\Qt\6.8.2\msvc2022_64\include\QtCore;C:\Qt\6.8.2\msvc2022_64\include;C:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;C:\Qt\6.8.2\msvc2022_64\include\QtWidgets;C:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
@@ -135,6 +135,18 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Message></Message>
+      <Command>setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different C:/Qt/6.8.2/msvc2022_64/bin/Qt6Widgetsd.dll C:/Qt/6.8.2/msvc2022_64/bin/Qt6Guid.dll C:/Qt/6.8.2/msvc2022_64/bin/Qt6Cored.dll "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/Debug"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
     <Link>
       <AdditionalDependencies>C:\Qt\6.8.2\msvc2022_64\lib\Qt6Widgetsd.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6Guid.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6Cored.lib;mpr.lib;userenv.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6EntryPointd.lib;shell32.lib;d3d11.lib;dxgi.lib;dxguid.lib;d3d12.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -166,14 +178,14 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SupportJustMyCode></SupportJustMyCode>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PASCALIZER_CORE_EXPORT=;QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR="Release";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PASCALIZER_CORE_EXPORT=__declspec;(;dllexport;);QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR="Release";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
       <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PASCALIZER_CORE_EXPORT=;QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR=\"Release\";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PASCALIZER_CORE_EXPORT=__declspec;(;dllexport;);QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR=\"Release\";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_Release;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;C:\Qt\6.8.2\msvc2022_64\include\QtCore;C:\Qt\6.8.2\msvc2022_64\include;C:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;C:\Qt\6.8.2\msvc2022_64\include\QtWidgets;C:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
@@ -201,6 +213,18 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Message></Message>
+      <Command>setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different C:/Qt/6.8.2/msvc2022_64/bin/Qt6Widgets.dll C:/Qt/6.8.2/msvc2022_64/bin/Qt6Gui.dll C:/Qt/6.8.2/msvc2022_64/bin/Qt6Core.dll "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/Release"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
     <Link>
       <AdditionalDependencies>C:\Qt\6.8.2\msvc2022_64\lib\Qt6Widgets.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6Gui.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6Core.lib;mpr.lib;userenv.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6EntryPoint.lib;shell32.lib;d3d11.lib;dxgi.lib;dxguid.lib;d3d12.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -232,14 +256,14 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SupportJustMyCode></SupportJustMyCode>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PASCALIZER_CORE_EXPORT=;QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR="MinSizeRel";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PASCALIZER_CORE_EXPORT=__declspec;(;dllexport;);QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR="MinSizeRel";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
       <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PASCALIZER_CORE_EXPORT=;QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR=\"MinSizeRel\";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PASCALIZER_CORE_EXPORT=__declspec;(;dllexport;);QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR=\"MinSizeRel\";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_MinSizeRel;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;C:\Qt\6.8.2\msvc2022_64\include\QtCore;C:\Qt\6.8.2\msvc2022_64\include;C:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;C:\Qt\6.8.2\msvc2022_64\include\QtWidgets;C:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
@@ -267,6 +291,18 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Message></Message>
+      <Command>setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different C:/Qt/6.8.2/msvc2022_64/bin/Qt6Widgets.dll C:/Qt/6.8.2/msvc2022_64/bin/Qt6Gui.dll C:/Qt/6.8.2/msvc2022_64/bin/Qt6Core.dll "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/MinSizeRel"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
     <Link>
       <AdditionalDependencies>C:\Qt\6.8.2\msvc2022_64\lib\Qt6Widgets.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6Gui.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6Core.lib;mpr.lib;userenv.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6EntryPoint.lib;shell32.lib;d3d11.lib;dxgi.lib;dxguid.lib;d3d12.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -299,12 +335,12 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SupportJustMyCode></SupportJustMyCode>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PASCALIZER_CORE_EXPORT=;QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR="RelWithDebInfo";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PASCALIZER_CORE_EXPORT=__declspec;(;dllexport;);QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR="RelWithDebInfo";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PASCALIZER_CORE_EXPORT=;QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR=\"RelWithDebInfo\";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PASCALIZER_CORE_EXPORT=__declspec;(;dllexport;);QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR=\"RelWithDebInfo\";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_RelWithDebInfo;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;C:\Qt\6.8.2\msvc2022_64\include\QtCore;C:\Qt\6.8.2\msvc2022_64\include;C:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;C:\Qt\6.8.2\msvc2022_64\include\QtWidgets;C:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
@@ -332,6 +368,18 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Message></Message>
+      <Command>setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different C:/Qt/6.8.2/msvc2022_64/bin/Qt6Widgets.dll C:/Qt/6.8.2/msvc2022_64/bin/Qt6Gui.dll C:/Qt/6.8.2/msvc2022_64/bin/Qt6Core.dll "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/RelWithDebInfo"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
     <Link>
       <AdditionalDependencies>C:\Qt\6.8.2\msvc2022_64\lib\Qt6Widgets.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6Gui.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6Core.lib;mpr.lib;userenv.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6EntryPoint.lib;shell32.lib;d3d11.lib;dxgi.lib;dxguid.lib;d3d12.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
