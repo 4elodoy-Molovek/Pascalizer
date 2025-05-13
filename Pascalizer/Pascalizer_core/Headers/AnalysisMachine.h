@@ -22,7 +22,7 @@ public:
 	virtual ~Accumulator() {}
 
 	// Stores an element in the accumulator
-	virtual void StoreElement(const Token& element) = 0;
+	virtual void StoreElement(const TokenizedElement& element) = 0;
 
 	// Creates an instruction out of stored data
 	virtual Instruction* Collapse() = 0;
@@ -45,15 +45,15 @@ public:
 	State(const class AnalysisMachine& inMachine): parentMachine(inMachine) {}
 	virtual ~State() {}
 
-	// Called when the machine enters this state by traversing a connection based on the Token 'element'
-	virtual void EnterState(const Token& element) = 0;
+	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
+	virtual void EnterState(const TokenizedElement& element) = 0;
 
 	// Called when the machine exits this state
 	virtual void ExitState() {}
 
 	// Determines the next state of the machine based on the incoming element
 	// If no transition is possible it means that the machine has encountered a syntax error
-	virtual State* UpdateTransitions(const Token& nextElement) = 0;
+	virtual State* UpdateTransitions(const TokenizedElement& nextElement) = 0;
 };
 
 
@@ -96,7 +96,7 @@ public:
 	~AnalysisMachine();
 
 	// Processes a single source code element
-	void ProcessElement(const Token& element)
+	void ProcessElement(const TokenizedElement& element)
 	{
 		State* newState = currentState->UpdateTransitions(element);
 		if (newState)

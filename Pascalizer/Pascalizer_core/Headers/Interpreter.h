@@ -11,7 +11,7 @@ class Interpreter
 {
 	// Cached debug values
 	std::vector<std::string> cachedLog;
-	ValuesTable cachedTable;
+	std::map<std::string, std::shared_ptr<Value>> cachedTable;
 
 public:
 
@@ -56,5 +56,5 @@ public:
 	}
 
 	const std::vector<std::string>& GetCachedLog() { return cachedLog; }
-	const ValuesTable& GetCachedTable() { return cachedTable; }
+	const std::map<std::string, std::shared_ptr<Value>>& GetCachedTable() { return cachedTable; }
 };

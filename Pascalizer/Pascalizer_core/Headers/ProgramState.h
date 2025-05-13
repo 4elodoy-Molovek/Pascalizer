@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 #include "HierarchicalList.h"
 #include "ValuesTable.h"
 
@@ -11,7 +12,7 @@ struct ProgramState
 	const HierarchicalList<class Instruction*> code;
 
 	// Table of values (constants and variable)
-	ValuesTable valuesTable;
+	std::map<std::string, std::shared_ptr<Value>> valuesTable;
 
 	// Pointer to the currently executing instruction
 	HListNode<class Instruction*>* instructionPointer;
