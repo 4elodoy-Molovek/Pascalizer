@@ -1,0 +1,17 @@
+C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/CMakeFiles/INSTALL.dir
+C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/Pascalizer_core.dir
+C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/INSTALL.dir
+C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/gtest/CMakeFiles/INSTALL.dir
+C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/gtest/CMakeFiles/ALL_BUILD.dir
+C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/gtest/googlemock/CMakeFiles/gmock.dir
+C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/gtest/googlemock/CMakeFiles/gmock_main.dir
+C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/gtest/googlemock/CMakeFiles/INSTALL.dir
+C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/gtest/googlemock/CMakeFiles/ALL_BUILD.dir
+C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/gtest/googletest/CMakeFiles/gtest.dir
+C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/gtest/googletest/CMakeFiles/gtest_main.dir
+C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/gtest/googletest/CMakeFiles/INSTALL.dir
+C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/gtest/googletest/CMakeFiles/ALL_BUILD.dir
+C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/CMakeFiles/base_test.dir
+C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/CMakeFiles/INSTALL.dir
