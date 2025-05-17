@@ -15,8 +15,8 @@ class Interpreter
 
 public:
 
-	Interpreter();
-	~Interpreter();
+	Interpreter() {}
+	~Interpreter() {}
 
 	// Executes the program
 	void RunProgram(const HierarchicalList<Instruction*>& code)
@@ -27,9 +27,13 @@ public:
 		{
 			while (currentState.instructionPointer)
 			{
+				// Fetching the current instruction
 				std::shared_ptr<Instruction> currentInstruction = currentState.instructionPointer->value;
+				
+				// Notifying the state of the currently executing instruction
+				currentState.currentInstruction = currentState.instructionPointer;
 
-				// Sets the next instruction pointer
+				// Modifies instruction pointer, traversing the list in the top to bottom order (default)
 				if (currentState.instructionPointer->pSub)
 					currentState.instructionPointer = currentState.instructionPointer->pSub;
 				else if (currentState.instructionPointer->pNext)

@@ -12,13 +12,13 @@ struct HListNode
 	T value;
 
 	// Pointer to the next element on the same level
-	HListNode<T>* pNext;
+	std::shared_ptr<HListNode<T>> pNext;
 
 	// Pointer to the first element on the sub level
-	HListNode<T>* pSub;
+	std::shared_ptr<HListNode<T>> pSub;
 
 	// Pointer to the parent element of this level
-	HListNode<T>* pUp;
+	std::shared_ptr<HListNode<T>> pUp;
 };
 
 
