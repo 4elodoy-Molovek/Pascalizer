@@ -27,7 +27,7 @@ public:
 		{
 			while (currentState.instructionPointer)
 			{
-				Instruction* currentInstruction = currentState.instructionPointer->value;
+				std::shared_ptr<Instruction> currentInstruction = currentState.instructionPointer->value;
 
 				// Sets the next instruction pointer
 				if (currentState.instructionPointer->pSub)

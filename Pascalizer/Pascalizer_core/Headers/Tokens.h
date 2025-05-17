@@ -2,7 +2,7 @@
 #include <string>
 
 // All tokens: lexem types, present in the program
-enum Token
+enum TokenType
 {
 	// Basic
 	NAME,
@@ -32,10 +32,10 @@ enum Token
 	PROGRAM_END
 };
 
-struct TokenizedElement
+struct Token
 {
 	// Element's token - type
-	Token token;
+	TokenType type;
 
 	// Element's value
 	std::string value;
