@@ -142,7 +142,13 @@ public:
 	// Stores an element in the accumulator
 	virtual void StoreElement(const Token& element, int storeIndex) override
 	{
+		if (storeIndex == 0) varName = element.value;
+	}
 
+	// Stores an expression in the accumulator
+	void StoreExpression(std::shared_ptr<Expression> expression, int storeIndex)
+	{
+		if (storeIndex == 1) newValueExpression = expression;
 	}
 
 	// Creates an instruction out of stored data
@@ -170,7 +176,13 @@ public:
 	// Stores an element in the accumulator
 	virtual void StoreElement(const Token& element, int storeIndex) override
 	{
+		if (storeIndex == 0) functionName = element.value;
+	}
 
+	// Stores an expression in the accumulator
+	void StoreExpression(std::shared_ptr<Expression> expression, int storeIndex)
+	{
+		if (storeIndex == 1) argumentExpressions.push_back(expression);
 	}
 
 	// Creates an instruction out of stored data
@@ -195,9 +207,12 @@ public:
 	~IfAccumulator() {}
 
 	// Stores an element in the accumulator
-	virtual void StoreElement(const Token& element, int storeIndex) override
-	{
+	virtual void StoreElement(const Token& element, int storeIndex) override {}
 
+	// Stores an expression in the accumulator
+	void StoreExpression(std::shared_ptr<Expression> expression, int storeIndex)
+	{
+		if (storeIndex == 0) conditionExpression = expression;
 	}
 
 	// Creates an instruction out of stored data
@@ -222,9 +237,12 @@ public:
 	~WhileAccumulator() {}
 
 	// Stores an element in the accumulator
-	virtual void StoreElement(const Token& element, int storeIndex) override
-	{
+	virtual void StoreElement(const Token& element, int storeIndex) override {}
 
+	// Stores an expression in the accumulator
+	void StoreExpression(std::shared_ptr<Expression> expression, int storeIndex)
+	{
+		if (storeIndex == 0) conditionExpression = expression;
 	}
 
 	// Creates an instruction out of stored data

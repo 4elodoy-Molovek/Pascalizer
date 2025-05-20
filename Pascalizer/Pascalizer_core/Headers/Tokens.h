@@ -7,6 +7,7 @@ enum TokenType
 	// Basic
 	NAME,
 	VALUE,
+	EQUAL,
 	MATH_OPERATOR,
 	ASSIGN_OPERATOR,
 	BRACKET_OPEN,
@@ -18,6 +19,7 @@ enum TokenType
 
 	// Condition
 	IF,
+	WHILE,
 	THEN,
 	ELSE,
 

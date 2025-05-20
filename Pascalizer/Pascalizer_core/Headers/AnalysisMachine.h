@@ -68,6 +68,8 @@ public:
 	 *	Processes a single token
 	 *	Additionally determines the next state of the machine based on the incoming element
 	 *	If 'nullptr' is returned, that means that no transition is required
+	 *  If non-nullptr state is returned, then the machine transitions to the given state on the same cycle
+	 *	entering the given state with the same token as was sent to this function
 	 */
 	virtual State* ProcessElement(const Token& nextElement) = 0;
 };
@@ -84,17 +86,16 @@ class AnalysisMachine
 
 	// Resulting analyzed code
 	HierarchicalList<std::shared_ptr<Instruction>> codeResult;
-	
+
 	// MACHINE STATE
 
 	// Current state of the machine
 	State* currentState;
 
-	// Current accumulator of the machine
-	Accumulator* currentAccumulator;
-
 
 public:
+	// Current accumulator of the machine
+	Accumulator* currentAccumulator;
 
 	/*
 	 * Where should the next instruction be added:
@@ -106,6 +107,9 @@ public:
 
 	// Used to handle single-line code blocks for branching
 	int oneLinerDepth = 0;
+
+	// A pointer to the instruction, that was most recently stored
+	std::shared_ptr<Instruction> lastStoredInstruction;
 
 
 	// Creates new a new accumulator, template because Accumulator is just an abstract base class
@@ -124,6 +128,8 @@ public:
 	// Stores the instruction into the result
 	void StoreInstruction(std::shared_ptr<Instruction> instruction)
 	{
+		lastStoredInstruction = instruction;
+
 		if (oneLinerDepth > 0)
 		{
 			codeResult.AddNextElement(instruction);
@@ -132,13 +138,28 @@ public:
 			return;
 		}
 
-			 if (levelOffset == 0)	codeResult.AddNextElement(instruction);
+		if (levelOffset == 0)	codeResult.AddNextElement(instruction);
 		else if (levelOffset == -1)	codeResult.AddUpElement(instruction);
 		else if (levelOffset == 1)	codeResult.AddSubElement(instruction);
 
 		else throw(std::exception("ANALYSIS DEVELOPMENT ERROR: Invalid level offset!"));
-	
+
 		levelOffset == 0;
+	}
+
+	// Forcefully transitions the machine to a different state
+	// Is used for imidiate state exits (like block exits)
+	void ForceTransitionToState(State* state, const Token& enterElement)
+	{
+		currentState->ExitState();
+		currentState = state;
+		state->EnterState(enterElement);
+	}
+
+	// Called, when the state machine has reached the end of analysis
+	void AnalysisFinished()
+	{
+
 	}
 
 public:

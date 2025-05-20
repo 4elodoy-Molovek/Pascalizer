@@ -48,17 +48,14 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override
 	{
+		innerState = 0;
+
 		parentMachine.CreateAccumulator<ProgramVerificationAccumulator>();
 	}
 
 	// Called when the machine exits this state
 	virtual void ExitState() override {}
 
-	/*	
-	 *	Processes a single token
-	 *	Additionally determines the next state of the machine based on the incoming element
-	 *	If 'nullptr' is returned, that means that no transition is required
-	 */
 	virtual State* ProcessElement(const Token& nextElement) override
 	{
 		// Processing "Program" keyword
@@ -95,13 +92,15 @@ public:
 		// Processing the following token -> Transition
 		if (innerState == 3)
 		{
+			parentMachine.levelOffset++;
+
 			if (nextElement.type == CONST)	return constBlockState;
 			if (nextElement.type == VAR)	return varBlockState;
 			if (nextElement.type == BEGIN)	return mainBlockBeginState;
 
 			CheckTokenType(nextElement, BEGIN);
+			return nullptr;
 		}
-
 	}
 };
 
@@ -123,7 +122,6 @@ public:
 	// Outgoing connections
 	State* constDeclarationState;
 
-
 public:
 	ConstBlockState(AnalysisMachine& analysisMachine,
 					State* inConstDeclarationState) 
@@ -136,17 +134,22 @@ public:
 	~ConstBlockState() {}
 
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
-	virtual void EnterState(const Token& element) override
+	virtual void EnterState(const Token& element) override 
 	{
-
+		parentMachine.CreateAccumulator<GenericInstructionAccumulator<Const>>();
 	}
 
 	// Called when the machine exits this state
 	virtual void ExitState() override {}
 
-	// Determines the next state of the machine based on the incoming element
-	// If no transition is possible it means that the machine has encountered a syntax error
-	virtual State* ProcessElement(const Token& nextElement) override {}
+	virtual State* ProcessElement(const Token& nextElement) override 
+	{
+		CheckTokenType(nextElement, NAME);
+		parentMachine.StoreInstruction(parentMachine.currentAccumulator->Collapse());
+
+		parentMachine.levelOffset++;
+		return constDeclarationState;
+	}
 };
 
 
@@ -162,6 +165,10 @@ public:
 	State* mainBlockBeginState;
 	State* exitToVarBlockState;
 
+	// Inner state
+	int innerState = 0;
+
+	ConstantDeclarationAccumulator* accumulator;
 
 public:
 	ConstDeclarationState(AnalysisMachine& analysisMachine,
@@ -179,17 +186,71 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override
 	{
+		innerState = 0;
 
+		accumulator = parentMachine.CreateAccumulator<ConstantDeclarationAccumulator>();
+
+		// We have entered the state with the name token, so we need to store it right away
+		accumulator->StoreElement(element, 0);
+		innerState++;
 	}
 
 	// Called when the machine exits this state
 	virtual void ExitState() override {}
 
-	// Determines the next state of the machine based on the incoming element
-	// If no transition is possible it means that the machine has encountered a syntax error
 	virtual State* ProcessElement(const Token& nextElement) override
 	{
+		// state 0: name was processed in the EnterState
 
+		// Type
+		if (innerState == 1)
+		{
+			CheckTokenType(nextElement, NAME);
+			accumulator->StoreElement(nextElement, 1);
+
+			innerState++;
+			return nullptr;
+		}
+
+		// Assign symbol
+		if (innerState == 2)
+		{
+			CheckTokenType(nextElement, EQUAL);
+
+			innerState++;
+			return nullptr;
+		}
+
+		// Value
+		if (innerState == 3)
+		{
+			CheckTokenType(nextElement, VALUE);
+			accumulator->StoreElement(nextElement, 2);
+
+			innerState++;
+			return nullptr;
+		}
+
+		// Endline + COLLAPSE
+		if (innerState == 4)
+		{
+			CheckTokenType(nextElement, END_LINE);
+			parentMachine.StoreInstruction(accumulator->Collapse());
+
+			innerState++;
+			return nullptr;
+		}
+
+		// NEXT STATE
+		if (innerState == 5)
+		{
+			if (nextElement.type == NAME) return this;
+			if (nextElement.type == VAR) return exitToVarBlockState;
+			if (nextElement.type == BEGIN) return mainBlockBeginState;
+
+			CheckTokenType(nextElement, BEGIN);
+			return nullptr;
+		}
 	}
 };
 
@@ -211,6 +272,7 @@ public:
 	// Outgoing connections
 	State* varDeclarationState;
 
+	Accumulator* accumulator;
 
 public:
 	VarBlockState(AnalysisMachine& analysisMachine,
@@ -226,15 +288,20 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override
 	{
-
+		accumulator = parentMachine.CreateAccumulator<GenericInstructionAccumulator<Var>>();
 	}
 
 	// Called when the machine exits this state
 	virtual void ExitState() override {}
 
-	// Determines the next state of the machine based on the incoming element
-	// If no transition is possible it means that the machine has encountered a syntax error
-	virtual State* ProcessElement(const Token& nextElement) override {}
+	virtual State* ProcessElement(const Token& nextElement) override 
+	{
+		CheckTokenType(nextElement, NAME);
+		parentMachine.StoreInstruction(accumulator->Collapse());
+		
+		parentMachine.levelOffset++;
+		return varDeclarationState;
+	}
 };
 
 
@@ -250,6 +317,10 @@ public:
 	State* mainBlockBeginState;
 	State* exitToConstBlockState;
 
+	// Inner state
+	int innerState = 0;
+
+	VariableDeclarationAccumulator* accumulator;
 
 public:
 	VarDeclarationState(AnalysisMachine& analysisMachine,
@@ -267,7 +338,13 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override
 	{
+		innerState = 0;
 
+		accumulator = parentMachine.CreateAccumulator<VariableDeclarationAccumulator>();
+
+		// State is entered with a name token, storing it imidiately
+		accumulator->StoreElement(element, 0);
+		innerState++;
 	}
 
 	// Called when the machine exits this state
@@ -277,7 +354,63 @@ public:
 	// If no transition is possible it means that the machine has encountered a syntax error
 	virtual State* ProcessElement(const Token& nextElement) override
 	{
+		if (innerState == 0)
+		{
+			CheckTokenType(nextElement, NAME);
+			accumulator->StoreElement(nextElement, 0);
 
+			innerState++;
+			return nullptr;
+		}
+
+		// Expecting a comma or a colon
+		if (innerState == 1)
+		{
+			// Reverting to state 0
+			if (nextElement.type == COMMA)
+			{
+				innerState = 0;
+				return nullptr;
+			}
+
+			// Continuing to type declaration
+			CheckTokenType(nextElement, COLON);
+			
+			innerState++;
+			return nullptr;
+		}
+
+		// Type
+		if (innerState == 2)
+		{
+			CheckTokenType(nextElement, NAME);
+			accumulator->StoreElement(nextElement, 1);
+
+			innerState++;
+			return nullptr;
+		}
+
+		// Endline + COLLAPSE
+		if (innerState == 3)
+		{
+			CheckTokenType(nextElement, END_LINE);
+			
+			parentMachine.StoreInstruction(accumulator->Collapse());
+			
+			innerState++;
+			return nullptr;
+		}
+
+		// NEXT STATE
+		if (innerState == 4)
+		{
+			if (nextElement.type == NAME) return this;
+			if (nextElement.type == CONST) return exitToConstBlockState;
+			if (nextElement.type == BEGIN) return mainBlockBeginState;
+
+			CheckTokenType(nextElement, BEGIN);
+			return nullptr;
+		}
 	}
 };
 
@@ -314,7 +447,8 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override
 	{
-
+		parentMachine.levelOffset--;
+		parentMachine.ForceTransitionToState(nextBlockState, element);
 	}
 
 	// Called when the machine exits this state
@@ -322,7 +456,7 @@ public:
 
 	// Determines the next state of the machine based on the incoming element
 	// If no transition is possible it means that the machine has encountered a syntax error
-	virtual State* ProcessElement(const Token& nextElement) override {}
+	virtual State* ProcessElement(const Token& nextElement) override { return nullptr; }
 };
 
 
@@ -346,6 +480,7 @@ public:
 	State* branchingState;
 	State* endBlockState;
 
+	Accumulator* accumulator;
 
 public:
 	MainBlockBeginState(AnalysisMachine& analysisMachine,
@@ -365,7 +500,7 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override
 	{
-
+		accumulator = parentMachine.CreateAccumulator<GenericInstructionAccumulator<Main>>();
 	}
 
 	// Called when the machine exits this state
@@ -373,7 +508,17 @@ public:
 
 	// Determines the next state of the machine based on the incoming element
 	// If no transition is possible it means that the machine has encountered a syntax error
-	virtual State* ProcessElement(const Token& nextElement) override {}
+	virtual State* ProcessElement(const Token& nextElement) override 
+	{
+		parentMachine.StoreInstruction(accumulator->Collapse());
+
+		if (nextElement.type == NAME) return nameState;
+		if (nextElement.type == IF || nextElement.type == WHILE) return branchingState;
+		if (nextElement.type == END) return endBlockState;
+
+		CheckTokenType(nextElement, END);
+		return nullptr;
+	}
 };
 
 
@@ -396,6 +541,8 @@ public:
 	State* variableAssignState;
 	State* functionCallState;
 
+	// Cache
+	Token nameToken;
 
 public:
 	NameBlockState(AnalysisMachine& analysisMachine,
@@ -413,7 +560,8 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override
 	{
-
+		// The state is entered with a name, caching it for the time being
+		nameToken = element;
 	}
 
 	// Called when the machine exits this state
@@ -421,7 +569,29 @@ public:
 
 	// Determines the next state of the machine based on the incoming element
 	// If no transition is possible it means that the machine has encountered a syntax error
-	virtual State* ProcessElement(const Token& nextElement) override {}
+	virtual State* ProcessElement(const Token& nextElement) override 
+	{
+		// Creating accumulators and transitioning to the state based on the next token
+
+		if (nextElement.type == ASSIGN_OPERATOR)
+		{
+			AssignVariableAccumulator* accumulator = parentMachine.CreateAccumulator<AssignVariableAccumulator>();
+			accumulator->StoreElement(nameToken, 0);
+			
+			return variableAssignState;
+		}
+
+		if (nextElement.type == BRACKET_OPEN)
+		{
+			FunctionCallAccumulator* accumulator = parentMachine.CreateAccumulator<FunctionCallAccumulator>();
+			accumulator->StoreElement(nameToken, 0);
+
+			return functionCallState;
+		}
+
+		CheckTokenType(nextElement, BRACKET_OPEN);
+		return nullptr;
+	}
 };
 
 
@@ -440,6 +610,10 @@ public:
 	State* branchingState;
 	State* endBlockState;
 
+	// Inner state
+	int innerState = 0;
+
+	AssignVariableAccumulator* accumulator;
 
 public:
 	VariableAssignState(AnalysisMachine& analysisMachine,
@@ -459,7 +633,11 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override
 	{
+		innerState = 0;
 
+		// Fetching accumulator from the machine
+		// Here we relly on the NameState to create a correct accumulator
+		accumulator = dynamic_cast<AssignVariableAccumulator*>(parentMachine.currentAccumulator);
 	}
 
 	// Called when the machine exits this state
@@ -467,7 +645,45 @@ public:
 
 	// Determines the next state of the machine based on the incoming element
 	// If no transition is possible it means that the machine has encountered a syntax error
-	virtual State* ProcessElement(const Token& nextElement) override {}
+	virtual State* ProcessElement(const Token& nextElement) override 
+	{
+		// Variable name was already aquared in the NameBlockState
+
+		if (innerState == 0)
+		{
+			innerState++;
+			
+			//!!!!!!!!!!!!!!!!!!!!!!!!!!
+			// EXPRESSION ANALYSIS BLOCK
+			//!!!!!!!!!!!!!!!!!!!!!!!!!!
+			// return ...
+		}
+
+		// CAME BACK FROM THE EXPRESSION BLOCK
+		if (innerState == 1)
+		{
+			CheckTokenType(nextElement, END_LINE);
+
+			std::shared_ptr<Expression> expression; // FETCHED FROM THE EXPRESSION BLOCK RESULT
+			accumulator->StoreExpression(expression, 1);
+
+			parentMachine.StoreInstruction(accumulator->Collapse());
+
+			innerState++;
+			return nullptr;
+		}
+
+		// NEXT STATE
+		if (innerState == 2)
+		{
+			if (nextElement.type == NAME) return nameState;
+			if (nextElement.type == IF || nextElement.type == WHILE) return branchingState;
+			if (nextElement.type == END) return endBlockState;
+
+			CheckTokenType(nextElement, END);
+			return nullptr;
+		}
+	}
 };
 
 
@@ -486,6 +702,10 @@ public:
 	State* branchingState;
 	State* endBlockState;
 
+	// Inner state
+	int innerState = 0;
+
+	FunctionCallAccumulator* accumulator;
 
 public:
 	FunctionCallState(AnalysisMachine& analysisMachine,
@@ -505,7 +725,11 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override
 	{
+		innerState = 0;
 
+		// Fetching accumulator from the machine
+		// Here we relly on the NameState to create a correct accumulator
+		accumulator = dynamic_cast<FunctionCallAccumulator*>(parentMachine.currentAccumulator);
 	}
 
 	// Called when the machine exits this state
@@ -513,7 +737,63 @@ public:
 
 	// Determines the next state of the machine based on the incoming element
 	// If no transition is possible it means that the machine has encountered a syntax error
-	virtual State* ProcessElement(const Token& nextElement) override {}
+	virtual State* ProcessElement(const Token& nextElement) override 
+	{
+		// Function name was already aquared in the NameBlockState
+
+		if (innerState == 0)
+		{
+			innerState++;
+
+			//!!!!!!!!!!!!!!!!!!!!!!!!!!
+			// EXPRESSION ANALYSIS BLOCK
+			//!!!!!!!!!!!!!!!!!!!!!!!!!!
+			// return ...
+		}
+
+		// CAME BACK FROM THE EXPRESSION BLOCK
+		if (innerState == 1)
+		{
+			// Storing expression argument
+			std::shared_ptr<Expression> expression; // FETCHED FROM THE EXPRESSION BLOCK RESULT
+			accumulator->StoreExpression(expression, 1);
+
+			// Checking for more arguments
+			if (nextElement.type == COMMA)
+			{
+				innerState = 0;
+				return nullptr;
+			}
+
+			// Closign bracket case
+			CheckTokenType(nextElement, BRACKET_CLOSE);
+
+			innerState++;
+			return nullptr;
+		}
+
+		// End line + COLLAPSE
+		if (innerState == 2)
+		{
+			CheckTokenType(nextElement, END_LINE);
+
+			parentMachine.StoreInstruction(accumulator->Collapse());
+
+			innerState++;
+			return nullptr;
+		}
+
+		// NEXT STATE
+		if (innerState == 3)
+		{
+			if (nextElement.type == NAME) return nameState;
+			if (nextElement.type == IF || nextElement.type == WHILE) return branchingState;
+			if (nextElement.type == END) return endBlockState;
+
+			CheckTokenType(nextElement, END);
+			return nullptr;
+		}
+	}
 };
 
 
@@ -524,9 +804,7 @@ public:
 
 /*
  * Processes the beginning of branching operations like If and While
- * Creates accumulators for the next states:
- *		- IfAccumulator;
- *		- WhileAccumulator;
+ * Acts as a rerouter, by just force transitioning the machine to either the IfState or the WhileState
  */
 class BranchingBlock : public State
 {
@@ -553,7 +831,22 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override
 	{
+		if (element.type == IF)
+		{
+			parentMachine.ForceTransitionToState(ifState, element);
 
+			return;
+		}
+
+		if (element.type == WHILE)
+		{
+			parentMachine.ForceTransitionToState(whileState, element);
+
+			return;
+		}
+
+		// Will never happen, but still
+		CheckTokenType(element, IF);
 	}
 
 	// Called when the machine exits this state
@@ -561,7 +854,7 @@ public:
 
 	// Determines the next state of the machine based on the incoming element
 	// If no transition is possible it means that the machine has encountered a syntax error
-	virtual State* ProcessElement(const Token& nextElement) override {}
+	virtual State* ProcessElement(const Token& nextElement) override { return nullptr; }
 };
 
 
@@ -576,6 +869,11 @@ public:
 	// Outgoing connections
 	State* oneLinerHandlerState;
 	State* subBlockBeginState;
+
+	// Inner State
+	int innerState = 0;
+
+	IfAccumulator* accumulator;
 
 public:
 	IfState(AnalysisMachine& analysisMachine,
@@ -593,15 +891,54 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override
 	{
+		innerState = 0;
 
+		accumulator = parentMachine.CreateAccumulator<IfAccumulator>();
 	}
 
 	// Called when the machine exits this state
 	virtual void ExitState() override {}
 
-	// Determines the next state of the machine based on the incoming element
-	// If no transition is possible it means that the machine has encountered a syntax error
-	virtual State* ProcessElement(const Token& nextElement) override {}
+	virtual State* ProcessElement(const Token& nextElement) override 
+	{
+		// Condition start
+		if (innerState == 0)
+		{
+			CheckTokenType(nextElement, BRACKET_OPEN);
+
+			innerState++;
+			
+			//!!!!!!!!!!!!!!!!!!!!!!!!!!
+			// EXPRESSION ANALYSIS BLOCK
+			//!!!!!!!!!!!!!!!!!!!!!!!!!!
+			// return ...
+		}
+
+		// BACK FROM EXPRESSION ANALYSIS
+		if (innerState == 1)
+		{
+			CheckTokenType(nextElement, BRACKET_CLOSE);
+
+			// Storing condition
+			std::shared_ptr<Expression> expression; // FETCHED FROM THE EXPRESSION BLOCK RESULT
+			accumulator->StoreExpression(expression, 0);
+
+			parentMachine.StoreInstruction(accumulator->Collapse());
+
+			innerState++;
+			return nullptr;
+		}
+
+		// NEXT STATE
+		if (innerState == 2)
+		{
+			if (nextElement.type == IF || nextElement.type == WHILE || nextElement.type == NAME) return oneLinerHandlerState;
+			if (nextElement.type == BEGIN) return subBlockBeginState;
+
+			CheckTokenType(nextElement, BEGIN);
+			return nullptr;
+		}
+	}
 };
 
 
@@ -616,6 +953,11 @@ public:
 	// Outgoing connections
 	State* oneLinerHandlerState;
 	State* subBlockBeginState;
+
+	// Inner State
+	int innerState = 0;
+
+	WhileAccumulator* accumulator;
 
 public:
 	WhileState(AnalysisMachine& analysisMachine,
@@ -633,7 +975,9 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override
 	{
+		innerState = 0;
 
+		accumulator = parentMachine.CreateAccumulator<WhileAccumulator>();
 	}
 
 	// Called when the machine exits this state
@@ -641,7 +985,46 @@ public:
 
 	// Determines the next state of the machine based on the incoming element
 	// If no transition is possible it means that the machine has encountered a syntax error
-	virtual State* ProcessElement(const Token& nextElement) override {}
+	virtual State* ProcessElement(const Token& nextElement) override 
+	{
+		// Condition start
+		if (innerState == 0)
+		{
+			CheckTokenType(nextElement, BRACKET_OPEN);
+
+			innerState++;
+
+			//!!!!!!!!!!!!!!!!!!!!!!!!!!
+			// EXPRESSION ANALYSIS BLOCK
+			//!!!!!!!!!!!!!!!!!!!!!!!!!!
+			// return ...
+		}
+
+		// BACK FROM EXPRESSION ANALYSIS
+		if (innerState == 1)
+		{
+			CheckTokenType(nextElement, BRACKET_CLOSE);
+
+			// Storing condition
+			std::shared_ptr<Expression> expression; // FETCHED FROM THE EXPRESSION BLOCK RESULT
+			accumulator->StoreExpression(expression, 0);
+
+			parentMachine.StoreInstruction(accumulator->Collapse());
+
+			innerState++;
+			return nullptr;
+		}
+
+		// NEXT STATE
+		if (innerState == 2)
+		{
+			if (nextElement.type == IF || nextElement.type == WHILE || nextElement.type == NAME) return oneLinerHandlerState;
+			if (nextElement.type == BEGIN) return subBlockBeginState;
+
+			CheckTokenType(nextElement, BEGIN);
+			return nullptr;
+		}
+	}
 };
 
 
@@ -657,6 +1040,8 @@ public:
 	// Outgoing connections
 	State* oneLinerHandlerState;
 	State* subBlockBeginState;
+
+	Accumulator* accumulator;
 
 public:
 	ElseState(AnalysisMachine& analysisMachine,
@@ -674,7 +1059,7 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override
 	{
-
+		accumulator = parentMachine.CreateAccumulator<GenericInstructionAccumulator<Else>>();
 	}
 
 	// Called when the machine exits this state
@@ -682,7 +1067,17 @@ public:
 
 	// Determines the next state of the machine based on the incoming element
 	// If no transition is possible it means that the machine has encountered a syntax error
-	virtual State* ProcessElement(const Token& nextElement) override {}
+	virtual State* ProcessElement(const Token& nextElement) override 
+	{
+		if (!dynamic_cast<IfInstruction>(parentMachine.lastStoredInstruction.get()))
+			throw std::exception("ANALYSIS ERROR: Else with no corresponding 'IF' before it!");
+
+		if (nextElement.type == IF || nextElement.type == WHILE || nextElement.type == NAME) return oneLinerHandlerState;
+		if (nextElement.type == BEGIN) return subBlockBeginState;
+
+		CheckTokenType(nextElement, BEGIN);
+		return nullptr;
+	}
 };
 
 
@@ -713,9 +1108,21 @@ public:
 	~OneLinerHandlerState() {}
 
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
-	virtual void EnterState(const Token& element) override
+	virtual void EnterState(const Token& element) override 
 	{
+		parentMachine.oneLinerDepth++;
 
+		if (element.type == IF || element.type == WHILE)
+		{
+			parentMachine.ForceTransitionToState(branchingState, element);
+			return;
+		}
+
+		if (element.type == NAME)
+		{
+			parentMachine.ForceTransitionToState(nameState, element);
+			return;
+		}
 	}
 
 	// Called when the machine exits this state
@@ -723,7 +1130,7 @@ public:
 
 	// Determines the next state of the machine based on the incoming element
 	// If no transition is possible it means that the machine has encountered a syntax error
-	virtual State* ProcessElement(const Token& nextElement) override {}
+	virtual State* ProcessElement(const Token& nextElement) override { return nullptr; }
 };
 
 
@@ -756,7 +1163,19 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override
 	{
+		parentMachine.levelOffset++;
 
+		if (element.type == IF || element.type == WHILE)
+		{
+			parentMachine.ForceTransitionToState(branchingState, element);
+			return;
+		}
+
+		if (element.type == NAME)
+		{
+			parentMachine.ForceTransitionToState(nameState, element);
+			return;
+		}
 	}
 
 	// Called when the machine exits this state
@@ -764,7 +1183,7 @@ public:
 
 	// Determines the next state of the machine based on the incoming element
 	// If no transition is possible it means that the machine has encountered a syntax error
-	virtual State* ProcessElement(const Token& nextElement) override {}
+	virtual State* ProcessElement(const Token& nextElement) override { return nullptr; }
 };
 
 
@@ -805,7 +1224,7 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override
 	{
-
+		parentMachine.levelOffset--;
 	}
 
 	// Called when the machine exits this state
@@ -813,5 +1232,17 @@ public:
 
 	// Determines the next state of the machine based on the incoming element
 	// If no transition is possible it means that the machine has encountered a syntax error
-	virtual State* ProcessElement(const Token& nextElement) override {}
+	virtual State* ProcessElement(const Token& nextElement) override 
+	{
+		if (nextElement.type == NAME) return nameState;
+		if (nextElement.type == IF || nextElement.type == WHILE) return branchingState;
+		if (nextElement.type == ELSE) return elseState;
+		
+		if (nextElement.type == PROGRAM_END)
+		{
+			parentMachine.AnalysisFinished();
+
+			return nullptr;
+		}
+	}
 };
