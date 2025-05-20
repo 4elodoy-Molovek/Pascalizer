@@ -26,7 +26,7 @@ public:
 	virtual void StoreElement(const Token& element, int storeIndex) = 0;
 
 	// Creates an instruction out of stored data
-	virtual Instruction* Collapse() = 0;
+	virtual std::shared_ptr<Instruction> Collapse() = 0;
 };
 
 
@@ -64,9 +64,11 @@ public:
 	// Called when the machine exits this state
 	virtual void ExitState() {}
 
-	// Processes a single token
-	// Additionally determines the next state of the machine based on the incoming element
-	// If 'nullptr' is returned, that means that no transition is required
+	/*
+	 *	Processes a single token
+	 *	Additionally determines the next state of the machine based on the incoming element
+	 *	If 'nullptr' is returned, that means that no transition is required
+	 */
 	virtual State* ProcessElement(const Token& nextElement) = 0;
 };
 

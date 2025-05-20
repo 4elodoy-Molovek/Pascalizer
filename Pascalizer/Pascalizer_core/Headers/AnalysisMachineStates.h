@@ -54,9 +54,11 @@ public:
 	// Called when the machine exits this state
 	virtual void ExitState() override {}
 
-	// Processes a single token
-	// Additionally determines the next state of the machine based on the incoming element
-	// If 'nullptr' is returned, that means that no transition is required
+	/*	
+	 *	Processes a single token
+	 *	Additionally determines the next state of the machine based on the incoming element
+	 *	If 'nullptr' is returned, that means that no transition is required
+	 */
 	virtual State* ProcessElement(const Token& nextElement) override
 	{
 		// Processing "Program" keyword
@@ -84,7 +86,7 @@ public:
 		{
 			CheckTokenType(nextElement, END_LINE);
 
-			
+			parentMachine.StoreInstruction(accumulator->Collapse());
 
 			innerState++;
 			return nullptr;

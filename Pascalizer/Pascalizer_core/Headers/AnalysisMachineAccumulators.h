@@ -22,7 +22,7 @@ public:
 	}
 
 	// Creates an instruction out of stored data
-	virtual Instruction* Collapse() override
+	virtual std::shared_ptr<Instruction> Collapse() override
 	{
 		
 	}
@@ -45,12 +45,12 @@ public:
 	virtual void StoreElement(const Token& element, int storeIndex) override {}
 
 	// Creates an instruction out of stored data
-	virtual Instruction* Collapse() override
+	virtual std::shared_ptr<Instruction> Collapse() override
 	{
 		// COLLAPSING
-		I* instruction = new I();
+		I instruction = I();
 
-		return instruction;
+		return std::make_shared<Instruction>(instruction);
 	}
 };
 
@@ -84,7 +84,7 @@ public:
 	}
 
 	// Creates an instruction out of stored data
-	virtual Instruction* Collapse() override
+	virtual std::shared_ptr<Instruction> Collapse() override
 	{
 
 	}
@@ -118,7 +118,7 @@ public:
 	}
 
 	// Creates an instruction out of stored data
-	virtual Instruction* Collapse() override
+	virtual std::shared_ptr<Instruction> Collapse() override
 	{
 
 	}
@@ -146,7 +146,7 @@ public:
 	}
 
 	// Creates an instruction out of stored data
-	virtual Instruction* Collapse() override
+	virtual std::shared_ptr<Instruction> Collapse() override
 	{
 
 	}
@@ -174,7 +174,7 @@ public:
 	}
 
 	// Creates an instruction out of stored data
-	virtual Instruction* Collapse() override
+	virtual std::shared_ptr<Instruction> Collapse() override
 	{
 
 	}
@@ -201,7 +201,7 @@ public:
 	}
 
 	// Creates an instruction out of stored data
-	virtual Instruction* Collapse() override
+	virtual std::shared_ptr<Instruction> Collapse() override
 	{
 
 	}
@@ -228,7 +228,7 @@ public:
 	}
 
 	// Creates an instruction out of stored data
-	virtual Instruction* Collapse() override
+	virtual std::shared_ptr<Instruction> Collapse() override
 	{
 
 	}

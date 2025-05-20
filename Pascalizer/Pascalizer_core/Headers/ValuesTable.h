@@ -17,8 +17,8 @@ public:
 	virtual std::shared_ptr<Value> Subtract(const Value& rhs)	const	{ throw(std::exception("ERROR: the type(s) does not support subtraction!")); }
 	virtual std::shared_ptr<Value> Multiply(const Value& rhs)	const	{ throw(std::exception("ERROR: the type(s) does not support multiplication!")); }
 	virtual std::shared_ptr<Value> Divide(const Value& rhs)		const	{ throw(std::exception("ERROR: the type(s) does not support division!")); }
-	virtual std::shared_ptr<Value> Mod(const Value& rhs)		const { throw(std::exception("ERROR: the type(s) does not support division!")); }
-	virtual std::shared_ptr<Value> Div(const Value& rhs)		const { throw(std::exception("ERROR: the type(s) does not support division!")); }
+	virtual std::shared_ptr<Value> Mod(const Value& rhs)		const	{ throw(std::exception("ERROR: the type(s) does not support division!")); }
+	virtual std::shared_ptr<Value> Div(const Value& rhs)		const	{ throw(std::exception("ERROR: the type(s) does not support division!")); }
 
 	// Add more if needed
 };
