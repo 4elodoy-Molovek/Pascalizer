@@ -470,7 +470,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="IElse.cpp" />
+    <ClCompile Include="IElse.h" />
     <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\AnalysisMachine.h" />
     <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\ExpressionEvaluationBlock.h" />
     <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\FileModule.h" />

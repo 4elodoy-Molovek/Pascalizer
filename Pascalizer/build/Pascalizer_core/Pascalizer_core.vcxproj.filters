@@ -13,7 +13,7 @@
     <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\mocs_compilation_RelWithDebInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IElse.cpp">
+    <ClCompile Include="IElse.h">
       <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
