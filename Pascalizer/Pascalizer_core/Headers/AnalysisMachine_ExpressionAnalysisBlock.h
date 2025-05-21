@@ -23,7 +23,7 @@ public:
 	virtual void StoreElement(const Token& element, int storeIndex) override {}
 
 	// Creates an instruction out of stored data
-	virtual Instruction* Collapse() override
+	virtual std::shared_ptr<Instruction> Collapse() override
 	{
 
 	}

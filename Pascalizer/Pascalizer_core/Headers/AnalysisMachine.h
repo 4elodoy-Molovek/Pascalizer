@@ -2,6 +2,7 @@
 #include <vector>
 #include "Tokens.h"
 #include "Instruction.h"
+#include "AnalysisMachine_ExpressionAnalysisBlock.h"
 
 /*
  * Program module, responsible for:
@@ -91,6 +92,18 @@ class AnalysisMachine
 
 	// Current state of the machine
 	State* currentState;
+
+
+	// EXPRESSION ANALYSIS BLOCK
+
+	// Pointer to the state, that analyses expressions
+	ExpressionAnalysisBlockState* expressionAnalysisBlock;
+
+	// State the analysis machine is going to transition to when exiting the expression analysis block
+	State* expressionBlockExitTarget;
+
+	// Cached result of expression analysis work, used to receive the result by the state that requested expression analysis
+	std::shared_ptr<Expression> cachedExpressionAnalysisResult;
 
 
 public:

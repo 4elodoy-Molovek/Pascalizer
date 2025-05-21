@@ -5,7 +5,6 @@
 #include <stack>
 #include "ValuesTable.h"
 
-
 /*
  * Program block, used by some instructions to implement expressions 
  */
@@ -47,7 +46,7 @@ public:
 	virtual ~OperationExpressionElement() {}
 
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
-	virtual void Calculate(std::stack<std::shared_ptr<ExpressionElement>>& calculationStack) = 0;
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) = 0;
 };
 
 
@@ -64,7 +63,29 @@ public:
 	Expression(const std::vector<std::shared_ptr<ExpressionElement>>& inPostfix) : postfix(inPostfix) {}
 
 	// Calculates a result of the stored expression
-	std::shared_ptr<Value> Caculate();
+	std::shared_ptr<Value> Caculate() {
+		std::stack<std::shared_ptr<ValueExpressionElement>> calculationStack;
+		for (std::shared_ptr<ExpressionElement> el : postfix) {
+
+			// if cur_elemnt is value
+			if (auto tmp = dynamic_cast<ValueExpressionElement*>(el.get())) // type of tmp is ValueExpressionElement*
+			{
+				calculationStack.push(std::make_shared<ValueExpressionElement>(*tmp));
+				continue;
+			}
+
+			// if cur_elemnt is operation
+			if (auto tmp = dynamic_cast<OperationExpressionElement*>(el.get()))  // type of tmp is OperationExpressionElement*
+			{
+				// calculating
+				tmp->Calculate(calculationStack); //? а че будет если в его классе нет переопределения calculate()?
+				continue;
+			}
+
+			throw(std::exception("Unrocognized type of ExpressionElement"));
+		}
+		return calculationStack.top()->value;
+	}
 };
 
 
@@ -79,20 +100,133 @@ public:
 	~AddOperation() {}
 
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
-	virtual void Calculate(std::stack<std::shared_ptr<ExpressionElement>>& calculationStack) override
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
-		if (auto rhs = dynamic_cast<ValueExpressionElement*>(calculationStack.top().get()))
-		{
-			calculationStack.pop();
-			if (auto lhs = dynamic_cast<ValueExpressionElement*>(calculationStack.top().get()))
-			{
-				calculationStack.pop();
+		auto rhs = calculationStack.top(); calculationStack.pop(); //? что возвратит top/pop из пустого стека
+		//auto rhs = rhs_.get();
 
-				// Calculation itself
-				calculationStack.push(std::make_shared<ValueExpressionElement>(  *(rhs->value) + *(lhs->value)  ));
-			}
-		}
+		auto lhs = calculationStack.top(); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>(*(rhs->value) + *(lhs->value)));
+		//? сложение принимает обычные -поинтеры- переменные, но возвращает shared
 	}
 };
 
+
+class MultiplyOperation final : public OperationExpressionElement
+{
+public:
+
+	MultiplyOperation() {}
+	~MultiplyOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop(); //? что возвратит top/pop из пустого стека
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>(*(rhs->value) * *(lhs->value)));
+		//? сложение принимает обычные -поинтеры- переменные, но возвращает shared
+	}
+};
+
+
+class SubstractOperation final : public OperationExpressionElement
+{
+public:
+
+	SubstractOperation() {}
+	~SubstractOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop(); //? что возвратит top/pop из пустого стека
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>(*(lhs->value) - *(rhs->value)));
+		//? сложение принимает обычные -поинтеры- переменные, но возвращает shared
+	}
+};
+
+
+class DivideOperation final : public OperationExpressionElement
+{
+public:
+
+	DivideOperation() {}
+	~DivideOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop(); //? что возвратит top/pop из пустого стека
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>(*(lhs->value) / *(rhs->value)));
+		//? сложение принимает обычные -поинтеры- переменные, но возвращает shared
+	}
+};
+
+
+
+class ModOperation final : public OperationExpressionElement
+{
+public:
+
+	ModOperation() {}
+	~ModOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop(); //? что возвратит top/pop из пустого стека
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>(*(lhs->value) % *(rhs->value)));
+		//? сложение принимает обычные -поинтеры- переменные, но возвращает shared
+	}
+};
 // TO DO: Add more
+
+
+class SinOperation final : public OperationExpressionElement
+{
+public:
+
+	SinOperation() {}
+	~SinOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop(); //? что возвратит top/pop из пустого стека
+		calculationStack.push(std::make_shared<ValueExpressionElement>(usin(*(rhs->value))));
+	}
+};
+
+
+
+
+/*
+* what's wrong
+* 
+class MultiplyOperation final : public OperationExpressionElement
+{
+public:
+
+	MultiplyOperation() {}
+	~MultiplyOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top().get(); calculationStack.pop(); //? что возвратит top/pop из пустого стека
+		auto lhs = (calculationStack.top()).get(); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>(*(rhs->value.get()) * *(lhs->value.get())));
+		//? сложение принимает обычные -поинтеры- переменные, но возвращает shared
+	}
+};
+*/
