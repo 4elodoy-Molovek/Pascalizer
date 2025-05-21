@@ -24,7 +24,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8E50CA4F-0C9B-30B1-81F4-4371F9C75EA6}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
     <ProjectName>base_test</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
@@ -137,7 +137,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <PostBuildEvent>
       <Message></Message>
       <Command>setlocal
-"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -D TEST_TARGET=base_test -D "TEST_EXECUTABLE=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/Debug/base_test.exe" -D TEST_EXECUTOR= -D "TEST_WORKING_DIR=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test" -D TEST_EXTRA_ARGS= -D TEST_PROPERTIES= -D TEST_PREFIX= -D TEST_SUFFIX= -D TEST_FILTER= -D NO_PRETTY_TYPES=FALSE -D NO_PRETTY_VALUES=FALSE -D TEST_LIST=base_test_TESTS -D "CTEST_FILE=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/base_test[1]_tests.cmake" -D TEST_DISCOVERY_TIMEOUT=5 -D TEST_XML_OUTPUT_DIR= -P "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.30/Modules/GoogleTestAddTests.cmake"
+"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -D TEST_TARGET=base_test -D "TEST_EXECUTABLE=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/Debug/base_test.exe" -D TEST_EXECUTOR= -D "TEST_WORKING_DIR=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test" -D TEST_EXTRA_ARGS= -D TEST_PROPERTIES= -D TEST_PREFIX= -D TEST_SUFFIX= -D TEST_FILTER= -D NO_PRETTY_TYPES=FALSE -D NO_PRETTY_VALUES=FALSE -D TEST_LIST=base_test_TESTS -D "CTEST_FILE=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/base_test[1]_tests.cmake" -D TEST_DISCOVERY_TIMEOUT=5 -D TEST_DISCOVERY_EXTRA_ARGS= -D TEST_XML_OUTPUT_DIR= -P "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/GoogleTestAddTests.cmake"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -214,7 +214,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <PostBuildEvent>
       <Message></Message>
       <Command>setlocal
-"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -D TEST_TARGET=base_test -D "TEST_EXECUTABLE=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/Release/base_test.exe" -D TEST_EXECUTOR= -D "TEST_WORKING_DIR=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test" -D TEST_EXTRA_ARGS= -D TEST_PROPERTIES= -D TEST_PREFIX= -D TEST_SUFFIX= -D TEST_FILTER= -D NO_PRETTY_TYPES=FALSE -D NO_PRETTY_VALUES=FALSE -D TEST_LIST=base_test_TESTS -D "CTEST_FILE=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/base_test[1]_tests.cmake" -D TEST_DISCOVERY_TIMEOUT=5 -D TEST_XML_OUTPUT_DIR= -P "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.30/Modules/GoogleTestAddTests.cmake"
+"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -D TEST_TARGET=base_test -D "TEST_EXECUTABLE=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/Release/base_test.exe" -D TEST_EXECUTOR= -D "TEST_WORKING_DIR=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test" -D TEST_EXTRA_ARGS= -D TEST_PROPERTIES= -D TEST_PREFIX= -D TEST_SUFFIX= -D TEST_FILTER= -D NO_PRETTY_TYPES=FALSE -D NO_PRETTY_VALUES=FALSE -D TEST_LIST=base_test_TESTS -D "CTEST_FILE=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/base_test[1]_tests.cmake" -D TEST_DISCOVERY_TIMEOUT=5 -D TEST_DISCOVERY_EXTRA_ARGS= -D TEST_XML_OUTPUT_DIR= -P "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/GoogleTestAddTests.cmake"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -291,7 +291,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <PostBuildEvent>
       <Message></Message>
       <Command>setlocal
-"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -D TEST_TARGET=base_test -D "TEST_EXECUTABLE=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/MinSizeRel/base_test.exe" -D TEST_EXECUTOR= -D "TEST_WORKING_DIR=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test" -D TEST_EXTRA_ARGS= -D TEST_PROPERTIES= -D TEST_PREFIX= -D TEST_SUFFIX= -D TEST_FILTER= -D NO_PRETTY_TYPES=FALSE -D NO_PRETTY_VALUES=FALSE -D TEST_LIST=base_test_TESTS -D "CTEST_FILE=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/base_test[1]_tests.cmake" -D TEST_DISCOVERY_TIMEOUT=5 -D TEST_XML_OUTPUT_DIR= -P "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.30/Modules/GoogleTestAddTests.cmake"
+"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -D TEST_TARGET=base_test -D "TEST_EXECUTABLE=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/MinSizeRel/base_test.exe" -D TEST_EXECUTOR= -D "TEST_WORKING_DIR=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test" -D TEST_EXTRA_ARGS= -D TEST_PROPERTIES= -D TEST_PREFIX= -D TEST_SUFFIX= -D TEST_FILTER= -D NO_PRETTY_TYPES=FALSE -D NO_PRETTY_VALUES=FALSE -D TEST_LIST=base_test_TESTS -D "CTEST_FILE=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/base_test[1]_tests.cmake" -D TEST_DISCOVERY_TIMEOUT=5 -D TEST_DISCOVERY_EXTRA_ARGS= -D TEST_XML_OUTPUT_DIR= -P "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/GoogleTestAddTests.cmake"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -367,7 +367,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <PostBuildEvent>
       <Message></Message>
       <Command>setlocal
-"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -D TEST_TARGET=base_test -D "TEST_EXECUTABLE=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/RelWithDebInfo/base_test.exe" -D TEST_EXECUTOR= -D "TEST_WORKING_DIR=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test" -D TEST_EXTRA_ARGS= -D TEST_PROPERTIES= -D TEST_PREFIX= -D TEST_SUFFIX= -D TEST_FILTER= -D NO_PRETTY_TYPES=FALSE -D NO_PRETTY_VALUES=FALSE -D TEST_LIST=base_test_TESTS -D "CTEST_FILE=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/base_test[1]_tests.cmake" -D TEST_DISCOVERY_TIMEOUT=5 -D TEST_XML_OUTPUT_DIR= -P "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.30/Modules/GoogleTestAddTests.cmake"
+"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -D TEST_TARGET=base_test -D "TEST_EXECUTABLE=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/RelWithDebInfo/base_test.exe" -D TEST_EXECUTOR= -D "TEST_WORKING_DIR=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test" -D TEST_EXTRA_ARGS= -D TEST_PROPERTIES= -D TEST_PREFIX= -D TEST_SUFFIX= -D TEST_FILTER= -D NO_PRETTY_TYPES=FALSE -D NO_PRETTY_VALUES=FALSE -D TEST_LIST=base_test_TESTS -D "CTEST_FILE=C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/base_test[1]_tests.cmake" -D TEST_DISCOVERY_TIMEOUT=5 -D TEST_DISCOVERY_EXTRA_ARGS= -D TEST_XML_OUTPUT_DIR= -P "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/GoogleTestAddTests.cmake"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -403,7 +403,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\GoogleTest.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\GoogleTest.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\base_test\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/base_test/CMakeLists.txt</Message>
@@ -416,7 +416,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\GoogleTest.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\GoogleTest.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\base_test\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/base_test/CMakeLists.txt</Message>
@@ -429,7 +429,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\GoogleTest.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\GoogleTest.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\base_test\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/base_test/CMakeLists.txt</Message>
@@ -442,37 +442,37 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.30\Modules\GoogleTest.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\GoogleTest.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\base_test\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\base_test\base_test_autogen\mocs_compilation_Debug.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\base_test\Sources\Test_AnalysisMachine.cpp" />
+    <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\base_test\Sources\testTokenizer.cpp" />
+    <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\base_test\Sources\test_EEB.cpp" />
     <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\base_test\base_test_autogen\mocs_compilation_Release.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\base_test\base_test_autogen\mocs_compilation_MinSizeRel.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\base_test\base_test_autogen\mocs_compilation_RelWithDebInfo.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\ZERO_CHECK.vcxproj">
       <Project>{5AD6670C-6D29-3B6E-827E-8BC7608F2220}</Project>

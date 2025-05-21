@@ -24,7 +24,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C0288E81-A6EB-3F36-8D38-36C45E8EE969}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
     <ProjectName>INSTALL</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
@@ -188,6 +188,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</VerifyInputsAndOutputsExist>
     </CustomBuild>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\ZERO_CHECK.vcxproj">
       <Project>{5AD6670C-6D29-3B6E-827E-8BC7608F2220}</Project>

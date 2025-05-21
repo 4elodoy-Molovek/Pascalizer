@@ -8,7 +8,7 @@
 	"CMAKE_LIST_FILES" : 
 	[
 		"C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/base_test/CMakeLists.txt",
-		"C:/Program Files/Microsoft Visual Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.30/Modules/GoogleTest.cmake"
+		"C:/Program Files/Microsoft Visual Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.31/Modules/GoogleTest.cmake"
 	],
 	"CMAKE_SOURCE_DIR" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer",
 	"CROSS_CONFIG" : false,
@@ -106,7 +106,24 @@
 	"SETTINGS_FILE_MinSizeRel" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/CMakeFiles/base_test_autogen.dir/AutogenUsed_MinSizeRel.txt",
 	"SETTINGS_FILE_RelWithDebInfo" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/CMakeFiles/base_test_autogen.dir/AutogenUsed_RelWithDebInfo.txt",
 	"SETTINGS_FILE_Release" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/CMakeFiles/base_test_autogen.dir/AutogenUsed_Release.txt",
-	"SOURCES" : [],
+	"SOURCES" : 
+	[
+		[
+			"C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/base_test/Sources/Test_AnalysisMachine.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/base_test/Sources/testTokenizer.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/base_test/Sources/test_EEB.cpp",
+			"MU",
+			null
+		]
+	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],
 	"UIC_SKIP" : [],
