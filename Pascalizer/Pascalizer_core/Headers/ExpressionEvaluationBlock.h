@@ -97,7 +97,7 @@ public:
 
 				// Replacing variable element with a value element
 				std::shared_ptr<Value> varValue = programState.valuesTable[varElement->varName];
-				postfix[i] = std::make_shared<ExpressionElement>(ValueExpressionElement(varValue));
+				postfix[i] = std::make_shared<ValueExpressionElement>(varValue);
 			}
 		}
 

@@ -23,13 +23,13 @@ class ExpressionAnalysisBlockState : public State
 	// Adds a value to the postfix
 	void AddValue(std::shared_ptr<Value> value) 
 	{
-		postfix.push_back(std::make_shared<ExpressionElement>(ValueExpressionElement(value)));
+		postfix.push_back(std::make_shared<ValueExpressionElement>(value));
 	}
 
 	// Adds a value to the postfix
 	void AddVariable(const std::string& varName)
 	{
-		postfix.push_back(std::make_shared<ExpressionElement>(VariableExpressionElement(varName)));
+		postfix.push_back(std::make_shared<VariableExpressionElement>(varName));
 	}
 
 	// Pushes operation into the operation stack
@@ -61,15 +61,15 @@ class ExpressionAnalysisBlockState : public State
 	{
 		std::shared_ptr<OperationExpressionElement> operation;
 
-				if (operationStr == "+") operation = std::make_shared<OperationExpressionElement>(AddOperation());
-		else	if (operationStr == "-") operation = std::make_shared<OperationExpressionElement>(SubtractOperation());
-		else	if (operationStr == "*") operation = std::make_shared<OperationExpressionElement>(MultiplyOperation());
-		else	if (operationStr == "/") operation = std::make_shared<OperationExpressionElement>(DivideOperation());
-		else	if (operationStr == "mod") operation = std::make_shared<OperationExpressionElement>(ModOperation());
-		else	if (operationStr == "div") operation = std::make_shared<OperationExpressionElement>(DivOperation());
+				if (operationStr == "+") operation = std::make_shared<AddOperation>();
+		else	if (operationStr == "-") operation = std::make_shared<SubtractOperation>();
+		else	if (operationStr == "*") operation = std::make_shared<MultiplyOperation>();
+		else	if (operationStr == "/") operation = std::make_shared<DivideOperation>();
+		else	if (operationStr == "mod") operation = std::make_shared<ModOperation>();
+		else	if (operationStr == "div") operation = std::make_shared<DivOperation>();
 		
 		// Functions (aslo processed as math operators for now)
-		else	if (operationStr == "sin") operation = std::make_shared<OperationExpressionElement>(SinOperation());
+		else	if (operationStr == "sin") operation = std::make_shared<SinOperation>();
 
 		return operation;
 	}
@@ -123,9 +123,9 @@ public:
 				// Creating value from the contents
 				std::shared_ptr<Value> newValue;
 
-						if (nextElement.type == VALUE_INT) newValue = std::make_shared<Value>(IntValue(std::stoi(nextElement.value)));
-				else	if (nextElement.type == VALUE_DOUBLE) newValue = std::make_shared<Value>(DoubleValue(std::stod(nextElement.value)));
-				else	if (nextElement.type == VALUE_STRING) newValue = std::make_shared<Value>(StringValue(nextElement.value));
+						if (nextElement.type == VALUE_INT) newValue = std::make_shared<IntValue>(std::stoi(nextElement.value));
+				else	if (nextElement.type == VALUE_DOUBLE) newValue = std::make_shared<DoubleValue>(std::stod(nextElement.value));
+				else	if (nextElement.type == VALUE_STRING) newValue = std::make_shared<StringValue>(nextElement.value);
 
 				AddValue(newValue);
 
