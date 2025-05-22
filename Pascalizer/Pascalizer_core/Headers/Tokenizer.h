@@ -50,8 +50,8 @@ private:
 				break;
 			}
 			if (name == "end.") {
-				cachedTokens.push_back(Token{ Token::END, "end" }); //! ну это капец какой то
-				token = { TokenType::PROGRAMM_END, "." };
+				cachedTokens.push_back(Token{ TokenType::END, "end" }); //! ну это капец какой то
+				token = { TokenType::PROGRAMM_END, "." }; 
 				break;
 			}
 
@@ -83,14 +83,14 @@ private:
 				break;
 			}
 
-			token = { TokenType::NAME, name };
+			token = { TokenType::NAME, name }; 
 			break;
 		}
 		return token;
 	}
 
-	TokenizedElement identifySymbol(const char& let, string& buf_name, int& state) {
-		TokenizedElement tokElemnet{ Token::NULL_TOKEN, " " };
+	Token identifySymbol(const char& let, string& buf_name, int& state) {
+		Token tokElemnet{ TokenType::NULL_TOKEN, " " };
 		while (true) {
 			if (('a' <= let && let <= 'z') || ('A' <= let && let <= 'Z')) {
 				buf_name += let;
@@ -99,7 +99,7 @@ private:
 				break;
 			}
 			if (let == '"') {
-				tokElemnet = { Token::QUOTES, "\""};
+				tokElemnet = { TokenType::QUOTES, "\""};
 				state = QUOTES_STATE;
 				break;
 			}
@@ -133,25 +133,25 @@ private:
 			case '\n': case ' ': case '\t':
 				break;
 			case '(':
-				tokElemnet = { Token::BRACKET_OPEN, "(" };
+				tokElemnet = { TokenType::BRACKET_OPEN, "(" };
 				break;
 			case ')':
-				tokElemnet = { Token::BRACKET_CLOSE, ")" };
+				tokElemnet = { TokenType::BRACKET_CLOSE, ")" };
 				break;
 			case ';':
-				tokElemnet = { Token::SEMICOLON, ";" };
+				tokElemnet = { TokenType::SEMICOLON, ";" };
 				break;
 			case ',':
-				tokElemnet = { Token::COMMA, "," };
+				tokElemnet = { TokenType::COMMA, "," };
 				break;
 			case '+':
 			case '-':
 			case '/':
 			case '*':
-				tokElemnet = { Token::MATH_OPERATOR, string(1, let) };
+				tokElemnet = { TokenType::MATH_OPERATOR, string(1, let) };
 				break;
 			default:
-				tokElemnet = { Token::WRONG, string(1, WRONG_CHAR_SYMBOL) };
+				tokElemnet = { TokenType::WRONG, string(1, WRONG_CHAR_SYMBOL) };
 				//W++;
 				break;
 			}
@@ -166,11 +166,11 @@ public:
 	~Tokenizer() = default;
 
 	// Tokenizes source code, splitting it into elements
-	const std::vector<TokenizedElement>& TokenizeCode(const std::string& sourceCode) {
+	const std::vector<Token>& TokenizeCode(const std::string& sourceCode) {
 		string txt = sourceCode;
 		string buf_name = "";
 		int state = ZERO_STATE;
-		TokenizedElement tmpTok { Token::NULL_TOKEN, " " };
+		Token tmpTok { TokenType::NULL_TOKEN, " " };
 
 		for (auto let : txt) {
 			switch (state) {
@@ -186,7 +186,7 @@ public:
 				}
 
 				tmpTok = identifySymbol(let, buf_name, state);
-				if (tmpTok.token != Token::NULL_TOKEN)
+				if (tmpTok.type != TokenType::NULL_TOKEN)
 					cachedTokens.push_back(tmpTok);
 				break;
 			}
@@ -205,13 +205,13 @@ public:
 						tmp_point_number += (i == '.');
 					}
 					if (tmp_point_number > 1) 
-						cachedTokens.push_back(TokenizedElement{ Token::WRONG, string(1, WRONG_CHAR_SYMBOL) });
+						cachedTokens.push_back(Token{ TokenType::WRONG, string(1, WRONG_CHAR_SYMBOL) });
 					else 
-						cachedTokens.push_back(TokenizedElement{Token::VALUE, buf_name});
+						cachedTokens.push_back(Token{TokenType::VALUE, buf_name});
 					buf_name.clear();
 					
 					tmpTok = identifySymbol(let, buf_name, state);
-					if (tmpTok.token != Token::NULL_TOKEN)
+					if (tmpTok.type != TokenType::NULL_TOKEN)
 						cachedTokens.push_back(tmpTok);
 					break;
 				}
@@ -219,14 +219,14 @@ public:
 			}
 			case EXCLAMATION_STATE:
 				if (let == '=') {
-					cachedTokens.push_back(TokenizedElement{ Token::NOT_EQUAL, "!=" });
+					cachedTokens.push_back(Token{ TokenType::NOT_EQUAL, "!=" });
 					state = ZERO_STATE;
 				}
 				else {
-					cachedTokens.push_back(TokenizedElement{ Token::WRONG, string(1, WRONG_CHAR_SYMBOL) });
+					cachedTokens.push_back(Token{ TokenType::WRONG, string(1, WRONG_CHAR_SYMBOL) });
 					
 					tmpTok = identifySymbol(let, buf_name, state);
-					if (tmpTok.token != Token::NULL_TOKEN)
+					if (tmpTok.type != TokenType::NULL_TOKEN)
 						cachedTokens.push_back(tmpTok);
 					break;
 				}
@@ -247,7 +247,7 @@ public:
 					buf_name.clear();
 					
 					tmpTok = identifySymbol(let, buf_name, state);
-					if (tmpTok.token != Token::NULL_TOKEN)
+					if (tmpTok.type != TokenType::NULL_TOKEN)
 						cachedTokens.push_back(tmpTok);
 					break;
 				}
@@ -257,8 +257,8 @@ public:
 			case QUOTES_STATE:
 			{
 				if (let == '"') {
-					cachedTokens.push_back(TokenizedElement{ Token::VALUE, buf_name });
-					cachedTokens.push_back(TokenizedElement{ Token::QUOTES, "\""});
+					cachedTokens.push_back(Token{ TokenType::VALUE, buf_name });
+					cachedTokens.push_back(Token{ TokenType::QUOTES, "\""});
 					buf_name.clear();
 					state = ZERO_STATE;
 				}
@@ -274,13 +274,13 @@ public:
 				if (let == '=')
 				{
 					state = ZERO_STATE;
-					cachedTokens.push_back(TokenizedElement{ Token::ASSIGN_OPERATOR, ":=" });
+					cachedTokens.push_back(Token{ TokenType::ASSIGN_OPERATOR, ":=" });
 				}
 				else {
-					cachedTokens.push_back(TokenizedElement{ Token::COLON, ":" });
+					cachedTokens.push_back(Token{ TokenType::COLON, ":" });
 					
 					tmpTok = identifySymbol(let, buf_name, state);
-					if (tmpTok.token != Token::NULL_TOKEN)
+					if (tmpTok.type != TokenType::NULL_TOKEN)
 						cachedTokens.push_back(tmpTok);
 					break;
 				}
@@ -291,17 +291,17 @@ public:
 			{
 				state = ZERO_STATE;
 				if (let == '>') {
-					cachedTokens.push_back(TokenizedElement{ Token::MORE_EQUAL, "=>" });
+					cachedTokens.push_back(Token{ TokenType::MORE_EQUAL, "=>" });
 					break;
 				}
 				if (let == '<') {
-					cachedTokens.push_back(TokenizedElement{ Token::LESS_EQUAL, "=>" });
+					cachedTokens.push_back(Token{ TokenType::LESS_EQUAL, "=>" });
 					break;
 				}
-				cachedTokens.push_back(TokenizedElement{ Token::EQUAL, "=" });
+				cachedTokens.push_back(Token{ TokenType::EQUAL, "=" });
 				
 				tmpTok = identifySymbol(let, buf_name, state);
-				if (tmpTok.token != Token::NULL_TOKEN)
+				if (tmpTok.type != TokenType::NULL_TOKEN)
 					cachedTokens.push_back(tmpTok);
 				break;
 			}
@@ -310,12 +310,12 @@ public:
 			{
 				state = ZERO_STATE;
 				if (let == '>') {
-					cachedTokens.push_back(TokenizedElement{ Token::NOT_EQUAL, "!=" });
+					cachedTokens.push_back(Token{ TokenType::NOT_EQUAL, "!=" });
 				}
-				cachedTokens.push_back(TokenizedElement{ Token::LESS, ">" });
+				cachedTokens.push_back(Token{ TokenType::LESS, ">" });
 				
 				tmpTok = identifySymbol(let, buf_name, state);
-				if (tmpTok.token != Token::NULL_TOKEN)
+				if (tmpTok.type != TokenType::NULL_TOKEN)
 					cachedTokens.push_back(tmpTok);
 				break;
 			}
@@ -324,12 +324,12 @@ public:
 			{
 				state = ZERO_STATE;
 				if (let == '<') {
-					cachedTokens.push_back(TokenizedElement{ Token::NOT_EQUAL, "!=" });
+					cachedTokens.push_back(Token{ TokenType::NOT_EQUAL, "!=" });
 				}
-				cachedTokens.push_back(TokenizedElement{ Token::MORE, "<" });
+				cachedTokens.push_back(Token{ TokenType::MORE, "<" });
 				
 				tmpTok = identifySymbol(let, buf_name, state);
-				if (tmpTok.token != Token::NULL_TOKEN)
+				if (tmpTok.type != TokenType::NULL_TOKEN)
 					cachedTokens.push_back(tmpTok);
 				break;
 			}
@@ -350,7 +350,7 @@ public:
 	}
 
 	 //Returns a reference to an indexed tokenized element //! я это не чекал
-	const TokenizedElement& GetTokenizedElement(size_t index) const {
+	const Token& GetToken(size_t index) const {
 		return cachedTokens[index];
 	}
 

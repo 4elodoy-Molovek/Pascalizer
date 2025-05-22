@@ -8,9 +8,7 @@ enum TokenType
 {
 	// Basic
 	NAME,
-	VALUE_INT,
-	VALUE_DOUBLE,
-	VALUE_STRING,
+	VALUE,
 	MATH_OPERATOR, 
 	ASSIGN_OPERATOR,
 	BRACKET_OPEN,
@@ -18,7 +16,7 @@ enum TokenType
 	QUOTES,
 	COMMA,
 	COLON,
-	END_LINE,
+	SEMICOLON,
 	
 
 	// tmp
@@ -54,7 +52,7 @@ enum TokenType
 
 struct Token
 {
-	// Element's type
+	// Element's token - type
 	TokenType type;
 
 	// Element's value
