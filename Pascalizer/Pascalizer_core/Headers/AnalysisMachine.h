@@ -102,8 +102,8 @@ class AnalysisMachine
 	// State the analysis machine is going to transition to when exiting the expression analysis block
 	State* expressionBlockExitTarget;
 
-	// Cached result of expression analysis work, used to receive the result by the state that requested expression analysis
-	std::shared_ptr<Expression> cachedExpressionAnalysisResult;
+	// A reference, where the result of expression analysis block's work will be put
+	std::shared_ptr<Expression>& cachedExpressionAnalysisResultOutput;
 
 
 public:
@@ -173,6 +173,40 @@ public:
 	void AnalysisFinished()
 	{
 
+	}
+
+
+	// EXPRESSION ANALYSIS BLOCK
+
+	/*	Get the machine to enter the expression analysis state
+	 *	Machine will stay in this state until it reaches END_LINE or COMMA or BRACKET_CLOSED (that doesn't close an expression open bracket)
+	 *	Once the analysis has been finished, machine will enter @exitTarget state with the finishing token
+	 *	The result of the analysis will be stored in @outResult
+	 *  @entryToken is just passed to the EnterState of expression analysis block
+	 */
+	void EnterExpressionAnalysisState(State* exitTarget, std::shared_ptr<Expression>& outResult, const Token& entryToken)
+	{
+		expressionBlockExitTarget = exitTarget;
+		cachedExpressionAnalysisResultOutput = outResult;
+
+		// Transitioning to the analysis block, without calling exit on the current state (it is not finished yet)
+		currentState = expressionAnalysisBlock;
+		currentState->EnterState(entryToken);
+	}
+
+	// Called by the expression analysis state, once the analysis has been finished
+	void ExpressionAnalysisFinished(std::shared_ptr<Expression> result, const Token& exitToken)
+	{
+		// Storing result in the requested location
+		cachedExpressionAnalysisResultOutput = result;
+
+		// Returning to the state that called the analysis block
+		currentState->ExitState();
+		currentState = expressionBlockExitTarget;
+
+		// No EnterState is required here as the state is already in process of analysing it's part
+		// Instead, we are using process element to CONTINUE execution of the state
+		ProcessElement(exitToken);
 	}
 
 public:

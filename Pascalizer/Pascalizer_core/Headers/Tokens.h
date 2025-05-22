@@ -4,11 +4,13 @@
 const char WRONG_CHAR_SYMBOL = ' ';
 
 // All tokens: lexem types, present in the program
-enum Token
+enum TokenType
 {
 	// Basic
 	NAME,
-	VALUE,
+	VALUE_INT,
+	VALUE_DOUBLE,
+	VALUE_STRING,
 	MATH_OPERATOR, 
 	ASSIGN_OPERATOR,
 	BRACKET_OPEN,
@@ -16,7 +18,7 @@ enum Token
 	QUOTES,
 	COMMA,
 	COLON,
-	SEMICOLON,
+	END_LINE,
 	
 
 	// tmp
@@ -50,10 +52,10 @@ enum Token
 	NOT_EQUAL
 };
 
-struct TokenizedElement
+struct Token
 {
-	// Element's token - type
-	Token token;
+	// Element's type
+	TokenType type;
 
 	// Element's value
 	std::string value;	

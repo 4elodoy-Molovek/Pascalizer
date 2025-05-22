@@ -18,72 +18,72 @@ class Tokenizer
 	/* Tokenized stores it's results into this cache field, returning only a const reference
 	 * This allows us to avoid unnecessary copying later on
 	 */
-	std::vector<TokenizedElement> cachedTokens;
+	std::vector<Token> cachedTokens;
 
 private:
 
-	TokenizedElement identifyName(const string& name) {
-		TokenizedElement token;
+	Token identifyName(const string& name) {
+		Token token;
 		
 		while (true) {
 			// brgin end
 			if (name == "begin") {
-				 token = { Token::BEGIN, "begin" };
+				 token = { TokenType::BEGIN, "begin" };
 				break;
 			}
 			if (name == "end") {
-				token = { Token::END, "end" };
+				token = { TokenType::END, "end" };
 				break;
 			}
 
 			// specefic
 			if (name == "program") {
-				token = { Token::PROGRAM, "program" };
+				token = { TokenType::PROGRAM, "program" };
 				break;
 			}
 			if (name == "var") {
-				token = { Token::VAR, "var" };
+				token = { TokenType::VAR, "var" };
 				break;
 			}
 			if (name == "const") {
-				token = { Token::CONST, "const" };
+				token = { TokenType::CONST, "const" };
 				break;
 			}
 			if (name == "end.") {
-				cachedTokens.push_back(TokenizedElement{ Token::END, "end" }); //! ну это капец какой то
-				token = { Token::PROGRAMM_END, "." }; 
+				cachedTokens.push_back(Token{ Token::END, "end" }); //! ну это капец какой то
+				token = { TokenType::PROGRAMM_END, "." };
 				break;
 			}
 
 			// if, then, else
 			if (name == "if") {
-				token = { Token::IF, "if" };
+				token = { TokenType::IF, "if" };
 				break;
 			}
 			if (name == "then") {
-				token = { Token::THEN, "then" };
+				token = { TokenType::THEN, "then" };
 				break;
 			}
 			if (name == "else") {
-				token = { Token::ELSE, "else" };
+				token = { TokenType::ELSE, "else" };
 				break;
 			}
 			if (name == "while") {
-				token = { Token::WHILE, "while" };
+				token = { TokenType::WHILE, "while" };
 				break;
 			}
 
 			// math
 			if (name == "div") {
-				token = { Token::MATH_OPERATOR, "/" }; //! какой у него div
+				token = { TokenType::MATH_OPERATOR, "/" }; //! какой у него div
 				break;
 			}
 			if (name == "mod") {
-				token = { Token::MATH_OPERATOR, "%" }; //! какой у него mod
+				token = { TokenType::MATH_OPERATOR, "%" }; //! какой у него mod
 				break;
 			}
 
-			token = { Token::NAME, name }; 
+			token = { TokenType::NAME, name };
 			break;
 		}
 		return token;

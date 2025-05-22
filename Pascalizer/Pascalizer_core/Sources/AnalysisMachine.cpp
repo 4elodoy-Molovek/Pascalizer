@@ -1,5 +1,6 @@
 #include "AnalysisMachine.h"
 #include "AnalysisMachineStates.h"
+#include "AnalysisMachine_ExpressionAnalysisBlock.h"
 
 
 // Constructs the machine
@@ -93,4 +94,16 @@ AnalysisMachine::AnalysisMachine()
 
 	// Setting initial state
 	currentState = programVerificationState;
+
+
+	// Expression analysis block
+	expressionAnalysisBlock = new ExpressionAnalysisBlockState(*this);
+	states.push_back(expressionAnalysisBlock);
+}
+
+// Destroying the state machine
+AnalysisMachine::~AnalysisMachine()
+{
+	for (auto& state : states)
+		delete state;
 }

@@ -613,6 +613,9 @@ public:
 	// Inner state
 	int innerState = 0;
 
+	// Contains the result of the latest expression analysis, called by this state
+	std::shared_ptr<Expression> expressionResult;
+
 	AssignVariableAccumulator* accumulator;
 
 public:
@@ -638,6 +641,9 @@ public:
 		// Fetching accumulator from the machine
 		// Here we relly on the NameState to create a correct accumulator
 		accumulator = dynamic_cast<AssignVariableAccumulator*>(parentMachine.currentAccumulator);
+
+		// Entering expression analysis state right away
+		parentMachine.EnterExpressionAnalysisState(this, expressionResult, element);
 	}
 
 	// Called when the machine exits this state
@@ -647,25 +653,14 @@ public:
 	// If no transition is possible it means that the machine has encountered a syntax error
 	virtual State* ProcessElement(const Token& nextElement) override 
 	{
-		// Variable name was already aquared in the NameBlockState
-
-		if (innerState == 0)
-		{
-			innerState++;
-			
-			//!!!!!!!!!!!!!!!!!!!!!!!!!!
-			// EXPRESSION ANALYSIS BLOCK
-			//!!!!!!!!!!!!!!!!!!!!!!!!!!
-			// return ...
-		}
+		// Variable name and equals sign were already aquared in the NameBlockState
 
 		// CAME BACK FROM THE EXPRESSION BLOCK
-		if (innerState == 1)
+		if (innerState == 0)
 		{
 			CheckTokenType(nextElement, END_LINE);
 
-			std::shared_ptr<Expression> expression; // FETCHED FROM THE EXPRESSION BLOCK RESULT
-			accumulator->StoreExpression(expression, 1);
+			accumulator->StoreExpression(expressionResult, 1);
 
 			parentMachine.StoreInstruction(accumulator->Collapse());
 
@@ -674,7 +669,7 @@ public:
 		}
 
 		// NEXT STATE
-		if (innerState == 2)
+		if (innerState == 1)
 		{
 			if (nextElement.type == NAME) return nameState;
 			if (nextElement.type == IF || nextElement.type == WHILE) return branchingState;
@@ -705,6 +700,9 @@ public:
 	// Inner state
 	int innerState = 0;
 
+	// Contains the result of the latest expression analysis, called by this state
+	std::shared_ptr<Expression> expressionResult;
+
 	FunctionCallAccumulator* accumulator;
 
 public:
@@ -730,6 +728,9 @@ public:
 		// Fetching accumulator from the machine
 		// Here we relly on the NameState to create a correct accumulator
 		accumulator = dynamic_cast<FunctionCallAccumulator*>(parentMachine.currentAccumulator);
+
+		// Entering expression analysis right away
+		parentMachine.EnterExpressionAnalysisState(this, expressionResult, element);
 	}
 
 	// Called when the machine exits this state
@@ -739,29 +740,20 @@ public:
 	// If no transition is possible it means that the machine has encountered a syntax error
 	virtual State* ProcessElement(const Token& nextElement) override 
 	{
-		// Function name was already aquared in the NameBlockState
-
-		if (innerState == 0)
-		{
-			innerState++;
-
-			//!!!!!!!!!!!!!!!!!!!!!!!!!!
-			// EXPRESSION ANALYSIS BLOCK
-			//!!!!!!!!!!!!!!!!!!!!!!!!!!
-			// return ...
-		}
+		// Function name and openning bracket were already aquared in the NameBlockState
 
 		// CAME BACK FROM THE EXPRESSION BLOCK
-		if (innerState == 1)
+		if (innerState == 0)
 		{
 			// Storing expression argument
-			std::shared_ptr<Expression> expression; // FETCHED FROM THE EXPRESSION BLOCK RESULT
-			accumulator->StoreExpression(expression, 1);
+			accumulator->StoreExpression(expressionResult, 1);
 
 			// Checking for more arguments
 			if (nextElement.type == COMMA)
 			{
 				innerState = 0;
+				parentMachine.EnterExpressionAnalysisState(this, expressionResult, nextElement);
+
 				return nullptr;
 			}
 
@@ -773,7 +765,7 @@ public:
 		}
 
 		// End line + COLLAPSE
-		if (innerState == 2)
+		if (innerState == 1)
 		{
 			CheckTokenType(nextElement, END_LINE);
 
@@ -784,7 +776,7 @@ public:
 		}
 
 		// NEXT STATE
-		if (innerState == 3)
+		if (innerState == 2)
 		{
 			if (nextElement.type == NAME) return nameState;
 			if (nextElement.type == IF || nextElement.type == WHILE) return branchingState;
@@ -873,6 +865,9 @@ public:
 	// Inner State
 	int innerState = 0;
 
+	// Contains the result of the latest expression analysis, called by this state
+	std::shared_ptr<Expression> expressionResult;
+
 	IfAccumulator* accumulator;
 
 public:
@@ -908,10 +903,8 @@ public:
 
 			innerState++;
 			
-			//!!!!!!!!!!!!!!!!!!!!!!!!!!
-			// EXPRESSION ANALYSIS BLOCK
-			//!!!!!!!!!!!!!!!!!!!!!!!!!!
-			// return ...
+			parentMachine.EnterExpressionAnalysisState(this, expressionResult, nextElement);
+			return nullptr;
 		}
 
 		// BACK FROM EXPRESSION ANALYSIS
@@ -920,8 +913,7 @@ public:
 			CheckTokenType(nextElement, BRACKET_CLOSE);
 
 			// Storing condition
-			std::shared_ptr<Expression> expression; // FETCHED FROM THE EXPRESSION BLOCK RESULT
-			accumulator->StoreExpression(expression, 0);
+			accumulator->StoreExpression(expressionResult, 0);
 
 			parentMachine.StoreInstruction(accumulator->Collapse());
 
@@ -956,6 +948,9 @@ public:
 
 	// Inner State
 	int innerState = 0;
+
+	// Contains the result of the latest expression analysis, called by this state
+	std::shared_ptr<Expression> expressionResult;
 
 	WhileAccumulator* accumulator;
 
@@ -994,10 +989,7 @@ public:
 
 			innerState++;
 
-			//!!!!!!!!!!!!!!!!!!!!!!!!!!
-			// EXPRESSION ANALYSIS BLOCK
-			//!!!!!!!!!!!!!!!!!!!!!!!!!!
-			// return ...
+			parentMachine.EnterExpressionAnalysisState(this, expressionResult, nextElement);
 		}
 
 		// BACK FROM EXPRESSION ANALYSIS
@@ -1006,8 +998,7 @@ public:
 			CheckTokenType(nextElement, BRACKET_CLOSE);
 
 			// Storing condition
-			std::shared_ptr<Expression> expression; // FETCHED FROM THE EXPRESSION BLOCK RESULT
-			accumulator->StoreExpression(expression, 0);
+			accumulator->StoreExpression(expressionResult, 0);
 
 			parentMachine.StoreInstruction(accumulator->Collapse());
 
