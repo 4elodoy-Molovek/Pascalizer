@@ -1,6 +1,7 @@
 #pragma once
 #include "AnalysisMachine.h"
 #include "AnalysisMachineAccumulators.h"
+#include "ProgramInstructions.h"
 
 
 // ====================
@@ -83,7 +84,7 @@ public:
 		{
 			CheckTokenType(nextElement, END_LINE);
 
-			parentMachine.StoreInstruction(accumulator->Collapse());
+			parentMachine.StoreInstruction(accumulator->Collapse()[0]);
 
 			innerState++;
 			return nullptr;
@@ -136,7 +137,7 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override 
 	{
-		parentMachine.CreateAccumulator<GenericInstructionAccumulator<Const>>();
+		parentMachine.CreateAccumulator<GenericInstructionAccumulator<IConstBlock>>();
 	}
 
 	// Called when the machine exits this state
@@ -145,7 +146,7 @@ public:
 	virtual State* ProcessElement(const Token& nextElement) override 
 	{
 		CheckTokenType(nextElement, NAME);
-		parentMachine.StoreInstruction(parentMachine.currentAccumulator->Collapse());
+		parentMachine.StoreInstruction(parentMachine.currentAccumulator->Collapse()[0]);
 
 		parentMachine.levelOffset++;
 		return constDeclarationState;
@@ -235,7 +236,7 @@ public:
 		if (innerState == 4)
 		{
 			CheckTokenType(nextElement, END_LINE);
-			parentMachine.StoreInstruction(accumulator->Collapse());
+			parentMachine.StoreInstruction(accumulator->Collapse()[0]);
 
 			innerState++;
 			return nullptr;
@@ -288,7 +289,7 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override
 	{
-		accumulator = parentMachine.CreateAccumulator<GenericInstructionAccumulator<Var>>();
+		accumulator = parentMachine.CreateAccumulator<GenericInstructionAccumulator<IVarBlock>>();
 	}
 
 	// Called when the machine exits this state
@@ -297,7 +298,11 @@ public:
 	virtual State* ProcessElement(const Token& nextElement) override 
 	{
 		CheckTokenType(nextElement, NAME);
-		parentMachine.StoreInstruction(accumulator->Collapse());
+
+		std::vector<std::shared_ptr<Instruction>> varDeclarationInstructions = accumulator->Collapse();
+
+		for (auto& instr: varDeclarationInstructions)
+			parentMachine.StoreInstruction(instr);
 		
 		parentMachine.levelOffset++;
 		return varDeclarationState;
@@ -395,7 +400,7 @@ public:
 		{
 			CheckTokenType(nextElement, END_LINE);
 			
-			parentMachine.StoreInstruction(accumulator->Collapse());
+			parentMachine.StoreInstruction(accumulator->Collapse()[0]);
 			
 			innerState++;
 			return nullptr;
@@ -500,7 +505,7 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override
 	{
-		accumulator = parentMachine.CreateAccumulator<GenericInstructionAccumulator<Main>>();
+		accumulator = parentMachine.CreateAccumulator<GenericInstructionAccumulator<IMainBlock>>();
 	}
 
 	// Called when the machine exits this state
@@ -510,7 +515,7 @@ public:
 	// If no transition is possible it means that the machine has encountered a syntax error
 	virtual State* ProcessElement(const Token& nextElement) override 
 	{
-		parentMachine.StoreInstruction(accumulator->Collapse());
+		parentMachine.StoreInstruction(accumulator->Collapse()[0]);
 
 		if (nextElement.type == NAME) return nameState;
 		if (nextElement.type == IF || nextElement.type == WHILE) return branchingState;
@@ -662,7 +667,7 @@ public:
 
 			accumulator->StoreExpression(expressionResult, 1);
 
-			parentMachine.StoreInstruction(accumulator->Collapse());
+			parentMachine.StoreInstruction(accumulator->Collapse()[0]);
 
 			innerState++;
 			return nullptr;
@@ -769,7 +774,7 @@ public:
 		{
 			CheckTokenType(nextElement, END_LINE);
 
-			parentMachine.StoreInstruction(accumulator->Collapse());
+			parentMachine.StoreInstruction(accumulator->Collapse()[0]);
 
 			innerState++;
 			return nullptr;
@@ -915,7 +920,7 @@ public:
 			// Storing condition
 			accumulator->StoreExpression(expressionResult, 0);
 
-			parentMachine.StoreInstruction(accumulator->Collapse());
+			parentMachine.StoreInstruction(accumulator->Collapse()[0]);
 
 			innerState++;
 			return nullptr;
@@ -1000,7 +1005,7 @@ public:
 			// Storing condition
 			accumulator->StoreExpression(expressionResult, 0);
 
-			parentMachine.StoreInstruction(accumulator->Collapse());
+			parentMachine.StoreInstruction(accumulator->Collapse()[0]);
 
 			innerState++;
 			return nullptr;
@@ -1050,7 +1055,7 @@ public:
 	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
 	virtual void EnterState(const Token& element) override
 	{
-		accumulator = parentMachine.CreateAccumulator<GenericInstructionAccumulator<Else>>();
+		accumulator = parentMachine.CreateAccumulator<GenericInstructionAccumulator<IElse>>();
 	}
 
 	// Called when the machine exits this state
@@ -1060,8 +1065,10 @@ public:
 	// If no transition is possible it means that the machine has encountered a syntax error
 	virtual State* ProcessElement(const Token& nextElement) override 
 	{
-		if (!dynamic_cast<IfInstruction>(parentMachine.lastStoredInstruction.get()))
+		if (!dynamic_cast<IIf*>(parentMachine.lastStoredInstruction.get()))
 			throw std::exception("ANALYSIS ERROR: Else with no corresponding 'IF' before it!");
+
+		parentMachine.StoreInstruction(accumulator->Collapse()[0]);
 
 		if (nextElement.type == IF || nextElement.type == WHILE || nextElement.type == NAME) return oneLinerHandlerState;
 		if (nextElement.type == BEGIN) return subBlockBeginState;

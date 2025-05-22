@@ -1,6 +1,8 @@
 #pragma once
 #include "AnalysisMachine.h"
 #include "ExpressionEvaluationBlock.h"
+#include "ProgramInstructions.h"
+#include <stdexcept>
 
 
 /*
@@ -22,9 +24,9 @@ public:
 	}
 
 	// Creates an instruction out of stored data
-	virtual std::shared_ptr<Instruction> Collapse() override
+	virtual std::vector<std::shared_ptr<Instruction>> Collapse() override
 	{
-		
+		return { std::make_shared<IProgram>(programName) };
 	}
 };
 
@@ -45,12 +47,10 @@ public:
 	virtual void StoreElement(const Token& element, int storeIndex) override {}
 
 	// Creates an instruction out of stored data
-	virtual std::shared_ptr<Instruction> Collapse() override
+	virtual std::vector<std::shared_ptr<Instruction>> Collapse() override
 	{
 		// COLLAPSING
-		I instruction = I();
-
-		return std::make_shared<Instruction>(instruction);
+		return { std::make_shared<I>() };
 	}
 };
 
@@ -84,9 +84,14 @@ public:
 	}
 
 	// Creates an instruction out of stored data
-	virtual std::shared_ptr<Instruction> Collapse() override
+	virtual std::vector<std::shared_ptr<Instruction>> Collapse() override
 	{
 
+		if (type == "int")		return { std::make_shared<IDeclareConst>(constName, std::make_shared<IntValue>(std::stoi(value))) };
+		if (type == "double")	return { std::make_shared<IDeclareConst>(constName, std::make_shared<DoubleValue>(std::stod(value))) };
+		if (type == "string")	return { std::make_shared<IDeclareConst>(constName, std::make_shared<StringValue>(value)) };
+
+		throw(std::runtime_error("ANALYSIS ERROR: Unidentified type '" + type + "'!"));
 	}
 };
 
@@ -118,9 +123,21 @@ public:
 	}
 
 	// Creates an instruction out of stored data
-	virtual std::shared_ptr<Instruction> Collapse() override
+	virtual std::vector<std::shared_ptr<Instruction>> Collapse() override
 	{
+		Type eType;
 
+				if (type == "int") eType = INT;
+		else	if (type == "double") eType = DOUBLE;
+		else	if (type == "string") eType = STRING;
+		else	throw(std::runtime_error("ANALYSIS ERROR: Unidentified type '" + type + "'!"));
+
+		std::vector<std::shared_ptr<Instruction>> instructions;
+
+		for (auto& name : varNames)
+			instructions.push_back(std::make_shared<IDeclareVar>(eType, name));
+
+		return instructions;
 	}
 };
 
@@ -152,9 +169,9 @@ public:
 	}
 
 	// Creates an instruction out of stored data
-	virtual std::shared_ptr<Instruction> Collapse() override
+	virtual std::vector<std::shared_ptr<Instruction>> Collapse() override
 	{
-
+		return { std::make_shared<IAssignVar>(varName, newValueExpression) };
 	}
 };
 
@@ -186,9 +203,9 @@ public:
 	}
 
 	// Creates an instruction out of stored data
-	virtual std::shared_ptr<Instruction> Collapse() override
+	virtual std::vector<std::shared_ptr<Instruction>> Collapse() override
 	{
-
+		// FUNCTIONS blah blah blah
 	}
 };
 
@@ -216,9 +233,9 @@ public:
 	}
 
 	// Creates an instruction out of stored data
-	virtual std::shared_ptr<Instruction> Collapse() override
+	virtual std::vector<std::shared_ptr<Instruction>> Collapse() override
 	{
-
+		return { std::make_shared<IIf>(conditionExpression) };
 	}
 };
 
@@ -246,8 +263,8 @@ public:
 	}
 
 	// Creates an instruction out of stored data
-	virtual std::shared_ptr<Instruction> Collapse() override
+	virtual std::vector<std::shared_ptr<Instruction>> Collapse() override
 	{
-
+		return { std::make_shared<IWhile>(conditionExpression) };
 	}
 };

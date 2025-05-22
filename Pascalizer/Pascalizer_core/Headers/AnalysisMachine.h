@@ -27,7 +27,7 @@ public:
 	virtual void StoreElement(const Token& element, int storeIndex) = 0;
 
 	// Creates an instruction out of stored data
-	virtual std::shared_ptr<Instruction> Collapse() = 0;
+	virtual std::vector<std::shared_ptr<Instruction>> Collapse() = 0;
 };
 
 
