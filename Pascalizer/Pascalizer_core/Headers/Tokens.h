@@ -8,7 +8,9 @@ enum TokenType
 {
 	// Basic
 	NAME,
-	VALUE,
+	INT_VALUE,
+	DOUBLE_VALUE,
+	STRING_VALUE,
 	MATH_OPERATOR, 
 	ASSIGN_OPERATOR,
 	BRACKET_OPEN,
@@ -16,7 +18,7 @@ enum TokenType
 	QUOTES,
 	COMMA,
 	COLON,
-	SEMICOLON,
+	END_LINE,
 	
 
 	// tmp

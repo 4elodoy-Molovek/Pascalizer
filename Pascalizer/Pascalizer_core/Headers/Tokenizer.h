@@ -139,7 +139,7 @@ private:
 				tokElemnet = { TokenType::BRACKET_CLOSE, ")" };
 				break;
 			case ';':
-				tokElemnet = { TokenType::SEMICOLON, ";" };
+				tokElemnet = { TokenType::END_LINE, ";" };
 				break;
 			case ',':
 				tokElemnet = { TokenType::COMMA, "," };
@@ -204,12 +204,17 @@ public:
 					for (char i : buf_name) {
 						tmp_point_number += (i == '.');
 					}
+
 					if (tmp_point_number > 1) 
 						cachedTokens.push_back(Token{ TokenType::WRONG, string(1, WRONG_CHAR_SYMBOL) });
-					else 
-						cachedTokens.push_back(Token{TokenType::VALUE, buf_name});
+					if (tmp_point_number == 1) 
+						cachedTokens.push_back(Token{ TokenType::DOUBLE_VALUE, buf_name});
+					if (tmp_point_number == 0)
+						cachedTokens.push_back(Token{ TokenType::INT_VALUE, buf_name });
+
 					buf_name.clear();
 					
+					// for the symbol
 					tmpTok = identifySymbol(let, buf_name, state);
 					if (tmpTok.type != TokenType::NULL_TOKEN)
 						cachedTokens.push_back(tmpTok);
@@ -257,7 +262,7 @@ public:
 			case QUOTES_STATE:
 			{
 				if (let == '"') {
-					cachedTokens.push_back(Token{ TokenType::VALUE, buf_name });
+					cachedTokens.push_back(Token{ TokenType::STRING_VALUE, buf_name });
 					cachedTokens.push_back(Token{ TokenType::QUOTES, "\""});
 					buf_name.clear();
 					state = ZERO_STATE;
