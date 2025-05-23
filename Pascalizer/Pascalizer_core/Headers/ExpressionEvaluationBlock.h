@@ -270,7 +270,7 @@ public:
 		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) == (*rhs->value)));
 	}
 };
-/*
+
 class NotEqualOperation final : public OperationExpressionElement
 {
 public:
@@ -355,7 +355,7 @@ public:
 		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) >= (*rhs->value)));
 	}
 };
-*/
+
 
 class SinOperation final : public OperationExpressionElement
 {

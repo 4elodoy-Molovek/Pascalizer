@@ -94,20 +94,64 @@ std::shared_ptr<Value> IntValue::Div(const Value& rhs) const {
 
 std::shared_ptr<Value> IntValue::Equal(const Value& rhs) const {
     if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
-        return std::make_shared<IntValue>(value == rhs_int->value ? 1 : 0);
+        return std::make_shared<IntValue>(int(value == rhs_int->value));
 
     if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
-        return std::make_shared<IntValue>((value == rhs_double->value ? 1 : 0));
+        return std::make_shared<IntValue>(int(value == rhs_double->value));
 
     throw std::runtime_error("Unsupported Equal operands");
 }
-/*
-virtual std::shared_ptr<Value> NotEqual(const Value& rhs) const override;
-virtual std::shared_ptr<Value> Less(const Value& rhs) const override;
-virtual std::shared_ptr<Value> LessEqual(const Value& rhs) const override;
-virtual std::shared_ptr<Value> More(const Value& rhs) const override;
-virtual std::shared_ptr<Value> MoreEqual(const Value& rhs) const override;
-*/
+
+std::shared_ptr<Value> IntValue::NotEqual(const Value& rhs) const {
+    if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
+        return std::make_shared<IntValue>(int(value != rhs_int->value));
+
+    if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
+        return std::make_shared<IntValue>(int(value != rhs_double->value));
+
+    throw std::runtime_error("Unsupported NotEqual operands");
+}
+
+std::shared_ptr<Value> IntValue::Less(const Value& rhs) const {
+    if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
+        return std::make_shared<IntValue>(int(value < rhs_int->value));
+
+    if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
+        return std::make_shared<IntValue>(int(value < rhs_double->value));
+
+    throw std::runtime_error("Unsupported Less operands");
+}
+
+std::shared_ptr<Value> IntValue::LessEqual(const Value& rhs) const {
+    if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
+        return std::make_shared<IntValue>(int(value <= rhs_int->value));
+
+    if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
+        return std::make_shared<IntValue>(int(value <= rhs_double->value));
+
+    throw std::runtime_error("Unsupported LessEqual operands");
+}
+
+std::shared_ptr<Value> IntValue::More(const Value& rhs) const {
+    if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
+        return std::make_shared<IntValue>(int(value > rhs_int->value));
+
+    if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
+        return std::make_shared<IntValue>(int(value > rhs_double->value));
+
+    throw std::runtime_error("Unsupported More operands");
+}
+
+std::shared_ptr<Value> IntValue::MoreEqual(const Value& rhs) const {
+    if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
+        return std::make_shared<IntValue>(int(value >= rhs_int->value));
+
+    if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
+        return std::make_shared<IntValue>(int(value >= rhs_double->value));
+
+    throw std::runtime_error("Unsupported MoreEqual operands");
+}
+
 
 std::shared_ptr<Value> IntValue::USin() const {
     return std::make_shared<DoubleValue>(sin(value));
