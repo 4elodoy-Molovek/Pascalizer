@@ -87,6 +87,14 @@ public:
     std::shared_ptr<Value> Multiply(const Value& rhs) const override;
     std::shared_ptr<Value> Divide(const Value& rhs) const override;
 
+    std::shared_ptr<Value> Equal(const Value& rhs) const override;
+    std::shared_ptr<Value> NotEqual(const Value& rhs) const override;
+    std::shared_ptr<Value> Less(const Value& rhs) const override;
+    std::shared_ptr<Value> LessEqual(const Value& rhs) const override;
+    std::shared_ptr<Value> More(const Value& rhs) const override;
+    std::shared_ptr<Value> MoreEqual(const Value& rhs) const override;
+
+
     std::shared_ptr<Value> USin() const override;
     std::string PrintValue() { return std::to_string(value); }
 
