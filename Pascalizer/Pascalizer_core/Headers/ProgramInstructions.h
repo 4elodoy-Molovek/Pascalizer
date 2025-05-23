@@ -1,7 +1,10 @@
 ﻿#pragma once
 #include "Instruction.h"
 #include "ExpressionEvaluationBlock.h"
+#include <cmath>
 
+
+std::string strType[3] = { "INT", "DOUBLE", "STRING" }; //for logs and exceptions
 
 // Head of the program
 class IProgram : public Instruction
@@ -87,8 +90,8 @@ public:
 
 	void Execute(ProgramState& programState) override 
 	{
+		programState.log.push_back("Declaring const...");
 		programState.valuesTable[_constName] = _value;
-
 		programState.log.push_back("Const " + _constName + " = " + _value->PrintValue() + " declared");
 	};
 };
@@ -112,6 +115,7 @@ public:
 
 	void Execute(ProgramState& programState) override 
 	{
+		programState.log.push_back("Declaring var...")
 		std::shared_ptr<Value> value;
 		if (_type == INT) value = std::make_shared<IntValue>(0);
 		if (_type == DOUBLE) value = std::make_shared<DoubleValue>(0.0f);
@@ -141,8 +145,9 @@ public:
 	}
 	~IAssignVar() override {}
 
-	void Execute(ProgramState& programState) override 
+	void Execute(ProgramState& programState) override
 	{
+		programState.log.push_back("Assigning var...");
 		programState.log.push_back("Trying to calculate expression...");
 		std::shared_ptr<Value> value;
 
@@ -150,9 +155,9 @@ public:
 		{
 			value = _expression->Caculate(programState);
 		}
-		catch(std::runtime_error ex)
+		catch (std::runtime_error e)
 		{
-			programState.log.push_back(ex.what());
+			programState.log.push_back(e.what());
 			programState.log.push_back("FATAL: Calculation failed");
 			throw(std::runtime_error("FATAL: Calculation failed"));
 		}
@@ -164,10 +169,9 @@ public:
 		}
 
 		programState.log.push_back("Calculation succeded");
-		
+
 		if (programState.valuesTable[_name]->GetType() != value->GetType())
 		{
-			std::string strType[3] = { "INT", "DOUBLE", "STRING"};
 			programState.log.push_back("FATAL: tried to assign " + strType[programState.valuesTable[_name]->GetType()] + " to " + strType[value->GetType()]);
 			throw("FATAL: tried to assign " + strType[programState.valuesTable[_name]->GetType()] + " to " + strType[value->GetType()]);
 		}
@@ -193,6 +197,7 @@ public:
 
 	void Execute(ProgramState& programState) override 
 	{
+		programState.log.push_back("Reading from standard input...")
 		std::string input;
 		std::shared_ptr<Value> value;
 
@@ -200,11 +205,63 @@ public:
 		size_t doublePos;
 		int intInput = std::stoi(input, &intPos);
 		double doubleInput = std::stod(input, &doublePos);
-		if (intPos == input.size())
+		if (intPos == input.size()) // if got an int
 		{
-			programState.log.push_back("Got an INT: " + input);
+			programState.log.push_back("Got INT: " + input);
 			if (programState.valuesTable[_varName]->GetType() == Type::INT)
+			{
+				value = std::make_shared<IntValue>(intInput);
+				programState.valuesTable[_varName] = value;
+				programState.log.push_back("Assigned to var " + _varName);
+			}
+			else if (programState.valuesTable[_varName]->GetType() == Type::DOUBLE)
+			{
+				value = std::make_shared<DoubleValue>(intInput);
+				programState.valuesTable[_varName] = value;
+				programState.log.push_back("Assigned to var " + _varName);
+			}
+			else
+			{
+				programState.log.push_back("FATAL: tried to assign INT to " + strType[programState.valuesTable[_varName]->GetType()]);
+				throw(std::runtime_error("FATAL: tried to assign INT to " + strType[programState.valuesTable[_varName]->GetType()]));
+			}
 
+		}
+		else if (doublePos == input.size()) // if got a double
+		{
+			programState.log.push_back("Got DOUBLE: " + input);
+			if (programState.valuesTable[_varName]->GetType == Type::DOUBLE)
+			{
+				value = std::make_shared<DoubleValue>(doubleInput);
+				programState.valuesTable[_varName] = value;
+				programState.log.push_back("Assigned to var " + _varName);
+			}
+			else if (programState.valuesTable[_varName]->GetType == Type::INT)
+			{
+				value = std::make_shared<IntValue>(std::round(doubleInput));
+				programState.valuesTable[_varName] = value;
+				programState.log.push_back("Assigned to var " + _varName);
+			}
+			else
+			{
+				programState.log.push_back("FATAL: tried to assign DOUBLE to " + strType[programState.valuesTable[_varName]->GetType()]);
+				throw(std::runtime_error("FATAL: tried to assign DOUBLE to " + strType[programState.valuesTable[_varName]->GetType()]));
+			}
+		}
+		else // if got a string
+		{
+			programState.log.push_back("Got STRING");
+			if (programState.valuesTable[_varName]->GetType == Type::STRING)
+			{
+				value = std::make_shared<StringValue>(doubleInput);
+				programState.valuesTable[_varName] = value;
+				programState.log.push_back("Assigned to var " + _varName);
+			}
+			else
+			{
+				programState.log.push_back("FATAL: tried to assign DOUBLE to " + strType[programState.valuesTable[_varName]->GetType()]);
+				throw(std::runtime_error("FATAL: tried to assign DOUBLE to " + strType[programState.valuesTable[_varName]->GetType()]));
+			}
 		}
 	}
 };
@@ -213,13 +270,54 @@ public:
 // Prints given values into the console
 class IWrite : public Instruction
 {
+private:
+	std::vector<std::shared_ptr<Expression>> _expressions;
+	std::string output;
 
 public:
 
-	IWrite(std::vector<std::shared_ptr<Expression>> expressions) {}
+	IWrite(std::vector<std::shared_ptr<Expression>> expressions) 
+	{
+		_expressions = expressions;
+	}
 	~IWrite() override {}
 
-	void Execute(ProgramState& programState) override {};
+	void Execute(ProgramState& programState) override 
+	{
+		programState.log.push_back("Writing to standard output...");
+
+		programState.log.push_back("Trying to calculate expressions...");
+		int expressionCount = _expressions.size();
+		std::shared_ptr<Expression> exp;
+		std::shared_ptr<Value> value;
+		for (int i = 0; i < expressionCount; i++)
+		{
+			programState.log.push_back("Calculating expression " + std::to_string(i) + "/" + std::to_string(expressionCount));
+			exp = _expressions[i];
+
+			try
+			{
+				value = exp->Caculate(programState);
+			}
+			catch (std::runtime_error e)
+			{
+				programState.log.push_back(e.what());
+				programState.log.push_back("FATAL: Expression " + std::to_string(i) + "/" + std::to_string(expressionCount) + " calculation failed");
+				throw(std::runtime_error("FATAL: Expression " + std::to_string(i) + "/" + std::to_string(expressionCount) + " calculation failed"));
+			}
+			catch (std::exception e)
+			{
+				programState.log.push_back("ERROR: " + std::string(e.what()));
+				programState.log.push_back("FATAL: Expression " + std::to_string(i) + "/" + std::to_string(expressionCount) + " calculation failed");
+				throw(std::runtime_error("FATAL: Expression " + std::to_string(i) + "/" + std::to_string(expressionCount) + " calculation failed"));
+			}
+			
+			output += value->PrintValue();
+		}
+
+		programState.log.push_back("OUTPUT: " + output);
+		std::cout << output;
+	}
 };
 
 
@@ -227,13 +325,72 @@ public:
 // Branching function
 class IIf : public Instruction
 {
+private:
+	std::shared_ptr<Expression> condition;
 
 public:
 
-	IIf(std::shared_ptr<Expression> expression) {}
+	IIf(std::shared_ptr<Expression> expression)
+	{
+		condition = expression;
+	}
 	~IIf() override {}
 
-	void Execute(ProgramState& programState) override {};
+	void Execute(ProgramState& programState) override
+	{
+		programState.log.push_back("IF block started")
+
+		programState.log.push_back("Trying to calculate condition...");
+		std::shared_ptr<Value> result;
+
+		try
+		{
+			result = condition->Caculate(programState);
+		}
+		catch (std::runtime_error e)
+		{
+			programState.log.push_back(e.what());
+			programState.log.push_back("FATAL: Calculation failed");
+			throw(std::runtime_error("FATAL: Calculation failed"));
+		}
+		catch (std::exception e)
+		{
+			programState.log.push_back("ERROR: " + std::string(e.what()));
+			programState.log.push_back("FATAL: Calculation failed");
+			throw(std::runtime_error("FATAL: Calculation failed"));
+		}
+
+		programState.log.push_back("Calculation succeded");
+
+		bool isTrue = false;
+		if (auto intVal = std::dynamic_pointer_cast<IntValue>(result))
+			isTrue = intVal->value != 0;
+		else if (auto doubleVal = std::dynamic_pointer_cast<DoubleValue>(result))
+			isTrue = doubleVal->value != 0.0;
+		else if (auto boolVal = std::dynamic_pointer_cast<StringValue>(result))
+			isTrue = boolVal->value != "";
+
+		programState.log.push_back("Condition is: " + std::toupper(std::to_string(isTrue)));
+
+		auto currentNode = programState.instructionPointer;
+		bool hasElse = currentNode->pNext && std::dynamic_pointer_cast<IElse>(currentNode->pNext->value);
+
+		if (hasElse)
+		{
+			programState.log.push_back("IF block has ELSE");
+			programState.branchingStack.push(isTrue);
+		}
+
+		if (isTrue)
+		{
+			programState.log.push_back("Entering IF body");
+		}
+		else
+		{
+			programState.log.push_back("Skipping IF body");
+			programState.instructionPointer = currentNode->pNext;
+		}
+	}
 };
 
 
@@ -246,18 +403,103 @@ public:
 	IElse() {}
 	~IElse() override {}
 
-	void Execute(ProgramState& programState) override {};
+	void Execute(ProgramState& programState) override
+	{
+		programState.log.push_back("ELSE block started");
+
+		if (programState.branchingStack.empty())
+		{
+			programState.log.push_back("FATAL: ELSE without mathing IF");
+			throw(std::runtime_error("FATAL: ELSE without mathing IF"));
+		}
+
+		bool ifConditionWasTrue = programState.branchingStack.top();
+		programState.branchingStack.pop();
+		programState.log.push_back("IF condition was " + std::toupper(std::to_string(ifConditionWasTrue)));
+
+		if (ifConditionWasTrue)
+		{
+			programState.log.push_back("Skipping ELSE body");
+			programState.instructionPointer = programState.instructionPointer->pNext;
+		}
+		else
+		{
+			programState.log.push_back("Entering ELSE body");
+		}
+	}
 };
 
 
 // While loop function
 class IWhile : public Instruction
 {
+private:
+	std::shared_ptr<Expression> condition;
 
 public:
 
-	IWhile(std::shared_ptr<Expression> expression) {}
+	IWhile(std::shared_ptr<Expression> expression) 
+	{
+		condition = expression;
+	}
 	~IWhile() override {}
 
-	void Execute(ProgramState& programState) override {};
+	void Execute(ProgramState& programState) override 
+	{
+		programState.log.push_back("WHILE block started");
+
+		programState.log.push_back("Trying to calculate condition...");
+		std::shared_ptr<Value> result;
+
+		try
+		{
+			result = condition->Caculate(programState);
+		}
+		catch (std::runtime_error e)
+		{
+			programState.log.push_back(e.what());
+			programState.log.push_back("FATAL: Calculation failed");
+			throw(std::runtime_error("FATAL: Calculation failed"));
+		}
+		catch (std::exception e)
+		{
+			programState.log.push_back("ERROR: " + std::string(e.what()));
+			programState.log.push_back("FATAL: Calculation failed");
+			throw(std::runtime_error("FATAL: Calculation failed"));
+		}
+
+		programState.log.push_back("Calculation succeded");
+
+		bool isTrue = false;
+		if (auto intVal = std::dynamic_pointer_cast<IntValue>(result))
+			isTrue = intVal->value != 0;
+		else if (auto doubleVal = std::dynamic_pointer_cast<DoubleValue>(result))
+			isTrue = doubleVal->value != 0.0;
+		else if (auto boolVal = std::dynamic_pointer_cast<StringValue>(result))
+			isTrue = boolVal->value != "";
+
+		programState.log.push_back("Condition is: " + std::toupper(std::to_string(isTrue)));
+
+		if (isTrue)
+		{
+			programState.log.push_back("Entering WHILE body");
+
+			//preparing return to beginning after body
+			auto loopStart = programState.instructionPointer;
+			auto lastChild = loopStart->pSub;
+
+			//finding last body instruction
+			while (lastChild && lastChild->pNext)
+				lastChild = lastChild->pNext;
+
+			//returning to loop beginning
+			if (lastChild)
+				lastChild->pNext = loopStart;
+		}
+		else
+		{
+			programState.log.push_back("Skipping WHILE body");
+			programState.instructionPointer = programState.instructionPointer->pNext;
+		}
+	}
 };
