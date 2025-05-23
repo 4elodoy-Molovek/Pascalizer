@@ -276,7 +276,7 @@ std::shared_ptr<Value> DoubleValue::USin() const {
 ///////////////////////////////////////////////////////////////////////////
 
 
-StringValue::StringValue(std::string initialValue) : value(std::move(initialValue)) {}
+StringValue::StringValue(const std::string initialValue) : value(std::move(initialValue)) {}
 
 std::shared_ptr<Value> StringValue::Add(const Value& rhs) const {
     if (auto rhs_str = dynamic_cast<const StringValue*>(&rhs))
@@ -294,4 +294,47 @@ std::shared_ptr<Value> StringValue::Multiply(const Value& rhs) const {
     }
 
     throw std::runtime_error("Unsupported Multiply for StringValue");
+}
+
+
+std::shared_ptr<Value> StringValue::Equal(const Value& rhs) const {
+    if (auto rhs_str = dynamic_cast<const StringValue*>(&rhs))
+        return std::make_shared<IntValue>(int(value == rhs_str->value));
+
+    throw std::runtime_error("Unsupported Equal for StringValue");
+}
+
+std::shared_ptr<Value> StringValue::NotEqual(const Value& rhs) const {
+    if (auto rhs_str = dynamic_cast<const StringValue*>(&rhs))
+        return std::make_shared<IntValue>(int(value != rhs_str->value));
+
+    throw std::runtime_error("Unsupported NotEqual for StringValue");
+}
+
+std::shared_ptr<Value> StringValue::Less(const Value& rhs) const {
+    if (auto rhs_str = dynamic_cast<const StringValue*>(&rhs))
+        return std::make_shared<IntValue>(int(value < rhs_str->value));
+
+    throw std::runtime_error("Unsupported Less for StringValue");
+}
+
+std::shared_ptr<Value> StringValue::LessEqual(const Value& rhs) const {
+    if (auto rhs_str = dynamic_cast<const StringValue*>(&rhs))
+        return std::make_shared<IntValue>(int(value <= rhs_str->value));
+
+    throw std::runtime_error("Unsupported LessEqual for StringValue");
+}
+
+std::shared_ptr<Value> StringValue::More(const Value& rhs) const {
+    if (auto rhs_str = dynamic_cast<const StringValue*>(&rhs))
+        return std::make_shared<IntValue>(int(value > rhs_str->value));
+
+    throw std::runtime_error("Unsupported More for StringValue");
+}
+
+std::shared_ptr<Value> StringValue::MoreEqual(const Value& rhs) const {
+    if (auto rhs_str = dynamic_cast<const StringValue*>(&rhs))
+        return std::make_shared<IntValue>(int(value >= rhs_str->value));
+
+    throw std::runtime_error("Unsupported MoreEqual for StringValue");
 }
