@@ -2,6 +2,9 @@
 #include "Instruction.h"
 #include "ExpressionEvaluationBlock.h"
 #include <cmath>
+#include <vector>
+#include <string>
+#include <iostream>
 
 
 std::string strType[3] = { "INT", "DOUBLE", "STRING" }; //for logs and exceptions
@@ -115,7 +118,7 @@ public:
 
 	void Execute(ProgramState& programState) override 
 	{
-		programState.log.push_back("Declaring var...")
+		programState.log.push_back("Declaring var...");
 		std::shared_ptr<Value> value;
 		if (_type == INT) value = std::make_shared<IntValue>(0);
 		if (_type == DOUBLE) value = std::make_shared<DoubleValue>(0.0f);
@@ -197,7 +200,7 @@ public:
 
 	void Execute(ProgramState& programState) override 
 	{
-		programState.log.push_back("Reading from standard input...")
+		programState.log.push_back("Reading from standard input...");
 		std::string input;
 		std::shared_ptr<Value> value;
 
@@ -230,13 +233,13 @@ public:
 		else if (doublePos == input.size()) // if got a double
 		{
 			programState.log.push_back("Got DOUBLE: " + input);
-			if (programState.valuesTable[_varName]->GetType == Type::DOUBLE)
+			if (programState.valuesTable[_varName]->GetType() == Type::DOUBLE)
 			{
 				value = std::make_shared<DoubleValue>(doubleInput);
 				programState.valuesTable[_varName] = value;
 				programState.log.push_back("Assigned to var " + _varName);
 			}
-			else if (programState.valuesTable[_varName]->GetType == Type::INT)
+			else if (programState.valuesTable[_varName]->GetType() == Type::INT)
 			{
 				value = std::make_shared<IntValue>(std::round(doubleInput));
 				programState.valuesTable[_varName] = value;
@@ -251,7 +254,7 @@ public:
 		else // if got a string
 		{
 			programState.log.push_back("Got STRING");
-			if (programState.valuesTable[_varName]->GetType == Type::STRING)
+			if (programState.valuesTable[_varName]->GetType() == Type::STRING)
 			{
 				value = std::make_shared<StringValue>(doubleInput);
 				programState.valuesTable[_varName] = value;
@@ -338,7 +341,7 @@ public:
 
 	void Execute(ProgramState& programState) override
 	{
-		programState.log.push_back("IF block started")
+		programState.log.push_back("IF block started");
 
 		programState.log.push_back("Trying to calculate condition...");
 		std::shared_ptr<Value> result;
@@ -370,7 +373,8 @@ public:
 		else if (auto boolVal = std::dynamic_pointer_cast<StringValue>(result))
 			isTrue = boolVal->value != "";
 
-		programState.log.push_back("Condition is: " + std::toupper(std::to_string(isTrue)));
+		std::string isTrueStr = isTrue ? "TRUE" : "FALSE";
+		programState.log.push_back("Condition is: " + isTrueStr);
 
 		auto currentNode = programState.instructionPointer;
 		bool hasElse = currentNode->pNext && std::dynamic_pointer_cast<IElse>(currentNode->pNext->value);
@@ -415,7 +419,9 @@ public:
 
 		bool ifConditionWasTrue = programState.branchingStack.top();
 		programState.branchingStack.pop();
-		programState.log.push_back("IF condition was " + std::toupper(std::to_string(ifConditionWasTrue)));
+
+		std::string ifConditionWasTrueStr = ifConditionWasTrue ? "TRUE" : "FALSE";
+		programState.log.push_back("Condition is: " + ifConditionWasTrueStr);
 
 		if (ifConditionWasTrue)
 		{
@@ -478,7 +484,8 @@ public:
 		else if (auto boolVal = std::dynamic_pointer_cast<StringValue>(result))
 			isTrue = boolVal->value != "";
 
-		programState.log.push_back("Condition is: " + std::toupper(std::to_string(isTrue)));
+		std::string isTrueStr = isTrue ? "TRUE" : "FALSE";
+		programState.log.push_back("Condition is: " + isTrueStr);
 
 		if (isTrue)
 		{

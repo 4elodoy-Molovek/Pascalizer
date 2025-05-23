@@ -1,6 +1,6 @@
 set(__QT_DEPLOY_TARGET_Pascalizer_core_FILE C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/Debug/Pascalizer_core.exe)
 set(__QT_DEPLOY_TARGET_Pascalizer_core_TYPE EXECUTABLE)
-set(__QT_DEPLOY_TARGET_Pascalizer_core_RUNTIME_DLLS C:/Qt/6.8.2/msvc2022_64/bin/Qt6Widgetsd.dll;C:/Qt/6.8.2/msvc2022_64/bin/Qt6Guid.dll;C:/Qt/6.8.2/msvc2022_64/bin/Qt6Cored.dll)
+set(__QT_DEPLOY_TARGET_Pascalizer_core_RUNTIME_DLLS D:/Qt/6.8.2/msvc2022_64/bin/Qt6Widgetsd.dll;D:/Qt/6.8.2/msvc2022_64/bin/Qt6Guid.dll;D:/Qt/6.8.2/msvc2022_64/bin/Qt6Cored.dll)
 set(__QT_DEPLOY_TARGET_gtest_FILE C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/lib/Debug/gtest.lib)
 set(__QT_DEPLOY_TARGET_gtest_TYPE STATIC_LIBRARY)
 set(__QT_DEPLOY_TARGET_gtest_main_FILE C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/lib/Debug/gtest_main.lib)
