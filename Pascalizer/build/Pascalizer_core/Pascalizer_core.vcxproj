@@ -24,7 +24,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F7A62485-810B-32AD-8AFB-B8AC4DA6DB2B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
     <ProjectName>Pascalizer_core</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
@@ -87,7 +87,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_Debug;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Qt/6.8.2/msvc2022_64/include/QtCore" /external:I "C:/Qt/6.8.2/msvc2022_64/include" /external:I "C:/Qt/6.8.2/msvc2022_64/mkspecs/win32-msvc" /external:I "C:/Qt/6.8.2/msvc2022_64/include/QtWidgets" /external:I "C:/Qt/6.8.2/msvc2022_64/include/QtGui" -Zc:__cplusplus -utf-8</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "D:/Qt/6.8.2/msvc2022_64/include/QtCore" /external:I "D:/Qt/6.8.2/msvc2022_64/include" /external:I "D:/Qt/6.8.2/msvc2022_64/mkspecs/win32-msvc" /external:I "D:/Qt/6.8.2/msvc2022_64/include/QtWidgets" /external:I "D:/Qt/6.8.2/msvc2022_64/include/QtGui" -Zc:__cplusplus -utf-8</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <ConformanceMode>true</ConformanceMode>
@@ -96,22 +96,29 @@
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <MinimalRebuild></MinimalRebuild>
+<<<<<<< Updated upstream
+      <MinimalRebuild>
+      </MinimalRebuild>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <SupportJustMyCode></SupportJustMyCode>
+      <SupportJustMyCode>
+      </SupportJustMyCode>
+=======
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+>>>>>>> Stashed changes
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;PASCALIZER_CORE_EXPORT=__declspec;(;dllexport;);QT_CORE_LIB;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR="Debug";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;PASCALIZER_CORE_EXPORT=__declspec;(;dllexport;);QT_CORE_LIB;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR=\"Debug\";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_Debug;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;C:\Qt\6.8.2\msvc2022_64\include\QtCore;C:\Qt\6.8.2\msvc2022_64\include;C:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;C:\Qt\6.8.2\msvc2022_64\include\QtWidgets;C:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_Debug;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;D:\Qt\6.8.2\msvc2022_64\include\QtCore;D:\Qt\6.8.2\msvc2022_64\include;D:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;D:\Qt\6.8.2\msvc2022_64\include\QtWidgets;D:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_Debug;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;C:\Qt\6.8.2\msvc2022_64\include\QtCore;C:\Qt\6.8.2\msvc2022_64\include;C:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;C:\Qt\6.8.2\msvc2022_64\include\QtWidgets;C:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_Debug;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;D:\Qt\6.8.2\msvc2022_64\include\QtCore;D:\Qt\6.8.2\msvc2022_64\include;D:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;D:\Qt\6.8.2\msvc2022_64\include\QtWidgets;D:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -126,7 +133,7 @@ cd "C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer
 if %errorlevel% neq 0 goto :cmEnd
 C:
 if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_autogen "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/Pascalizer_core_autogen.dir/AutogenInfo.json" Debug
+"G:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_autogen "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/Pascalizer_core_autogen.dir/AutogenInfo.json" Debug
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -136,9 +143,10 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>
+      </Message>
       <Command>setlocal
-"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different C:/Qt/6.8.2/msvc2022_64/bin/Qt6Widgetsd.dll C:/Qt/6.8.2/msvc2022_64/bin/Qt6Guid.dll C:/Qt/6.8.2/msvc2022_64/bin/Qt6Cored.dll "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/Debug"
+"G:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different D:/Qt/6.8.2/msvc2022_64/bin/Qt6Widgetsd.dll D:/Qt/6.8.2/msvc2022_64/bin/Qt6Guid.dll D:/Qt/6.8.2/msvc2022_64/bin/Qt6Cored.dll "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/Debug"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -148,7 +156,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>C:\Qt\6.8.2\msvc2022_64\lib\Qt6Widgetsd.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6Guid.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6Cored.lib;mpr.lib;userenv.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6EntryPointd.lib;shell32.lib;d3d11.lib;dxgi.lib;dxguid.lib;d3d12.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>D:\Qt\6.8.2\msvc2022_64\lib\Qt6Widgetsd.lib;D:\Qt\6.8.2\msvc2022_64\lib\Qt6Guid.lib;D:\Qt\6.8.2\msvc2022_64\lib\Qt6Cored.lib;mpr.lib;userenv.lib;D:\Qt\6.8.2\msvc2022_64\lib\Qt6EntryPointd.lib;shell32.lib;d3d11.lib;dxgi.lib;dxguid.lib;d3d12.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -164,32 +172,38 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_Release;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Qt/6.8.2/msvc2022_64/include/QtCore" /external:I "C:/Qt/6.8.2/msvc2022_64/include" /external:I "C:/Qt/6.8.2/msvc2022_64/mkspecs/win32-msvc" /external:I "C:/Qt/6.8.2/msvc2022_64/include/QtWidgets" /external:I "C:/Qt/6.8.2/msvc2022_64/include/QtGui" -Zc:__cplusplus -utf-8</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "D:/Qt/6.8.2/msvc2022_64/include/QtCore" /external:I "D:/Qt/6.8.2/msvc2022_64/include" /external:I "D:/Qt/6.8.2/msvc2022_64/mkspecs/win32-msvc" /external:I "D:/Qt/6.8.2/msvc2022_64/include/QtWidgets" /external:I "D:/Qt/6.8.2/msvc2022_64/include/QtGui" -Zc:__cplusplus -utf-8</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>Sync</ExceptionHandling>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <MinimalRebuild></MinimalRebuild>
+<<<<<<< Updated upstream
+      <MinimalRebuild>
+      </MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <SupportJustMyCode></SupportJustMyCode>
+      <SupportJustMyCode>
+      </SupportJustMyCode>
+=======
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+>>>>>>> Stashed changes
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PASCALIZER_CORE_EXPORT=__declspec;(;dllexport;);QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR="Release";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
-      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PASCALIZER_CORE_EXPORT=__declspec;(;dllexport;);QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR=\"Release\";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_Release;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;C:\Qt\6.8.2\msvc2022_64\include\QtCore;C:\Qt\6.8.2\msvc2022_64\include;C:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;C:\Qt\6.8.2\msvc2022_64\include\QtWidgets;C:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_Release;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;D:\Qt\6.8.2\msvc2022_64\include\QtCore;D:\Qt\6.8.2\msvc2022_64\include;D:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;D:\Qt\6.8.2\msvc2022_64\include\QtWidgets;D:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_Release;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;C:\Qt\6.8.2\msvc2022_64\include\QtCore;C:\Qt\6.8.2\msvc2022_64\include;C:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;C:\Qt\6.8.2\msvc2022_64\include\QtWidgets;C:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_Release;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;D:\Qt\6.8.2\msvc2022_64\include\QtCore;D:\Qt\6.8.2\msvc2022_64\include;D:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;D:\Qt\6.8.2\msvc2022_64\include\QtWidgets;D:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -204,7 +218,7 @@ cd "C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer
 if %errorlevel% neq 0 goto :cmEnd
 C:
 if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_autogen "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/Pascalizer_core_autogen.dir/AutogenInfo.json" Release
+"G:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_autogen "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/Pascalizer_core_autogen.dir/AutogenInfo.json" Release
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -214,9 +228,10 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>
+      </Message>
       <Command>setlocal
-"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different C:/Qt/6.8.2/msvc2022_64/bin/Qt6Widgets.dll C:/Qt/6.8.2/msvc2022_64/bin/Qt6Gui.dll C:/Qt/6.8.2/msvc2022_64/bin/Qt6Core.dll "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/Release"
+"G:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different D:/Qt/6.8.2/msvc2022_64/bin/Qt6Widgets.dll D:/Qt/6.8.2/msvc2022_64/bin/Qt6Gui.dll D:/Qt/6.8.2/msvc2022_64/bin/Qt6Core.dll "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/Release"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -226,7 +241,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>C:\Qt\6.8.2\msvc2022_64\lib\Qt6Widgets.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6Gui.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6Core.lib;mpr.lib;userenv.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6EntryPoint.lib;shell32.lib;d3d11.lib;dxgi.lib;dxguid.lib;d3d12.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>D:\Qt\6.8.2\msvc2022_64\lib\Qt6Widgets.lib;D:\Qt\6.8.2\msvc2022_64\lib\Qt6Gui.lib;D:\Qt\6.8.2\msvc2022_64\lib\Qt6Core.lib;mpr.lib;userenv.lib;D:\Qt\6.8.2\msvc2022_64\lib\Qt6EntryPoint.lib;shell32.lib;d3d11.lib;dxgi.lib;dxguid.lib;d3d12.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -242,32 +257,38 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_MinSizeRel;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Qt/6.8.2/msvc2022_64/include/QtCore" /external:I "C:/Qt/6.8.2/msvc2022_64/include" /external:I "C:/Qt/6.8.2/msvc2022_64/mkspecs/win32-msvc" /external:I "C:/Qt/6.8.2/msvc2022_64/include/QtWidgets" /external:I "C:/Qt/6.8.2/msvc2022_64/include/QtGui" -Zc:__cplusplus -utf-8</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "D:/Qt/6.8.2/msvc2022_64/include/QtCore" /external:I "D:/Qt/6.8.2/msvc2022_64/include" /external:I "D:/Qt/6.8.2/msvc2022_64/mkspecs/win32-msvc" /external:I "D:/Qt/6.8.2/msvc2022_64/include/QtWidgets" /external:I "D:/Qt/6.8.2/msvc2022_64/include/QtGui" -Zc:__cplusplus -utf-8</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>Sync</ExceptionHandling>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <MinimalRebuild></MinimalRebuild>
+<<<<<<< Updated upstream
+      <MinimalRebuild>
+      </MinimalRebuild>
       <Optimization>MinSpace</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <SupportJustMyCode></SupportJustMyCode>
+      <SupportJustMyCode>
+      </SupportJustMyCode>
+=======
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+>>>>>>> Stashed changes
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PASCALIZER_CORE_EXPORT=__declspec;(;dllexport;);QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR="MinSizeRel";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
-      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PASCALIZER_CORE_EXPORT=__declspec;(;dllexport;);QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR=\"MinSizeRel\";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_MinSizeRel;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;C:\Qt\6.8.2\msvc2022_64\include\QtCore;C:\Qt\6.8.2\msvc2022_64\include;C:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;C:\Qt\6.8.2\msvc2022_64\include\QtWidgets;C:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_MinSizeRel;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;D:\Qt\6.8.2\msvc2022_64\include\QtCore;D:\Qt\6.8.2\msvc2022_64\include;D:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;D:\Qt\6.8.2\msvc2022_64\include\QtWidgets;D:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_MinSizeRel;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;C:\Qt\6.8.2\msvc2022_64\include\QtCore;C:\Qt\6.8.2\msvc2022_64\include;C:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;C:\Qt\6.8.2\msvc2022_64\include\QtWidgets;C:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_MinSizeRel;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;D:\Qt\6.8.2\msvc2022_64\include\QtCore;D:\Qt\6.8.2\msvc2022_64\include;D:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;D:\Qt\6.8.2\msvc2022_64\include\QtWidgets;D:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -282,7 +303,7 @@ cd "C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer
 if %errorlevel% neq 0 goto :cmEnd
 C:
 if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_autogen "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/Pascalizer_core_autogen.dir/AutogenInfo.json" MinSizeRel
+"G:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_autogen "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/Pascalizer_core_autogen.dir/AutogenInfo.json" MinSizeRel
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -292,9 +313,10 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>
+      </Message>
       <Command>setlocal
-"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different C:/Qt/6.8.2/msvc2022_64/bin/Qt6Widgets.dll C:/Qt/6.8.2/msvc2022_64/bin/Qt6Gui.dll C:/Qt/6.8.2/msvc2022_64/bin/Qt6Core.dll "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/MinSizeRel"
+"G:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different D:/Qt/6.8.2/msvc2022_64/bin/Qt6Widgets.dll D:/Qt/6.8.2/msvc2022_64/bin/Qt6Gui.dll D:/Qt/6.8.2/msvc2022_64/bin/Qt6Core.dll "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/MinSizeRel"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -304,7 +326,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>C:\Qt\6.8.2\msvc2022_64\lib\Qt6Widgets.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6Gui.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6Core.lib;mpr.lib;userenv.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6EntryPoint.lib;shell32.lib;d3d11.lib;dxgi.lib;dxguid.lib;d3d12.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>D:\Qt\6.8.2\msvc2022_64\lib\Qt6Widgets.lib;D:\Qt\6.8.2\msvc2022_64\lib\Qt6Gui.lib;D:\Qt\6.8.2\msvc2022_64\lib\Qt6Core.lib;mpr.lib;userenv.lib;D:\Qt\6.8.2\msvc2022_64\lib\Qt6EntryPoint.lib;shell32.lib;d3d11.lib;dxgi.lib;dxguid.lib;d3d12.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -320,31 +342,37 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_RelWithDebInfo;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Qt/6.8.2/msvc2022_64/include/QtCore" /external:I "C:/Qt/6.8.2/msvc2022_64/include" /external:I "C:/Qt/6.8.2/msvc2022_64/mkspecs/win32-msvc" /external:I "C:/Qt/6.8.2/msvc2022_64/include/QtWidgets" /external:I "C:/Qt/6.8.2/msvc2022_64/include/QtGui" -Zc:__cplusplus -utf-8</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "D:/Qt/6.8.2/msvc2022_64/include/QtCore" /external:I "D:/Qt/6.8.2/msvc2022_64/include" /external:I "D:/Qt/6.8.2/msvc2022_64/mkspecs/win32-msvc" /external:I "D:/Qt/6.8.2/msvc2022_64/include/QtWidgets" /external:I "D:/Qt/6.8.2/msvc2022_64/include/QtGui" -Zc:__cplusplus -utf-8</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <MinimalRebuild></MinimalRebuild>
+<<<<<<< Updated upstream
+      <MinimalRebuild>
+      </MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <SupportJustMyCode></SupportJustMyCode>
+      <SupportJustMyCode>
+      </SupportJustMyCode>
+=======
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+>>>>>>> Stashed changes
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PASCALIZER_CORE_EXPORT=__declspec;(;dllexport;);QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR="RelWithDebInfo";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PASCALIZER_CORE_EXPORT=__declspec;(;dllexport;);QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_WIDGETS_LIB;QT_GUI_LIB;CMAKE_INTDIR=\"RelWithDebInfo\";Pascalizer_core_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_RelWithDebInfo;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;C:\Qt\6.8.2\msvc2022_64\include\QtCore;C:\Qt\6.8.2\msvc2022_64\include;C:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;C:\Qt\6.8.2\msvc2022_64\include\QtWidgets;C:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_RelWithDebInfo;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;D:\Qt\6.8.2\msvc2022_64\include\QtCore;D:\Qt\6.8.2\msvc2022_64\include;D:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;D:\Qt\6.8.2\msvc2022_64\include\QtWidgets;D:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_RelWithDebInfo;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;C:\Qt\6.8.2\msvc2022_64\include\QtCore;C:\Qt\6.8.2\msvc2022_64\include;C:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;C:\Qt\6.8.2\msvc2022_64\include\QtWidgets;C:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\include_RelWithDebInfo;C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers;D:\Qt\6.8.2\msvc2022_64\include\QtCore;D:\Qt\6.8.2\msvc2022_64\include;D:\Qt\6.8.2\msvc2022_64\mkspecs\win32-msvc;D:\Qt\6.8.2\msvc2022_64\include\QtWidgets;D:\Qt\6.8.2\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -359,7 +387,7 @@ cd "C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer
 if %errorlevel% neq 0 goto :cmEnd
 C:
 if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_autogen "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/Pascalizer_core_autogen.dir/AutogenInfo.json" RelWithDebInfo
+"G:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E cmake_autogen "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/Pascalizer_core_autogen.dir/AutogenInfo.json" RelWithDebInfo
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -369,9 +397,10 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Message></Message>
+      <Message>
+      </Message>
       <Command>setlocal
-"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different C:/Qt/6.8.2/msvc2022_64/bin/Qt6Widgets.dll C:/Qt/6.8.2/msvc2022_64/bin/Qt6Gui.dll C:/Qt/6.8.2/msvc2022_64/bin/Qt6Core.dll "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/RelWithDebInfo"
+"G:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different D:/Qt/6.8.2/msvc2022_64/bin/Qt6Widgets.dll D:/Qt/6.8.2/msvc2022_64/bin/Qt6Gui.dll D:/Qt/6.8.2/msvc2022_64/bin/Qt6Core.dll "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/RelWithDebInfo"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -381,7 +410,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>C:\Qt\6.8.2\msvc2022_64\lib\Qt6Widgets.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6Gui.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6Core.lib;mpr.lib;userenv.lib;C:\Qt\6.8.2\msvc2022_64\lib\Qt6EntryPoint.lib;shell32.lib;d3d11.lib;dxgi.lib;dxguid.lib;d3d12.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>D:\Qt\6.8.2\msvc2022_64\lib\Qt6Widgets.lib;D:\Qt\6.8.2\msvc2022_64\lib\Qt6Gui.lib;D:\Qt\6.8.2\msvc2022_64\lib\Qt6Core.lib;mpr.lib;userenv.lib;D:\Qt\6.8.2\msvc2022_64\lib\Qt6EntryPoint.lib;shell32.lib;d3d11.lib;dxgi.lib;dxguid.lib;d3d12.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -399,7 +428,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <UseUtf8Encoding>Always</UseUtf8Encoding>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/Pascalizer_core/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" "-SC:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer" "-BC:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build" --check-stamp-file "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/generate.stamp"
+"G:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" "-SC:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer" "-BC:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build" --check-stamp-file "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/generate.stamp"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -412,7 +441,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/Pascalizer_core/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" "-SC:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer" "-BC:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build" --check-stamp-file "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/generate.stamp"
+"G:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" "-SC:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer" "-BC:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build" --check-stamp-file "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/generate.stamp"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -425,7 +454,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/Pascalizer_core/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" "-SC:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer" "-BC:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build" --check-stamp-file "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/generate.stamp"
+"G:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" "-SC:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer" "-BC:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build" --check-stamp-file "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/generate.stamp"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -438,7 +467,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/Pascalizer_core/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" "-SC:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer" "-BC:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build" --check-stamp-file "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/generate.stamp"
+"G:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" "-SC:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer" "-BC:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build" --check-stamp-file "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/generate.stamp"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -453,41 +482,56 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\mocs_compilation_Debug.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
     </ClCompile>
+<<<<<<< Updated upstream
+    <ClCompile Include="IElse.h" />
+=======
+    <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Sources\AnalysisMachine.cpp" />
+    <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Sources\ValueTable.cpp" />
+>>>>>>> Stashed changes
     <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\AnalysisMachine.h" />
+    <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\AnalysisMachineAccumulators.h" />
+    <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\AnalysisMachineStates.h" />
+    <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\AnalysisMachine_ExpressionAnalysisBlock.h" />
     <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\ExpressionEvaluationBlock.h" />
     <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\FileModule.h" />
     <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\HierarchicalList.h" />
+    <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\IProgram.h" />
     <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\Instruction.h" />
     <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\Interpreter.h" />
     <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\Pascalizer.h" />
+    <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\ProgramInstructions.h" />
     <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\ProgramState.h" />
     <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\Tokenizer.h" />
     <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\Tokens.h" />
     <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\ValuesTable.h" />
     <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\mocs_compilation_Release.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\mocs_compilation_MinSizeRel.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\mocs_compilation_RelWithDebInfo.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClInclude Include="IAssignVar.h" />
+    <ClInclude Include="IDeclareConst.h" />
+    <ClInclude Include="IDeclareVar.h" />
+    <ClInclude Include="IIf.h" />
+    <ClInclude Include="IRead.h" />
+    <ClInclude Include="IWhile.h" />
+    <ClInclude Include="IWrite.h" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\ZERO_CHECK.vcxproj">
       <Project>{5AD6670C-6D29-3B6E-827E-8BC7608F2220}</Project>

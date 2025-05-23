@@ -1,5 +1,7 @@
-#pragma once
+﻿#pragma once
 #include "ProgramState.h"
+#include "ExpressionEvaluationBlock.h"
+#include <memory>
 
 /*
  * A base class for program instructions, that are generated in Analysis Machine and later executed in the interpreter
