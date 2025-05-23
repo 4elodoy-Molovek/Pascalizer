@@ -46,7 +46,6 @@ public:
 
 	IVarBlock() {}
 	~IVarBlock() override {}
-
 	void Execute(ProgramState& programState) override 
 	{
 		programState.log.push_back("Var block started");

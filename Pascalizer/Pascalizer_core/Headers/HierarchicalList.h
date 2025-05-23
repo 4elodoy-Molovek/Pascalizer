@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 
 /*
  * A non-encapsulated hierarchical list object
@@ -11,21 +12,21 @@ struct HListNode
 	T value;
 
 	// Pointer to the next element on the same level
-	HListNode<T>* pNext;
+	std::shared_ptr<HListNode<T>> pNext;
 
 	// Pointer to the first element on the sub level
-	HListNode<T>* pSub;
+	std::shared_ptr<HListNode<T>> pSub;
 
 	// Pointer to the parent element of this level
-	HListNode<T>* pUp;
+	std::shared_ptr<HListNode<T>> pUp;
 };
 
 
 template <typename T>
 class HierarchicalList
 {
-	HListNode<T>* pFirst;
-	HListNode<T>* pLast;
+	std::shared_ptr<HListNode<T>> pFirst;
+	std::shared_ptr<HListNode<T>> pLast;
 	
 	size_t sz;
 
@@ -37,13 +38,13 @@ public:
 	size_t size() { return sz; }
 
 	// Adds element on the same level as the last one
-	void AddNextElement();
+	void AddNextElement(T element);
 
 	// Adds element to the sub level of the last one
-	void AddSubElement();
+	void AddSubElement(T element);
 
 	// Adds element as the next element of the parent of this level
-	void AddUpElement();
+	void AddUpElement(T element);
 
 	// Returns a POINTER to the first element of the list
 	// Will be used for interpretation

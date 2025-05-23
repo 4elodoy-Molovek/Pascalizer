@@ -1,13 +1,17 @@
 #pragma once
 #include <string>
 
+const char WRONG_CHAR_SYMBOL = ' ';
+
 // All tokens: lexem types, present in the program
-enum Token
+enum TokenType
 {
 	// Basic
 	NAME,
-	VALUE,
-	MATH_OPERATOR,
+	VALUE_INT,
+	VALUE_DOUBLE,
+	VALUE_STRING,
+	MATH_OPERATOR, 
 	ASSIGN_OPERATOR,
 	BRACKET_OPEN,
 	BRACKET_CLOSE,
@@ -15,28 +19,44 @@ enum Token
 	COMMA,
 	COLON,
 	END_LINE,
+	
+
+	// tmp
+	PROGRAMM_END,
 
 	// Condition
 	IF,
 	THEN,
 	ELSE,
+	WHILE,
 
 	// Blocks
 	BEGIN,
 	END,
+	VAR,
+	CONST,
 
 	// Specific
 	PROGRAM,
-	CONST,
-	VAR,
-	PROGRAM_END
+	SECTION,
+	PROGRAM_END,
+	WRONG,
+	NULL_TOKEN, // this is not for you
+
+	// comparison
+	MORE_EQUAL,
+	LESS,
+	MORE,
+	LESS_EQUAL,
+	EQUAL,
+	NOT_EQUAL
 };
 
-struct TokenizedElement
+struct Token
 {
-	// Element's token - type
-	Token token;
+	// Element's type
+	TokenType type;
 
 	// Element's value
-	std::string value;
+	std::string value;	
 };

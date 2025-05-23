@@ -1,191 +1,91 @@
 #pragma once
-#include <string>
 #include <memory>
+#include <string>
+#include <exception>
 
+// Lists all posible types of values
+enum Type {INT, DOUBLE, STRING};
 
-class Value
+class Value 
 {
+protected:
+    // Type of this value
+    Type type = INT;
 
 public:
 
-	Value() {}
-	virtual ~Value() {}
+    Value() {}
+    virtual ~Value() {}
 
+    const Type& GetType() { return type; }
 
-	// Operator methods
-	virtual std::shared_ptr<Value> Add(const Value& rhs)		const	{ throw(std::exception("ERROR: the type(s) does not support addition!")); }
-	virtual std::shared_ptr<Value> Subtract(const Value& rhs)	const	{ throw(std::exception("ERROR: the type(s) does not support subtraction!")); }
-	virtual std::shared_ptr<Value> Multiply(const Value& rhs)	const	{ throw(std::exception("ERROR: the type(s) does not support multiplication!")); }
-	virtual std::shared_ptr<Value> Divide(const Value& rhs)		const	{ throw(std::exception("ERROR: the type(s) does not support division!")); }
-	virtual std::shared_ptr<Value> Mod(const Value& rhs)		const { throw(std::exception("ERROR: the type(s) does not support division!")); }
-	virtual std::shared_ptr<Value> Div(const Value& rhs)		const { throw(std::exception("ERROR: the type(s) does not support division!")); }
-
-	// Add more if needed
+    virtual std::shared_ptr<Value> Add(const Value& rhs) const { throw std::exception("Addition not supported"); }
+    virtual std::shared_ptr<Value> Subtract(const Value& rhs) const { throw std::exception("Subtraction not supported"); }
+    virtual std::shared_ptr<Value> Multiply(const Value& rhs) const { throw std::exception("Multiplication not supported"); }
+    virtual std::shared_ptr<Value> Divide(const Value& rhs) const { throw std::exception("Division not supported"); }
+    virtual std::shared_ptr<Value> Mod(const Value& rhs) const { throw std::exception("Modulo not supported"); }
+    virtual std::shared_ptr<Value> Div(const Value& rhs) const { throw std::exception("Div not supported"); }
+    virtual std::shared_ptr<Value> USin() const { throw std::exception("Sin not supported"); }
+    virtual std::string PrintValue() { throw std::exception("Print not supported"); }
 };
 
-// Operators for easier use
-std::shared_ptr<Value> operator+(const Value& lhs, const Value& rhs) { return lhs.Add(rhs); }
-std::shared_ptr<Value> operator-(const Value& lhs, const Value& rhs) { return lhs.Subtract(rhs); }
-std::shared_ptr<Value> operator*(const Value& lhs, const Value& rhs) { return lhs.Multiply(rhs); }
-std::shared_ptr<Value> operator/(const Value& lhs, const Value& rhs) { return lhs.Divide(rhs); }
+// Operators for syntactic sugar
+std::shared_ptr<Value> operator+(const Value& lhs, const Value& rhs);
+std::shared_ptr<Value> operator-(const Value& lhs, const Value& rhs);
+std::shared_ptr<Value> operator*(const Value& lhs, const Value& rhs);
+std::shared_ptr<Value> operator/(const Value& lhs, const Value& rhs);
+std::shared_ptr<Value> operator%(const Value& lhs, const Value& rhs);
+std::shared_ptr<Value> usin(const Value& lhs);
 
 
 
-
-// DATA TYPES
-
-
-class IntValue : public Value
-{
+class IntValue : public Value {
 public:
+    int value;
 
-	int value;
+    IntValue(int initialValue);
 
-	IntValue(int initialValue): value(initialValue) {}
+    std::shared_ptr<Value> Add(const Value& rhs) const override;
+    std::shared_ptr<Value> Subtract(const Value& rhs) const override;
+    std::shared_ptr<Value> Multiply(const Value& rhs) const override;
+    std::shared_ptr<Value> Divide(const Value& rhs) const override;
+    std::shared_ptr<Value> Mod(const Value& rhs) const override;
 
-	virtual std::shared_ptr<Value> Add(const Value& rhs) const override
-	{
-		// Int case
-		if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
-			return std::make_shared<IntValue>( IntValue(value + rhs_int->value) );
+    std::shared_ptr<Value> USin() const override;
+    std::string PrintValue() { return std::to_string(value); }
 
-		// Double case
-		if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
-			return std::make_shared<DoubleValue>( DoubleValue(value + rhs_double->value) );
-	}
-
-	virtual std::shared_ptr<Value> Subtract(const Value& rhs) const override
-	{
-		// Int case
-		if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
-			return std::make_shared<IntValue>(IntValue(value - rhs_int->value));
-
-		// Double case
-		if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
-			return std::make_shared<DoubleValue>(DoubleValue(value - rhs_double->value));
-	}
-
-	virtual std::shared_ptr<Value> Multiply(const Value& rhs) const override
-	{
-		// Int case
-		if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
-			return std::make_shared<IntValue>( IntValue(value * rhs_int->value) );
-
-		// Double case
-		if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
-			return std::make_shared<DoubleValue>( DoubleValue(value * rhs_double->value) );
-		
-		// String case
-		if (auto rhs_string = dynamic_cast<const StringValue*>(&rhs))
-		{
-			StringValue newValue("");
-
-			for (int i = 0; i < value; i++)
-				newValue.value += rhs_string->value;
-
-			return std::make_shared<StringValue>(newValue);
-		}
-	}
-
-	virtual std::shared_ptr<Value> Divide(const Value& rhs) const override
-	{
-		// Int case
-		if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
-			return std::make_shared<IntValue>(IntValue(value / rhs_int->value));
-
-		// Double case
-		if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
-			return std::make_shared<DoubleValue>(DoubleValue(value / rhs_double->value));
-	}
 };
 
 
-class DoubleValue : public Value
-{
+
+class DoubleValue : public Value {
 public:
+    double value;
 
-	double value;
+    DoubleValue(double initialValue);
 
-	DoubleValue(double initialValue): value(initialValue) {}
+    std::shared_ptr<Value> Add(const Value& rhs) const override;
+    std::shared_ptr<Value> Subtract(const Value& rhs) const override;
+    std::shared_ptr<Value> Multiply(const Value& rhs) const override;
+    std::shared_ptr<Value> Divide(const Value& rhs) const override;
 
-	virtual std::shared_ptr<Value> Add(const Value& rhs) const override
-	{
-		// Int case
-		if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
-			return std::make_shared<DoubleValue>(DoubleValue(value + rhs_int->value));
+    std::shared_ptr<Value> USin() const override;
+    std::string PrintValue() { return std::to_string(value); }
 
-		// Double case
-		if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
-			return std::make_shared<DoubleValue>(DoubleValue(value + rhs_double->value));
-	}
-
-	virtual std::shared_ptr<Value> Subtract(const Value& rhs) const override
-	{
-		// Int case
-		if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
-			return std::make_shared<DoubleValue>(DoubleValue(value - rhs_int->value));
-
-		// Double case
-		if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
-			return std::make_shared<DoubleValue>(DoubleValue(value - rhs_double->value));
-	}
-
-	virtual std::shared_ptr<Value> Multiply(const Value& rhs) const override
-	{
-		// Int case
-		if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
-			return std::make_shared<DoubleValue>(DoubleValue(value * rhs_int->value));
-
-		// Double case
-		if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
-			return std::make_shared<DoubleValue>(DoubleValue(value * rhs_double->value));
-	}
-
-	virtual std::shared_ptr<Value> Divide(const Value& rhs) const override
-	{
-		// Int case
-		if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
-			return std::make_shared<DoubleValue>(DoubleValue(value / rhs_int->value));
-
-		// Double case
-		if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
-			return std::make_shared<DoubleValue>(DoubleValue(value / rhs_double->value));
-	}
 };
 
 
-class StringValue : public Value
-{
+
+class StringValue : public Value {
 public:
+    std::string value;
 
-	std::string value;
+    StringValue(std::string initialValue);
 
-	StringValue(std::string initialValue) : value(initialValue) {}
+    std::shared_ptr<Value> Add(const Value& rhs) const override;
+    std::shared_ptr<Value> Multiply(const Value& rhs) const override;
+    std::string PrintValue() { return value; }
 
-	virtual std::shared_ptr<Value> Add(const Value& rhs) const override
-	{
-		// String case
-		if (auto rhs_string = dynamic_cast<const StringValue*>(&rhs))
-		{
-			StringValue newValue("");
-
-			newValue = value + rhs_string->value;
-
-			return std::make_shared<StringValue>(newValue);
-		}
-	}
-
-	virtual std::shared_ptr<Value> Multiply(const Value& rhs) const override
-	{
-		// Int case
-		if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
-		{
-			StringValue newValue("");
-
-			for (int i = 0; i < rhs_int->value; i++)
-				newValue.value += value;
-
-			return std::make_shared<StringValue>(newValue);
-		}
-	}
 };
+
+
