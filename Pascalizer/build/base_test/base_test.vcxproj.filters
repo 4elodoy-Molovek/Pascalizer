@@ -22,6 +22,9 @@
     <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\base_test\base_test_autogen\mocs_compilation_RelWithDebInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\base_test\Test_AnalysisMachine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\base_test\CMakeLists.txt" />

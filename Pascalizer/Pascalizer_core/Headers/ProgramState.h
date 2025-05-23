@@ -9,7 +9,7 @@
 struct ProgramState
 {
 	// Analyzed code of the whole program
-	const HierarchicalList<class Instruction*> code;
+	const HierarchicalList<std::shared_ptr<class Instruction>> code;
 
 	// Table of values (constants and variable)
 	std::map<std::string, std::shared_ptr<Value>> valuesTable;
@@ -20,5 +20,12 @@ struct ProgramState
 	// Program execution log
 	std::vector<std::string> log;
 
+<<<<<<< Updated upstream
 	ProgramState(const HierarchicalList<class Instruction*>& inCode) : code(inCode) {}
+=======
+	// Caches condition results for 'else' statements
+	std::stack<bool> branchingStack;
+
+	ProgramState(const HierarchicalList<std::shared_ptr<class Instruction>>& inCode) : code(inCode) {}
+>>>>>>> Stashed changes
 };

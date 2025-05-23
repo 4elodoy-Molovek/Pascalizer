@@ -4,6 +4,12 @@
     <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\mocs_compilation_Debug.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Sources\AnalysisMachine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Sources\ValueTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\build\Pascalizer_core\Pascalizer_core_autogen\mocs_compilation_Release.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -19,6 +25,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\AnalysisMachine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\AnalysisMachineAccumulators.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\AnalysisMachineStates.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\AnalysisMachine_ExpressionAnalysisBlock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\ExpressionEvaluationBlock.h">
@@ -40,6 +55,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\Pascalizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\ProgramInstructions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\4elodoy Molovek\source\repos\Pascalizer\Pascalizer\Pascalizer_core\Headers\ProgramState.h">

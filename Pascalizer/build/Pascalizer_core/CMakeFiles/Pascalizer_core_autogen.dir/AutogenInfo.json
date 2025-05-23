@@ -1,16 +1,14 @@
 {
-	"AUTOGEN_COMMAND_LINE_LENGTH_MAX" : 32000,
 	"BUILD_DIR" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/Pascalizer_core_autogen",
 	"CMAKE_BINARY_DIR" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build",
 	"CMAKE_CURRENT_BINARY_DIR" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core",
 	"CMAKE_CURRENT_SOURCE_DIR" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/Pascalizer_core",
-	"CMAKE_EXECUTABLE" : "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
+	"CMAKE_EXECUTABLE" : "G:/Program Files/Microsoft Visual Studio/2022/Enterprise/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
 	"CMAKE_LIST_FILES" : 
 	[
 		"C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/Pascalizer_core/CMakeLists.txt"
 	],
 	"CMAKE_SOURCE_DIR" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer",
-	"CROSS_CONFIG" : false,
 	"DEP_FILE" : "",
 	"DEP_FILE_RULE_NAME" : "",
 	"HEADERS" : 
@@ -19,6 +17,24 @@
 			"C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/Pascalizer_core/Headers/AnalysisMachine.h",
 			"MU",
 			"D2MWKIZDYH/moc_AnalysisMachine.cpp",
+			null
+		],
+		[
+			"C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/Pascalizer_core/Headers/AnalysisMachineAccumulators.h",
+			"MU",
+			"D2MWKIZDYH/moc_AnalysisMachineAccumulators.cpp",
+			null
+		],
+		[
+			"C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/Pascalizer_core/Headers/AnalysisMachineStates.h",
+			"MU",
+			"D2MWKIZDYH/moc_AnalysisMachineStates.cpp",
+			null
+		],
+		[
+			"C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/Pascalizer_core/Headers/AnalysisMachine_ExpressionAnalysisBlock.h",
+			"MU",
+			"D2MWKIZDYH/moc_AnalysisMachine_ExpressionAnalysisBlock.cpp",
 			null
 		],
 		[
@@ -64,6 +80,12 @@
 			null
 		],
 		[
+			"C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/Pascalizer_core/Headers/ProgramInstructions.h",
+			"MU",
+			"D2MWKIZDYH/moc_ProgramInstructions.cpp",
+			null
+		],
+		[
 			"C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/Pascalizer_core/Headers/ProgramState.h",
 			"MU",
 			"D2MWKIZDYH/moc_ProgramState.cpp",
@@ -99,7 +121,23 @@
 	"MOC_COMPILATION_FILE_MinSizeRel" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/Pascalizer_core_autogen/mocs_compilation_MinSizeRel.cpp",
 	"MOC_COMPILATION_FILE_RelWithDebInfo" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/Pascalizer_core_autogen/mocs_compilation_RelWithDebInfo.cpp",
 	"MOC_COMPILATION_FILE_Release" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/Pascalizer_core_autogen/mocs_compilation_Release.cpp",
-	"MOC_DEFINITIONS" : [],
+	"MOC_DEFINITIONS" : 
+	[
+		")",
+		"PASCALIZER_CORE_EXPORT=__declspec",
+		"Pascalizer_core_EXPORTS",
+		"QT_CORE_LIB",
+		"QT_GUI_LIB",
+		"QT_NO_DEBUG",
+		"QT_WIDGETS_LIB",
+		"UNICODE",
+		"WIN32",
+		"WIN64",
+		"_ENABLE_EXTENDED_ALIGNED_STORAGE",
+		"_UNICODE",
+		"_WIN64",
+		"dllexport"
+	],
 	"MOC_DEFINITIONS_Debug" : 
 	[
 		")",
@@ -116,57 +154,6 @@
 		"_WIN64",
 		"dllexport"
 	],
-	"MOC_DEFINITIONS_MinSizeRel" : 
-	[
-		")",
-		"PASCALIZER_CORE_EXPORT=__declspec",
-		"Pascalizer_core_EXPORTS",
-		"QT_CORE_LIB",
-		"QT_GUI_LIB",
-		"QT_NO_DEBUG",
-		"QT_WIDGETS_LIB",
-		"UNICODE",
-		"WIN32",
-		"WIN64",
-		"_ENABLE_EXTENDED_ALIGNED_STORAGE",
-		"_UNICODE",
-		"_WIN64",
-		"dllexport"
-	],
-	"MOC_DEFINITIONS_RelWithDebInfo" : 
-	[
-		")",
-		"PASCALIZER_CORE_EXPORT=__declspec",
-		"Pascalizer_core_EXPORTS",
-		"QT_CORE_LIB",
-		"QT_GUI_LIB",
-		"QT_NO_DEBUG",
-		"QT_WIDGETS_LIB",
-		"UNICODE",
-		"WIN32",
-		"WIN64",
-		"_ENABLE_EXTENDED_ALIGNED_STORAGE",
-		"_UNICODE",
-		"_WIN64",
-		"dllexport"
-	],
-	"MOC_DEFINITIONS_Release" : 
-	[
-		")",
-		"PASCALIZER_CORE_EXPORT=__declspec",
-		"Pascalizer_core_EXPORTS",
-		"QT_CORE_LIB",
-		"QT_GUI_LIB",
-		"QT_NO_DEBUG",
-		"QT_WIDGETS_LIB",
-		"UNICODE",
-		"WIN32",
-		"WIN64",
-		"_ENABLE_EXTENDED_ALIGNED_STORAGE",
-		"_UNICODE",
-		"_WIN64",
-		"dllexport"
-	],
 	"MOC_DEPEND_FILTERS" : 
 	[
 		[
@@ -174,42 +161,14 @@
 			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
 		]
 	],
-	"MOC_INCLUDES" : [],
-	"MOC_INCLUDES_Debug" : 
+	"MOC_INCLUDES" : 
 	[
 		"C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/Pascalizer_core/Headers",
-		"C:/Qt/6.8.2/msvc2022_64/include/QtCore",
-		"C:/Qt/6.8.2/msvc2022_64/include",
-		"C:/Qt/6.8.2/msvc2022_64/mkspecs/win32-msvc",
-		"C:/Qt/6.8.2/msvc2022_64/include/QtWidgets",
-		"C:/Qt/6.8.2/msvc2022_64/include/QtGui"
-	],
-	"MOC_INCLUDES_MinSizeRel" : 
-	[
-		"C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/Pascalizer_core/Headers",
-		"C:/Qt/6.8.2/msvc2022_64/include/QtCore",
-		"C:/Qt/6.8.2/msvc2022_64/include",
-		"C:/Qt/6.8.2/msvc2022_64/mkspecs/win32-msvc",
-		"C:/Qt/6.8.2/msvc2022_64/include/QtWidgets",
-		"C:/Qt/6.8.2/msvc2022_64/include/QtGui"
-	],
-	"MOC_INCLUDES_RelWithDebInfo" : 
-	[
-		"C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/Pascalizer_core/Headers",
-		"C:/Qt/6.8.2/msvc2022_64/include/QtCore",
-		"C:/Qt/6.8.2/msvc2022_64/include",
-		"C:/Qt/6.8.2/msvc2022_64/mkspecs/win32-msvc",
-		"C:/Qt/6.8.2/msvc2022_64/include/QtWidgets",
-		"C:/Qt/6.8.2/msvc2022_64/include/QtGui"
-	],
-	"MOC_INCLUDES_Release" : 
-	[
-		"C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/Pascalizer_core/Headers",
-		"C:/Qt/6.8.2/msvc2022_64/include/QtCore",
-		"C:/Qt/6.8.2/msvc2022_64/include",
-		"C:/Qt/6.8.2/msvc2022_64/mkspecs/win32-msvc",
-		"C:/Qt/6.8.2/msvc2022_64/include/QtWidgets",
-		"C:/Qt/6.8.2/msvc2022_64/include/QtGui"
+		"D:/Qt/6.8.2/msvc2022_64/include/QtCore",
+		"D:/Qt/6.8.2/msvc2022_64/include",
+		"D:/Qt/6.8.2/msvc2022_64/mkspecs/win32-msvc",
+		"D:/Qt/6.8.2/msvc2022_64/include/QtWidgets",
+		"D:/Qt/6.8.2/msvc2022_64/include/QtGui"
 	],
 	"MOC_MACRO_NAMES" : 
 	[
@@ -227,22 +186,14 @@
 	"MOC_RELAXED_MODE" : false,
 	"MOC_SKIP" : [],
 	"MULTI_CONFIG" : true,
-	"PARALLEL" : 8,
+	"PARALLEL" : 4,
 	"PARSE_CACHE_FILE" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/Pascalizer_core_autogen.dir/ParseCache.txt",
 	"PARSE_CACHE_FILE_Debug" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/Pascalizer_core_autogen.dir/ParseCache_Debug.txt",
 	"PARSE_CACHE_FILE_MinSizeRel" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/Pascalizer_core_autogen.dir/ParseCache_MinSizeRel.txt",
 	"PARSE_CACHE_FILE_RelWithDebInfo" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/Pascalizer_core_autogen.dir/ParseCache_RelWithDebInfo.txt",
 	"PARSE_CACHE_FILE_Release" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/Pascalizer_core_autogen.dir/ParseCache_Release.txt",
-	"QT_MOC_EXECUTABLE" : "",
-	"QT_MOC_EXECUTABLE_Debug" : "C:/Qt/6.8.2/msvc2022_64/bin/moc.exe",
-	"QT_MOC_EXECUTABLE_MinSizeRel" : "C:/Qt/6.8.2/msvc2022_64/bin/moc.exe",
-	"QT_MOC_EXECUTABLE_RelWithDebInfo" : "C:/Qt/6.8.2/msvc2022_64/bin/moc.exe",
-	"QT_MOC_EXECUTABLE_Release" : "C:/Qt/6.8.2/msvc2022_64/bin/moc.exe",
-	"QT_UIC_EXECUTABLE" : "",
-	"QT_UIC_EXECUTABLE_Debug" : "C:/Qt/6.8.2/msvc2022_64/bin/uic.exe",
-	"QT_UIC_EXECUTABLE_MinSizeRel" : "C:/Qt/6.8.2/msvc2022_64/bin/uic.exe",
-	"QT_UIC_EXECUTABLE_RelWithDebInfo" : "C:/Qt/6.8.2/msvc2022_64/bin/uic.exe",
-	"QT_UIC_EXECUTABLE_Release" : "C:/Qt/6.8.2/msvc2022_64/bin/uic.exe",
+	"QT_MOC_EXECUTABLE" : "D:/Qt/6.8.2/msvc2022_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "D:/Qt/6.8.2/msvc2022_64/bin/uic.exe",
 	"QT_VERSION_MAJOR" : 6,
 	"QT_VERSION_MINOR" : 8,
 	"SETTINGS_FILE" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/Pascalizer_core_autogen.dir/AutogenUsed.txt",
@@ -250,11 +201,22 @@
 	"SETTINGS_FILE_MinSizeRel" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/Pascalizer_core_autogen.dir/AutogenUsed_MinSizeRel.txt",
 	"SETTINGS_FILE_RelWithDebInfo" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/Pascalizer_core_autogen.dir/AutogenUsed_RelWithDebInfo.txt",
 	"SETTINGS_FILE_Release" : "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/Pascalizer_core/CMakeFiles/Pascalizer_core_autogen.dir/AutogenUsed_Release.txt",
-	"SOURCES" : [],
+	"SOURCES" : 
+	[
+		[
+			"C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/Pascalizer_core/Sources/AnalysisMachine.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/Pascalizer_core/Sources/ValueTable.cpp",
+			"MU",
+			null
+		]
+	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],
 	"UIC_SKIP" : [],
 	"UIC_UI_FILES" : [],
-	"USE_BETTER_GRAPH" : true,
 	"VERBOSITY" : 0
 }
