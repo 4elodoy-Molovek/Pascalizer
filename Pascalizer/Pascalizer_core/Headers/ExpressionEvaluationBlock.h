@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include <string>
 #include <vector>
 #include <map>
@@ -93,7 +93,7 @@ public:
 			if (auto varElement = dynamic_cast<VariableExpressionElement*>(postfix[i].get()))
 			{
 				// Checking if variable is valid
-				if (programState.valuesTable.count(varElement->varName) == 0) throw(std::runtime_error("RUNTIME ERROR: Unknown variable '" + varElement->varName + "'!"));
+				if (programState.valuesTable.count(varElement->varName) == 0) throw(std::runtime_error("RUNTIME ERROR: Unknown variable " + varElement->varName + "!"));
 
 				// Replacing variable element with a value element
 				std::shared_ptr<Value> varValue = programState.valuesTable[varElement->varName];
@@ -117,7 +117,7 @@ public:
 			if (auto tmp = dynamic_cast<OperationExpressionElement*>(el.get()))  // type of tmp is OperationExpressionElement*
 			{
 				// calculating
-				tmp->Calculate(calculationStack); //? а че будет если в его классе нет переопределения calculate()?
+				tmp->Calculate(calculationStack); //? Г  Г·ГҐ ГЎГіГ¤ГҐГІ ГҐГ±Г«ГЁ Гў ГҐГЈГ® ГЄГ«Г Г±Г±ГҐ Г­ГҐГІ ГЇГҐГ°ГҐГ®ГЇГ°ГҐГ¤ГҐГ«ГҐГ­ГЁГї calculate()?
 				continue;
 			}
 
@@ -141,13 +141,13 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
-		auto rhs = calculationStack.top(); calculationStack.pop(); //? что возвратит top/pop из пустого стека
+		auto rhs = calculationStack.top(); calculationStack.pop(); //? Г·ГІГ® ГўГ®Г§ГўГ°Г ГІГЁГІ top/pop ГЁГ§ ГЇГіГ±ГІГ®ГЈГ® Г±ГІГҐГЄГ 
 		//auto rhs = rhs_.get();
 
 		auto lhs = calculationStack.top(); calculationStack.pop();
 
 		calculationStack.push(std::make_shared<ValueExpressionElement>(*(rhs->value) + *(lhs->value)));
-		//? сложение принимает обычные -поинтеры- переменные, но возвращает shared
+		//? Г±Г«Г®Г¦ГҐГ­ГЁГҐ ГЇГ°ГЁГ­ГЁГ¬Г ГҐГІ Г®ГЎГ»Г·Г­Г»ГҐ -ГЇГ®ГЁГ­ГІГҐГ°Г»- ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г»ГҐ, Г­Г® ГўГ®Г§ГўГ°Г Г№Г ГҐГІ shared
 	}
 };
 
@@ -162,11 +162,11 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
-		auto rhs = calculationStack.top(); calculationStack.pop(); //? что возвратит top/pop из пустого стека
+		auto rhs = calculationStack.top(); calculationStack.pop(); //? Г·ГІГ® ГўГ®Г§ГўГ°Г ГІГЁГІ top/pop ГЁГ§ ГЇГіГ±ГІГ®ГЈГ® Г±ГІГҐГЄГ 
 		auto lhs = (calculationStack.top()); calculationStack.pop();
 
 		calculationStack.push(std::make_shared<ValueExpressionElement>(*(rhs->value) * *(lhs->value)));
-		//? сложение принимает обычные -поинтеры- переменные, но возвращает shared
+		//? Г±Г«Г®Г¦ГҐГ­ГЁГҐ ГЇГ°ГЁГ­ГЁГ¬Г ГҐГІ Г®ГЎГ»Г·Г­Г»ГҐ -ГЇГ®ГЁГ­ГІГҐГ°Г»- ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г»ГҐ, Г­Г® ГўГ®Г§ГўГ°Г Г№Г ГҐГІ shared
 	}
 };
 
@@ -181,11 +181,11 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
-		auto rhs = calculationStack.top(); calculationStack.pop(); //? что возвратит top/pop из пустого стека
+		auto rhs = calculationStack.top(); calculationStack.pop(); //? Г·ГІГ® ГўГ®Г§ГўГ°Г ГІГЁГІ top/pop ГЁГ§ ГЇГіГ±ГІГ®ГЈГ® Г±ГІГҐГЄГ 
 		auto lhs = (calculationStack.top()); calculationStack.pop();
 
 		calculationStack.push(std::make_shared<ValueExpressionElement>(*(lhs->value) - *(rhs->value)));
-		//? сложение принимает обычные -поинтеры- переменные, но возвращает shared
+		//? Г±Г«Г®Г¦ГҐГ­ГЁГҐ ГЇГ°ГЁГ­ГЁГ¬Г ГҐГІ Г®ГЎГ»Г·Г­Г»ГҐ -ГЇГ®ГЁГ­ГІГҐГ°Г»- ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г»ГҐ, Г­Г® ГўГ®Г§ГўГ°Г Г№Г ГҐГІ shared
 	}
 };
 
@@ -200,11 +200,11 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
-		auto rhs = calculationStack.top(); calculationStack.pop(); //? что возвратит top/pop из пустого стека
+		auto rhs = calculationStack.top(); calculationStack.pop(); //? Г·ГІГ® ГўГ®Г§ГўГ°Г ГІГЁГІ top/pop ГЁГ§ ГЇГіГ±ГІГ®ГЈГ® Г±ГІГҐГЄГ 
 		auto lhs = (calculationStack.top()); calculationStack.pop();
 
 		calculationStack.push(std::make_shared<ValueExpressionElement>(*(lhs->value) / *(rhs->value)));
-		//? сложение принимает обычные -поинтеры- переменные, но возвращает shared
+		//? Г±Г«Г®Г¦ГҐГ­ГЁГҐ ГЇГ°ГЁГ­ГЁГ¬Г ГҐГІ Г®ГЎГ»Г·Г­Г»ГҐ -ГЇГ®ГЁГ­ГІГҐГ°Г»- ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г»ГҐ, Г­Г® ГўГ®Г§ГўГ°Г Г№Г ГҐГІ shared
 	}
 };
 
@@ -220,11 +220,11 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
-		auto rhs = calculationStack.top(); calculationStack.pop(); //? что возвратит top/pop из пустого стека
+		auto rhs = calculationStack.top(); calculationStack.pop(); //? Г·ГІГ® ГўГ®Г§ГўГ°Г ГІГЁГІ top/pop ГЁГ§ ГЇГіГ±ГІГ®ГЈГ® Г±ГІГҐГЄГ 
 		auto lhs = (calculationStack.top()); calculationStack.pop();
 
 		calculationStack.push(std::make_shared<ValueExpressionElement>(*(lhs->value) % *(rhs->value)));
-		//? сложение принимает обычные -поинтеры- переменные, но возвращает shared
+		//? Г±Г«Г®Г¦ГҐГ­ГЁГҐ ГЇГ°ГЁГ­ГЁГ¬Г ГҐГІ Г®ГЎГ»Г·Г­Г»ГҐ -ГЇГ®ГЁГ­ГІГҐГ°Г»- ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г»ГҐ, Г­Г® ГўГ®Г§ГўГ°Г Г№Г ГҐГІ shared
 	}
 };
 // TO DO: Add more
@@ -240,7 +240,7 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
-		auto rhs = calculationStack.top(); calculationStack.pop(); //? что возвратит top/pop из пустого стека
+		auto rhs = calculationStack.top(); calculationStack.pop(); //? Г·ГІГ® ГўГ®Г§ГўГ°Г ГІГЁГІ top/pop ГЁГ§ ГЇГіГ±ГІГ®ГЈГ® Г±ГІГҐГЄГ 
 		calculationStack.push(std::make_shared<ValueExpressionElement>(usin(*(rhs->value))));
 	}
 };
@@ -261,11 +261,11 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
-		auto rhs = calculationStack.top().get(); calculationStack.pop(); //? что возвратит top/pop из пустого стека
+		auto rhs = calculationStack.top().get(); calculationStack.pop(); //? Г·ГІГ® ГўГ®Г§ГўГ°Г ГІГЁГІ top/pop ГЁГ§ ГЇГіГ±ГІГ®ГЈГ® Г±ГІГҐГЄГ 
 		auto lhs = (calculationStack.top()).get(); calculationStack.pop();
 
 		calculationStack.push(std::make_shared<ValueExpressionElement>(*(rhs->value.get()) * *(lhs->value.get())));
-		//? сложение принимает обычные -поинтеры- переменные, но возвращает shared
+		//? Г±Г«Г®Г¦ГҐГ­ГЁГҐ ГЇГ°ГЁГ­ГЁГ¬Г ГҐГІ Г®ГЎГ»Г·Г­Г»ГҐ -ГЇГ®ГЁГ­ГІГҐГ°Г»- ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г»ГҐ, Г­Г® ГўГ®Г§ГўГ°Г Г№Г ГҐГІ shared
 	}
 };
 */

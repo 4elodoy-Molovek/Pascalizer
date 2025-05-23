@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Instruction.h"
 #include "ExpressionEvaluationBlock.h"
 
@@ -89,7 +89,7 @@ public:
 	{
 		programState.valuesTable[_constName] = _value;
 
-		programState.log.push_back("Const " + _constName + " = " + _value->PrintValue() + " added");
+		programState.log.push_back("Const " + _constName + " = " + _value->PrintValue() + " declared");
 	};
 };
 
@@ -118,6 +118,8 @@ public:
 		if (_type == STRING) value = std::make_shared<StringValue>("\0");
 
 		programState.valuesTable[_name] = value;
+
+		programState.log.push_back("Var " + _name + " = " + value->PrintValue() + " declared");
 	}
 };
 
@@ -126,26 +128,85 @@ public:
 // Modifes the value of the given variable
 class IAssignVar : public Instruction
 {
+private:
+	std::string _name;
+	std::shared_ptr<Expression> _expression;
 
 public:
 
-	IAssignVar(const std::string& name, std::shared_ptr<Expression> expression) {}
+	IAssignVar(const std::string& name, std::shared_ptr<Expression> expression)
+	{
+		_name = name;
+		_expression = expression;
+	}
 	~IAssignVar() override {}
 
-	void Execute(ProgramState& programState) override {};
+	void Execute(ProgramState& programState) override 
+	{
+		programState.log.push_back("Trying to calculate expression...");
+		std::shared_ptr<Value> value;
+
+		try
+		{
+			value = _expression->Caculate(programState);
+		}
+		catch(std::runtime_error ex)
+		{
+			programState.log.push_back(ex.what());
+			programState.log.push_back("FATAL: Calculation failed");
+			throw(std::runtime_error("FATAL: Calculation failed"));
+		}
+		catch (std::exception e)
+		{
+			programState.log.push_back("ERROR: " + std::string(e.what()));
+			programState.log.push_back("FATAL: Calculation failed");
+			throw(std::runtime_error("FATAL: Calculation failed"));
+		}
+
+		programState.log.push_back("Calculation succeded");
+		
+		if (programState.valuesTable[_name]->GetType() != value->GetType())
+		{
+			std::string strType[3] = { "INT", "DOUBLE", "STRING"};
+			programState.log.push_back("FATAL: tried to assign " + strType[programState.valuesTable[_name]->GetType()] + " to " + strType[value->GetType()]);
+			throw("FATAL: tried to assign " + strType[programState.valuesTable[_name]->GetType()] + " to " + strType[value->GetType()]);
+		}
+
+		programState.valuesTable[_name] = value;
+	}
 };
 
 
 // Reads input from keyboard, writing it into the given variable
 class IRead : public Instruction
 {
+private:
+	std::string _varName;
 
 public:
 
-	IRead(const std::string& varName) {}
+	IRead(const std::string& varName) 
+	{
+		_varName = varName;
+	}
 	~IRead() override {}
 
-	void Execute(ProgramState& programState) override {};
+	void Execute(ProgramState& programState) override 
+	{
+		std::string input;
+		std::shared_ptr<Value> value;
+
+		size_t intPos;
+		size_t doublePos;
+		int intInput = std::stoi(input, &intPos);
+		double doubleInput = std::stod(input, &doublePos);
+		if (intPos == input.size())
+		{
+			programState.log.push_back("Got an INT: " + input);
+			if (programState.valuesTable[_varName]->GetType() == Type::INT)
+
+		}
+	}
 };
 
 
