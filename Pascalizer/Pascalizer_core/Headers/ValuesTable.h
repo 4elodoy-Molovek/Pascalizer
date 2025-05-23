@@ -14,6 +14,8 @@ public:
     virtual std::shared_ptr<Value> Divide(const Value& rhs) const { throw std::exception("Division not supported"); }
     virtual std::shared_ptr<Value> Mod(const Value& rhs) const { throw std::exception("Modulo not supported"); }
     virtual std::shared_ptr<Value> Div(const Value& rhs) const { throw std::exception("Div not supported"); }
+    
+    
     virtual std::shared_ptr<Value> USin() const { throw std::exception("Sin not supported"); }
     virtual std::string PrintValue() { throw std::exception("Print not supported"); }
 };
@@ -24,6 +26,8 @@ std::shared_ptr<Value> operator-(const Value& lhs, const Value& rhs);
 std::shared_ptr<Value> operator*(const Value& lhs, const Value& rhs);
 std::shared_ptr<Value> operator/(const Value& lhs, const Value& rhs);
 std::shared_ptr<Value> operator%(const Value& lhs, const Value& rhs);
+std::shared_ptr<Value> div(const Value& lhs, const Value& rhs);
+
 std::shared_ptr<Value> usin(const Value& lhs);
 
 
@@ -39,6 +43,8 @@ public:
     std::shared_ptr<Value> Multiply(const Value& rhs) const override;
     std::shared_ptr<Value> Divide(const Value& rhs) const override;
     std::shared_ptr<Value> Mod(const Value& rhs) const override;
+    virtual std::shared_ptr<Value> Div(const Value& rhs) const;
+
 
     std::shared_ptr<Value> USin() const override;
     std::string PrintValue() { return std::to_string(value); }

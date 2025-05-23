@@ -1,4 +1,4 @@
-#include "./Pascalizer/ValuesTable.h"
+#include "./ValuesTable.h"
 #include <stdexcept>
 
 
@@ -7,6 +7,11 @@ std::shared_ptr<Value> operator-(const Value& lhs, const Value& rhs) { return lh
 std::shared_ptr<Value> operator*(const Value& lhs, const Value& rhs) { return lhs.Multiply(rhs); }
 std::shared_ptr<Value> operator/(const Value& lhs, const Value& rhs) { return lhs.Divide(rhs); }
 std::shared_ptr<Value> operator%(const Value& lhs, const Value& rhs) { return lhs.Mod(rhs); }
+
+std::shared_ptr<Value> div(const Value& lhs, const Value& rhs) { return lhs.Div(rhs); }
+
+
+
 std::shared_ptr<Value> usin(const Value& lhs) { return lhs.USin(); }
 
 
@@ -69,6 +74,19 @@ std::shared_ptr<Value> IntValue::Mod(const Value& rhs) const {
 
     throw std::runtime_error("Unsupported Divide operands");
 }
+
+//t
+std::shared_ptr<Value> IntValue::Div(const Value& rhs) const {
+    if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
+        return std::make_shared<IntValue>(int(value / rhs_int->value));
+
+    if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
+        return std::make_shared<IntValue>(int(value / rhs_double->value));
+
+    throw std::runtime_error("Unsupported Div operands");
+}
+
+
 
 std::shared_ptr<Value> IntValue::USin() const {
     return std::make_shared<DoubleValue>(sin(value));
