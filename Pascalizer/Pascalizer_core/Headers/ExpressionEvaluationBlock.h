@@ -13,7 +13,12 @@
 
 
 // All posible operation types
-enum OperationType {OP_NONE, OP_ADD, OP_SUBTRACT, OP_DIVIDE, OP_MULTIPLY, OP_MOD, OP_DIV, OP_SIN /*...*/ };
+enum OperationType 
+{
+	OP_NONE, OP_ADD, OP_SUBTRACT, OP_DIVIDE, OP_MULTIPLY, OP_MOD, OP_DIV,
+	OP_MORE, OP_EQUAL, OP_MORE_EQUAL, OP_LESS, OP_NOT_EQUAL, OP_LESS_EQUAL,
+	OP_SIN
+};
 
 /*
  * Base class for elements containing data about a single expression element 
@@ -249,6 +254,108 @@ public:
 	}
 };
 
+class EqualOperation final : public OperationExpressionElement
+{
+public:
+
+	EqualOperation() { type = OP_EQUAL; }
+	~EqualOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop();
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) == (*rhs->value)));
+	}
+};
+/*
+class NotEqualOperation final : public OperationExpressionElement
+{
+public:
+
+	NotEqualOperation() { type = OP_NOT_EQUAL; }
+	~NotEqualOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop();
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) != (*rhs->value)));
+	}
+};
+
+class LessOperation final : public OperationExpressionElement
+{
+public:
+
+	LessOperation() { type = OP_LESS; }
+	~LessOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop();
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) < (*rhs->value)));
+	}
+};
+
+class LessEqualOperation final : public OperationExpressionElement
+{
+public:
+
+	LessEqualOperation() { type = OP_LESS_EQUAL; }
+	~LessEqualOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop();
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) <= (*rhs->value)));
+	}
+};
+
+class MoreOperation final : public OperationExpressionElement
+{
+public:
+
+	MoreOperation() { type = OP_MORE; }
+	~MoreOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop();
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) > (*rhs->value)));
+	}
+};
+
+class MoreEqualOperation final : public OperationExpressionElement
+{
+public:
+
+	MoreEqualOperation() { type = OP_MORE_EQUAL; }
+	~MoreEqualOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop();
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) >= (*rhs->value)));
+	}
+};
+*/
 
 class SinOperation final : public OperationExpressionElement
 {

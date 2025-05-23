@@ -7,9 +7,14 @@ std::shared_ptr<Value> operator-(const Value& lhs, const Value& rhs) { return lh
 std::shared_ptr<Value> operator*(const Value& lhs, const Value& rhs) { return lhs.Multiply(rhs); }
 std::shared_ptr<Value> operator/(const Value& lhs, const Value& rhs) { return lhs.Divide(rhs); }
 std::shared_ptr<Value> operator%(const Value& lhs, const Value& rhs) { return lhs.Mod(rhs); }
-
 std::shared_ptr<Value> div(const Value& lhs, const Value& rhs) { return lhs.Div(rhs); }
 
+std::shared_ptr<Value> operator==(const Value& lhs, const Value& rhs) { return lhs.Equal(rhs); }
+std::shared_ptr<Value> operator!=(const Value& lhs, const Value& rhs) { return lhs.NotEqual(rhs); }
+std::shared_ptr<Value> operator<(const Value& lhs, const Value& rhs) { return lhs.Less(rhs); }
+std::shared_ptr<Value> operator<=(const Value& lhs, const Value& rhs) { return lhs.LessEqual(rhs); }
+std::shared_ptr<Value> operator>(const Value& lhs, const Value& rhs) { return lhs.More(rhs); }
+std::shared_ptr<Value> operator>=(const Value& lhs, const Value& rhs) { return lhs.MoreEqual(rhs); }
 
 
 std::shared_ptr<Value> usin(const Value& lhs) { return lhs.USin(); }
@@ -75,7 +80,6 @@ std::shared_ptr<Value> IntValue::Mod(const Value& rhs) const {
     throw std::runtime_error("Unsupported Divide operands");
 }
 
-//t
 std::shared_ptr<Value> IntValue::Div(const Value& rhs) const {
     if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
         return std::make_shared<IntValue>(int(value / rhs_int->value));
@@ -88,10 +92,28 @@ std::shared_ptr<Value> IntValue::Div(const Value& rhs) const {
 
 
 
+std::shared_ptr<Value> IntValue::Equal(const Value& rhs) const {
+    if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
+        return std::make_shared<IntValue>(value == rhs_int->value ? 1 : 0);
+
+    if (auto rhs_double = dynamic_cast<const DoubleValue*>(&rhs))
+        return std::make_shared<IntValue>((value == rhs_double->value ? 1 : 0));
+
+    throw std::runtime_error("Unsupported Equal operands");
+}
+/*
+virtual std::shared_ptr<Value> NotEqual(const Value& rhs) const override;
+virtual std::shared_ptr<Value> Less(const Value& rhs) const override;
+virtual std::shared_ptr<Value> LessEqual(const Value& rhs) const override;
+virtual std::shared_ptr<Value> More(const Value& rhs) const override;
+virtual std::shared_ptr<Value> MoreEqual(const Value& rhs) const override;
+*/
+
 std::shared_ptr<Value> IntValue::USin() const {
     return std::make_shared<DoubleValue>(sin(value));
 }
 
+///////////////////////////////////////////////////////////////////////////
 
 DoubleValue::DoubleValue(double initialValue) : value(initialValue) {}
 
@@ -138,6 +160,8 @@ std::shared_ptr<Value> DoubleValue::Divide(const Value& rhs) const {
 std::shared_ptr<Value> DoubleValue::USin() const {
     return std::make_shared<DoubleValue>(sin(value));
 }
+
+///////////////////////////////////////////////////////////////////////////
 
 
 StringValue::StringValue(std::string initialValue) : value(std::move(initialValue)) {}
