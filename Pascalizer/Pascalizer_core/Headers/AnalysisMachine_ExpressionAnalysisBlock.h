@@ -91,7 +91,7 @@ class ExpressionAnalysisBlockState : public State
 
 
 public:
-	ExpressionAnalysisBlockState(const AnalysisMachine& analysisMachine) : State(analysisMachine) {}
+	ExpressionAnalysisBlockState(AnalysisMachine& analysisMachine) : State(analysisMachine) {}
 
 
 	~ExpressionAnalysisBlockState() {}
@@ -113,7 +113,7 @@ public:
 	// Called when the machine exits this state
 	virtual void ExitState() override {}
 
-	virtual State* ProcessElement(const Token& nextElement) override 
+	virtual State* ProcessElement(const Token& nextElement) override
 	{
 		// Base loop state
 		if (innerState == "initial")

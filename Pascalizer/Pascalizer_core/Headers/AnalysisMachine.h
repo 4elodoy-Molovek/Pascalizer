@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include "Tokens.h"
 #include "Instruction.h"
-#include "AnalysisMachine_ExpressionAnalysisBlock.h"
+#include "HierarchicalList.h"
 
 /*
  * Program module, responsible for:
@@ -77,6 +77,7 @@ public:
 };
 
 
+
 enum AnalysisStatus { ONGOING, FINISHED, ERROR };
 
 /*
@@ -108,7 +109,7 @@ class AnalysisMachine
 	// EXPRESSION ANALYSIS BLOCK
 
 	// Pointer to the state, that analyses expressions
-	ExpressionAnalysisBlockState* expressionAnalysisBlock;
+	class ExpressionAnalysisBlockState* expressionAnalysisBlock;
 
 	// State the analysis machine is going to transition to when exiting the expression analysis block
 	State* expressionBlockExitTarget;
@@ -195,30 +196,10 @@ public:
 	 *	The result of the analysis will be stored in @outResult
 	 *  @entryToken is just passed to the EnterState of expression analysis block
 	 */
-	void EnterExpressionAnalysisState(State* exitTarget, std::shared_ptr<Expression>* outResult, const Token& entryToken)
-	{
-		expressionBlockExitTarget = exitTarget;
-		cachedExpressionAnalysisResultOutput = outResult;
-
-		// Transitioning to the analysis block, without calling exit on the current state (it is not finished yet)
-		currentState = expressionAnalysisBlock;
-		currentState->EnterState(entryToken);
-	}
+	void EnterExpressionAnalysisState(State* exitTarget, std::shared_ptr<Expression>* outResult, const Token& entryToken);
 
 	// Called by the expression analysis state, once the analysis has been finished
-	void ExpressionAnalysisFinished(std::shared_ptr<Expression> result, const Token& exitToken)
-	{
-		// Storing result in the requested location
-		*cachedExpressionAnalysisResultOutput = result;
-
-		// Returning to the state that called the analysis block
-		currentState->ExitState();
-		currentState = expressionBlockExitTarget;
-
-		// No EnterState is required here as the state is already in process of analysing it's part
-		// Instead, we are using process element to CONTINUE execution of the state
-		ProcessElement(exitToken);
-	}
+	void ExpressionAnalysisFinished(std::shared_ptr<Expression> result, const Token& exitToken);
 
 public:
 
@@ -227,28 +208,7 @@ public:
 	~AnalysisMachine();
 
 	// Processes a single source code element
-	void ProcessElement(const Token& element)
-	{
-		if (analysisStatus == ONGOING)
-		{
-			try
-			{
-				State* newState = currentState->ProcessElement(element);
-				if (newState)
-				{
-					currentState->ExitState();
-					currentState = newState;
-					newState->EnterState(element);
-				}
-			}
-
-			catch (std::exception e)
-			{
-				analysisErrorLog.push_back(std::string(e.what()));
-				analysisStatus = ERROR;
-			}
-		}
-	}
+	void ProcessElement(const Token& element);
 
 	// Returns the result of the analysis
 	const HierarchicalList<std::shared_ptr<Instruction>>& GetResult() { return codeResult; }
