@@ -30,6 +30,11 @@ public:
 	{
 		programState.log.push_back("Program started, name: " + _programName);
 	};
+
+	std::string GetStringNotation() override
+	{
+		return "IProgram(" + _programName + ")";
+	}
 };
 
 // 'const' keyword, logs the start of the const section
@@ -45,6 +50,11 @@ public:
 	{
 		programState.log.push_back("Const block started");
 	};
+
+	std::string GetStringNotation() override
+	{
+		return "IConstBlock()";
+	}
 };
 
 // 'var' keyword, logs the start of the var section
@@ -59,6 +69,11 @@ public:
 	{
 		programState.log.push_back("Var block started");
 	};
+
+	std::string GetStringNotation() override
+	{
+		return "IVarBlock()";
+	}
 };
 
 // 'begin' keyword of the main code block, logs the start of the main code block section
@@ -74,6 +89,11 @@ public:
 	{
 		programState.log.push_back("Main block started");
 	};
+
+	std::string GetStringNotation() override
+	{
+		return "IMainBlock()";
+	}
 };
 
 
@@ -100,6 +120,11 @@ public:
 		programState.valuesTable[_constName] = _value;
 		programState.log.push_back("Const " + _constName + " = " + _value->PrintValue() + " declared");
 	};
+
+	std::string GetStringNotation() override
+	{
+		return "IDeclareConst(" + _constName + ", " + _value->PrintValue() + ")";
+	}
 };
 
 
@@ -130,6 +155,11 @@ public:
 		programState.valuesTable[_name] = value;
 
 		programState.log.push_back("Var " + _name + " = " + value->PrintValue() + " declared");
+	}
+
+	std::string GetStringNotation() override
+	{
+		return "IDeclareVar(" + strType[_type] + ", " + _name + ")";
 	}
 };
 
@@ -184,6 +214,11 @@ public:
 
 		programState.valuesTable[_name] = value;
 	}
+
+	std::string GetStringNotation() override
+	{
+		return "IAssignVar(" + _name + ", " + ")";
+	}
 };
 
 
@@ -211,7 +246,7 @@ public:
 
 		if (nameValue->GetType() != STRING) throw(std::runtime_error("FATAL: Read instruction received a non-string variable name"));
 
-		std::string cachedVarName = std::dynamic_pointer_cast<StringValue>(nameValue)->value;
+		std::string cachedVarName = dynamic_cast<StringValue*>(nameValue.get())->value;
 
 		if (programState.valuesTable.count(cachedVarName) == 0) throw(std::runtime_error("FATAL: Read instruction trying to write into an invalid variable '" + cachedVarName + "'!"));
 
@@ -292,6 +327,11 @@ public:
 			}
 		}
 	}
+
+	std::string GetStringNotation() override
+	{
+		return "IRead()";
+	}
 };
 
 
@@ -346,8 +386,12 @@ public:
 		programState.log.push_back("OUTPUT: " + output);
 		programState.ioProcessor->CallOutputString(output);
 	}
-};
 
+	std::string GetStringNotation() override
+	{
+		return "IWrite()";
+	}
+};
 
 // Else function
 class IElse : public Instruction
@@ -384,8 +428,12 @@ public:
 			programState.log.push_back("Entering ELSE body");
 		}
 	}
-};
 
+	std::string GetStringNotation() override
+	{
+		return "IElse()";
+	}
+};
 
 // Branching function
 class IIf : public Instruction
@@ -457,8 +505,12 @@ public:
 			programState.instructionPointer = currentNode->pNext;
 		}
 	}
-};
 
+	std::string GetStringNotation() override
+	{
+		return "IIf()";
+	}
+};
 
 // While loop function
 class IWhile : public Instruction
@@ -532,5 +584,10 @@ public:
 			programState.log.push_back("Skipping WHILE body");
 			programState.instructionPointer = programState.instructionPointer->pNext;
 		}
+	}
+
+	std::string GetStringNotation() override
+	{
+		return "IWhile()";
 	}
 };

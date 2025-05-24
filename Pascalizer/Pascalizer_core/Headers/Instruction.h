@@ -19,7 +19,7 @@ public:
 
 	// Used for testing
 	// Retunns "Instruction(arguments)"
-	virtual std::string GetStringNotation() { return ""; }
+	virtual std::string GetStringNotation() = 0;
 };
 
 
