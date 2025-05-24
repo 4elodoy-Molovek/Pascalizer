@@ -4,18 +4,24 @@
 #include <map>
 #include <stack>
 #include <stdexcept>
+#include "ProgramState.h"
 #include "ValuesTable.h"
 
 /*
- * Program block, used by some instructions to implement expressions 
+ * Program block, used by some instructions to implement expressions
  */
 
 
-// All posible operation types
-enum OperationType {OP_NONE, OP_ADD, OP_SUBTRACT, OP_DIVIDE, OP_MULTIPLY, OP_MOD, OP_DIV, OP_SIN /*...*/ };
+ // All posible operation types
+enum OperationType
+{
+	OP_NONE, OP_ADD, OP_SUBTRACT, OP_DIVIDE, OP_MULTIPLY, OP_MOD, OP_DIV,
+	OP_MORE, OP_EQUAL, OP_MORE_EQUAL, OP_LESS, OP_NOT_EQUAL, OP_LESS_EQUAL,
+	OP_SIN
+};
 
 /*
- * Base class for elements containing data about a single expression element 
+ * Base class for elements containing data about a single expression element
  */
 class ExpressionElement
 {
@@ -34,7 +40,7 @@ public:
 
 	std::shared_ptr<Value> value;
 
-	ValueExpressionElement(std::shared_ptr<Value> inValue): value(inValue) {}
+	ValueExpressionElement(std::shared_ptr<Value> inValue) : value(inValue) {}
 	~ValueExpressionElement() {}
 };
 
@@ -85,7 +91,7 @@ public:
 	Expression(const std::vector<std::shared_ptr<ExpressionElement>>& inPostfix) : postfix(inPostfix) {}
 
 	// Calculates a result of the stored expression
-	std::shared_ptr<Value> Caculate(ProgramState& programState) 
+	std::shared_ptr<Value> Caculate(ProgramState& programState)
 	{
 		// Loading variables from the program state
 		for (int i = 0; i < postfix.size(); i++)
@@ -93,7 +99,7 @@ public:
 			if (auto varElement = dynamic_cast<VariableExpressionElement*>(postfix[i].get()))
 			{
 				// Checking if variable is valid
-				if (programState.valuesTable.count(varElement->varName) == 0) throw(std::runtime_error("RUNTIME ERROR: Unknown variable " + varElement->varName + "!"));
+				if (programState.valuesTable.count(varElement->varName) == 0) throw(std::runtime_error("RUNTIME ERROR: Unknown variable '" + varElement->varName + "'!"));
 
 				// Replacing variable element with a value element
 				std::shared_ptr<Value> varValue = programState.valuesTable[varElement->varName];
@@ -101,9 +107,8 @@ public:
 			}
 		}
 
-
 		std::stack<std::shared_ptr<ValueExpressionElement>> calculationStack;
-		for (std::shared_ptr<ExpressionElement> el : postfix) 
+		for (std::shared_ptr<ExpressionElement> el : postfix)
 		{
 
 			// if cur_elemnt is value
@@ -171,12 +176,12 @@ public:
 };
 
 
-class SubstractOperation final : public OperationExpressionElement
+class SubtractOperation final : public OperationExpressionElement
 {
 public:
 
-	SubstractOperation() { type = OP_SUBTRACT; }
-	~SubstractOperation() {}
+	SubtractOperation() { type = OP_SUBTRACT; }
+	~SubtractOperation() {}
 
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
@@ -227,7 +232,126 @@ public:
 		//? ñëîæåíèå ïðèíèìàåò îáû÷íûå -ïîèíòåðû- ïåðåìåííûå, íî âîçâðàùàåò shared
 	}
 };
-// TO DO: Add more
+
+
+class DivOperation final : public OperationExpressionElement
+{
+public:
+
+	DivOperation() { type = OP_DIV; }
+	~DivOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop();
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>(div((*lhs->value), (*rhs->value))));
+	}
+};
+
+class EqualOperation final : public OperationExpressionElement
+{
+public:
+
+	EqualOperation() { type = OP_EQUAL; }
+	~EqualOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop();
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) == (*rhs->value)));
+	}
+};
+
+class NotEqualOperation final : public OperationExpressionElement
+{
+public:
+
+	NotEqualOperation() { type = OP_NOT_EQUAL; }
+	~NotEqualOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop();
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) != (*rhs->value)));
+	}
+};
+
+class LessOperation final : public OperationExpressionElement
+{
+public:
+
+	LessOperation() { type = OP_LESS; }
+	~LessOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop();
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) < (*rhs->value)));
+	}
+};
+
+class LessEqualOperation final : public OperationExpressionElement
+{
+public:
+
+	LessEqualOperation() { type = OP_LESS_EQUAL; }
+	~LessEqualOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop();
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) <= (*rhs->value)));
+	}
+};
+
+class MoreOperation final : public OperationExpressionElement
+{
+public:
+
+	MoreOperation() { type = OP_MORE; }
+	~MoreOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop();
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) > (*rhs->value)));
+	}
+};
+
+class MoreEqualOperation final : public OperationExpressionElement
+{
+public:
+
+	MoreEqualOperation() { type = OP_MORE_EQUAL; }
+	~MoreEqualOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop();
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) >= (*rhs->value)));
+	}
+};
 
 
 class SinOperation final : public OperationExpressionElement
@@ -244,28 +368,3 @@ public:
 		calculationStack.push(std::make_shared<ValueExpressionElement>(usin(*(rhs->value))));
 	}
 };
-
-
-
-
-/*
-* what's wrong
-* 
-class MultiplyOperation final : public OperationExpressionElement
-{
-public:
-
-	MultiplyOperation() {}
-	~MultiplyOperation() {}
-
-	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
-	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
-	{
-		auto rhs = calculationStack.top().get(); calculationStack.pop(); //? ÷òî âîçâðàòèò top/pop èç ïóñòîãî ñòåêà
-		auto lhs = (calculationStack.top()).get(); calculationStack.pop();
-
-		calculationStack.push(std::make_shared<ValueExpressionElement>(*(rhs->value.get()) * *(lhs->value.get())));
-		//? ñëîæåíèå ïðèíèìàåò îáû÷íûå -ïîèíòåðû- ïåðåìåííûå, íî âîçâðàùàåò shared
-	}
-};
-*/

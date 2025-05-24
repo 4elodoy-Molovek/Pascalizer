@@ -19,9 +19,11 @@ public:
 	~Interpreter() {}
 
 	// Executes the program
-	void RunProgram(const HierarchicalList<Instruction*>& code)
+	void RunProgram(const HierarchicalList<std::shared_ptr<Instruction>>& code, class IO_ProcessorInterface* ioProcessor)
 	{
-		ProgramState currentState(code);
+		ProgramState currentState(code, ioProcessor);
+
+		std::string errorCache = "";
 
 		try
 		{
@@ -50,12 +52,13 @@ public:
 
 		catch (std::exception e)
 		{
-			// TO-DO:
-			// Add error catching and cacheing
+			errorCache = "PROGRAM CRASH DETECTED: " + std::string(e.what());
 		}
 
 		// Cacheing debug values
 		cachedLog = currentState.log;
+		cachedLog.push_back(errorCache);
+
 		cachedTable = currentState.valuesTable;
 	}
 

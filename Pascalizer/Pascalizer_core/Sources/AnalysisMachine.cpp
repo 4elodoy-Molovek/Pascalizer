@@ -3,6 +3,7 @@
 #include "AnalysisMachine_ExpressionAnalysisBlock.h"
 
 
+
 // Constructs the machine
 AnalysisMachine::AnalysisMachine()
 {
@@ -93,7 +94,8 @@ AnalysisMachine::AnalysisMachine()
 
 
 	// Setting initial state
-	currentState = programVerificationState;
+	initialState = programVerificationState;
+	currentState = initialState;
 
 
 	// Expression analysis block
@@ -106,4 +108,62 @@ AnalysisMachine::~AnalysisMachine()
 {
 	for (auto& state : states)
 		delete state;
+}
+
+
+void AnalysisMachine::EnterExpressionAnalysisState(State* exitTarget, std::shared_ptr<Expression>* outResult, const Token& entryToken)
+{
+	expressionBlockExitTarget = exitTarget;
+	cachedExpressionAnalysisResultOutput = outResult;
+
+	// Transitioning to the analysis block, without calling exit on the current state (it is not finished yet)
+	currentState = expressionAnalysisBlock;
+	currentState->EnterState(entryToken);
+}
+
+void AnalysisMachine::ExpressionAnalysisFinished(std::shared_ptr<Expression> result, const Token& exitToken)
+{
+	// Storing result in the requested location
+	*cachedExpressionAnalysisResultOutput = result;
+
+	// Returning to the state that called the analysis block
+	currentState->ExitState();
+	currentState = expressionBlockExitTarget;
+
+	// No EnterState is required here as the state is already in process of analysing it's part
+	// Instead, we are using process element to CONTINUE execution of the state
+	ProcessElement(exitToken);
+}
+
+
+void AnalysisMachine::ProcessElement(const Token& element)
+{
+	if (analysisStatus == ONGOING)
+	{
+		try
+		{
+			State* newState = currentState->ProcessElement(element);
+			if (newState)
+			{
+				currentState->ExitState();
+				currentState = newState;
+				newState->EnterState(element);
+			}
+		}
+
+		catch (std::exception e)
+		{
+			analysisErrorLog.push_back(std::string(e.what()));
+			analysisStatus = ERROR;
+		}
+	}
+}
+
+void AnalysisMachine::CleanUp()
+{
+	codeResult.Clear();
+	currentState = initialState;
+
+	analysisErrorLog.clear();
+	analysisStatus = ONGOING;
 }

@@ -1,10 +1,13 @@
-﻿#pragma once
+#pragma once
 #include "Instruction.h"
 #include "ExpressionEvaluationBlock.h"
+#include "ValuesTable.h"
 #include <cmath>
 #include <vector>
 #include <string>
 #include <iostream>
+#include <stdexcept>
+#include "IO_ProcessorInterface.h"
 
 
 std::string strType[3] = { "INT", "DOUBLE", "STRING" }; //for logs and exceptions
@@ -17,16 +20,21 @@ private:
 
 public:
 
-	IProgram(const std::string& programName) 
+	IProgram(const std::string& programName)
 	{
 		_programName = programName;
 	}
 	~IProgram() override {}
 
-	void Execute(ProgramState& programState) override 
+	void Execute(ProgramState& programState) override
 	{
 		programState.log.push_back("Program started, name: " + _programName);
 	};
+
+	std::string GetStringNotation() override
+	{
+		return "IProgram(" + _programName + ")";
+	}
 };
 
 // 'const' keyword, logs the start of the const section
@@ -38,10 +46,15 @@ public:
 	IConstBlock() {}
 	~IConstBlock() override {}
 
-	void Execute(ProgramState& programState) override 
+	void Execute(ProgramState& programState) override
 	{
 		programState.log.push_back("Const block started");
 	};
+
+	std::string GetStringNotation() override
+	{
+		return "IConstBlock()";
+	}
 };
 
 // 'var' keyword, logs the start of the var section
@@ -52,10 +65,15 @@ public:
 
 	IVarBlock() {}
 	~IVarBlock() override {}
-	void Execute(ProgramState& programState) override 
+	void Execute(ProgramState& programState) override
 	{
 		programState.log.push_back("Var block started");
 	};
+
+	std::string GetStringNotation() override
+	{
+		return "IVarBlock()";
+	}
 };
 
 // 'begin' keyword of the main code block, logs the start of the main code block section
@@ -67,10 +85,15 @@ public:
 	IMainBlock() {}
 	~IMainBlock() override {}
 
-	void Execute(ProgramState& programState) override 
+	void Execute(ProgramState& programState) override
 	{
 		programState.log.push_back("Main block started");
 	};
+
+	std::string GetStringNotation() override
+	{
+		return "IMainBlock()";
+	}
 };
 
 
@@ -84,19 +107,24 @@ private:
 
 public:
 
-	IDeclareConst(const std::string& constName, std::shared_ptr<Value> value) 
+	IDeclareConst(const std::string& constName, std::shared_ptr<Value> value)
 	{
 		_constName = constName;
 		_value = value;
 	}
 	~IDeclareConst() override {}
 
-	void Execute(ProgramState& programState) override 
+	void Execute(ProgramState& programState) override
 	{
 		programState.log.push_back("Declaring const...");
 		programState.valuesTable[_constName] = _value;
 		programState.log.push_back("Const " + _constName + " = " + _value->PrintValue() + " declared");
 	};
+
+	std::string GetStringNotation() override
+	{
+		return "IDeclareConst(" + _constName + ", " + _value->PrintValue() + ")";
+	}
 };
 
 
@@ -109,14 +137,14 @@ private:
 
 public:
 
-	IDeclareVar(Type type, const std::string& name) 
+	IDeclareVar(Type type, const std::string& name)
 	{
 		_type = type;
 		_name = name;
 	}
 	~IDeclareVar() override {}
 
-	void Execute(ProgramState& programState) override 
+	void Execute(ProgramState& programState) override
 	{
 		programState.log.push_back("Declaring var...");
 		std::shared_ptr<Value> value;
@@ -127,6 +155,11 @@ public:
 		programState.valuesTable[_name] = value;
 
 		programState.log.push_back("Var " + _name + " = " + value->PrintValue() + " declared");
+	}
+
+	std::string GetStringNotation() override
+	{
+		return "IDeclareVar(" + strType[_type] + ", " + _name + ")";
 	}
 };
 
@@ -181,26 +214,53 @@ public:
 
 		programState.valuesTable[_name] = value;
 	}
+
+	std::string GetStringNotation() override
+	{
+		return "IAssignVar(" + _name + ", " + ")";
+	}
 };
 
 
 // Reads input from keyboard, writing it into the given variable
-class IRead : public Instruction
+class IRead : public Instruction, public IO_InstructionInterface
 {
 private:
-	std::string _varName;
+	std::shared_ptr<Expression> _varNameExpression;
+
+	std::string cachedVarName;
+	ProgramState* programStatePtr;
 
 public:
 
-	IRead(const std::string& varName) 
+	IRead(std::shared_ptr<Expression> varNameExpression)
 	{
-		_varName = varName;
+		_varNameExpression = varNameExpression;
 	}
 	~IRead() override {}
 
-	void Execute(ProgramState& programState) override 
+	void Execute(ProgramState& programState) override
 	{
+		// Calculating var name expression
+		std::shared_ptr<Value> nameValue = _varNameExpression->Caculate(programState);
+
+		if (nameValue->GetType() != STRING) throw(std::runtime_error("FATAL: Read instruction received a non-string variable name"));
+
+		std::string cachedVarName = dynamic_cast<StringValue*>(nameValue.get())->value;
+
+		if (programState.valuesTable.count(cachedVarName) == 0) throw(std::runtime_error("FATAL: Read instruction trying to write into an invalid variable '" + cachedVarName + "'!"));
+
+
+		programStatePtr = &programState;
+
 		programState.log.push_back("Reading from standard input...");
+
+		programState.ioProcessor->CallReceiveUserInput(this);
+	}
+
+	// Called when the user input has been received after this instruction requested it
+	virtual void OnUserInputReceived(const std::string& userInput) override
+	{
 		std::string input;
 		std::shared_ptr<Value> value;
 
@@ -210,62 +270,67 @@ public:
 		double doubleInput = std::stod(input, &doublePos);
 		if (intPos == input.size()) // if got an int
 		{
-			programState.log.push_back("Got INT: " + input);
-			if (programState.valuesTable[_varName]->GetType() == Type::INT)
+			programStatePtr->log.push_back("Got INT: " + input);
+			if (programStatePtr->valuesTable[cachedVarName]->GetType() == Type::INT)
 			{
 				value = std::make_shared<IntValue>(intInput);
-				programState.valuesTable[_varName] = value;
-				programState.log.push_back("Assigned to var " + _varName);
+				programStatePtr->valuesTable[cachedVarName] = value;
+				programStatePtr->log.push_back("Assigned to var " + cachedVarName);
 			}
-			else if (programState.valuesTable[_varName]->GetType() == Type::DOUBLE)
+			else if (programStatePtr->valuesTable[cachedVarName]->GetType() == Type::DOUBLE)
 			{
 				value = std::make_shared<DoubleValue>(intInput);
-				programState.valuesTable[_varName] = value;
-				programState.log.push_back("Assigned to var " + _varName);
+				programStatePtr->valuesTable[cachedVarName] = value;
+				programStatePtr->log.push_back("Assigned to var " + cachedVarName);
 			}
 			else
 			{
-				programState.log.push_back("FATAL: tried to assign INT to " + strType[programState.valuesTable[_varName]->GetType()]);
-				throw(std::runtime_error("FATAL: tried to assign INT to " + strType[programState.valuesTable[_varName]->GetType()]));
+				programStatePtr->log.push_back("FATAL: tried to assign INT to " + strType[programStatePtr->valuesTable[cachedVarName]->GetType()]);
+				throw(std::runtime_error("FATAL: tried to assign INT to " + strType[programStatePtr->valuesTable[cachedVarName]->GetType()]));
 			}
 
 		}
 		else if (doublePos == input.size()) // if got a double
 		{
-			programState.log.push_back("Got DOUBLE: " + input);
-			if (programState.valuesTable[_varName]->GetType() == Type::DOUBLE)
+			programStatePtr->log.push_back("Got DOUBLE: " + input);
+			if (programStatePtr->valuesTable[cachedVarName]->GetType() == Type::DOUBLE)
 			{
 				value = std::make_shared<DoubleValue>(doubleInput);
-				programState.valuesTable[_varName] = value;
-				programState.log.push_back("Assigned to var " + _varName);
+				programStatePtr->valuesTable[cachedVarName] = value;
+				programStatePtr->log.push_back("Assigned to var " + cachedVarName);
 			}
-			else if (programState.valuesTable[_varName]->GetType() == Type::INT)
+			else if (programStatePtr->valuesTable[cachedVarName]->GetType() == Type::INT)
 			{
 				value = std::make_shared<IntValue>(std::round(doubleInput));
-				programState.valuesTable[_varName] = value;
-				programState.log.push_back("Assigned to var " + _varName);
+				programStatePtr->valuesTable[cachedVarName] = value;
+				programStatePtr->log.push_back("Assigned to var " + cachedVarName);
 			}
 			else
 			{
-				programState.log.push_back("FATAL: tried to assign DOUBLE to " + strType[programState.valuesTable[_varName]->GetType()]);
-				throw(std::runtime_error("FATAL: tried to assign DOUBLE to " + strType[programState.valuesTable[_varName]->GetType()]));
+				programStatePtr->log.push_back("FATAL: tried to assign DOUBLE to " + strType[programStatePtr->valuesTable[cachedVarName]->GetType()]);
+				throw(std::runtime_error("FATAL: tried to assign DOUBLE to " + strType[programStatePtr->valuesTable[cachedVarName]->GetType()]));
 			}
 		}
 		else // if got a string
 		{
-			programState.log.push_back("Got STRING");
-			if (programState.valuesTable[_varName]->GetType() == Type::STRING)
+			programStatePtr->log.push_back("Got STRING");
+			if (programStatePtr->valuesTable[cachedVarName]->GetType() == Type::STRING)
 			{
-				value = std::make_shared<StringValue>(doubleInput);
-				programState.valuesTable[_varName] = value;
-				programState.log.push_back("Assigned to var " + _varName);
+				value = std::make_shared<StringValue>(input);
+				programStatePtr->valuesTable[cachedVarName] = value;
+				programStatePtr->log.push_back("Assigned to var " + cachedVarName);
 			}
 			else
 			{
-				programState.log.push_back("FATAL: tried to assign DOUBLE to " + strType[programState.valuesTable[_varName]->GetType()]);
-				throw(std::runtime_error("FATAL: tried to assign DOUBLE to " + strType[programState.valuesTable[_varName]->GetType()]));
+				programStatePtr->log.push_back("FATAL: tried to assign DOUBLE to " + strType[programStatePtr->valuesTable[cachedVarName]->GetType()]);
+				throw(std::runtime_error("FATAL: tried to assign DOUBLE to " + strType[programStatePtr->valuesTable[cachedVarName]->GetType()]));
 			}
 		}
+	}
+
+	std::string GetStringNotation() override
+	{
+		return "IRead()";
 	}
 };
 
@@ -279,13 +344,13 @@ private:
 
 public:
 
-	IWrite(std::vector<std::shared_ptr<Expression>> expressions) 
+	IWrite(std::vector<std::shared_ptr<Expression>> expressions)
 	{
 		_expressions = expressions;
 	}
 	~IWrite() override {}
 
-	void Execute(ProgramState& programState) override 
+	void Execute(ProgramState& programState) override
 	{
 		programState.log.push_back("Writing to standard output...");
 
@@ -314,16 +379,61 @@ public:
 				programState.log.push_back("FATAL: Expression " + std::to_string(i) + "/" + std::to_string(expressionCount) + " calculation failed");
 				throw(std::runtime_error("FATAL: Expression " + std::to_string(i) + "/" + std::to_string(expressionCount) + " calculation failed"));
 			}
-			
+
 			output += value->PrintValue();
 		}
 
 		programState.log.push_back("OUTPUT: " + output);
-		std::cout << output;
+		programState.ioProcessor->CallOutputString(output);
+	}
+
+	std::string GetStringNotation() override
+	{
+		return "IWrite()";
 	}
 };
 
+// Else function
+class IElse : public Instruction
+{
 
+public:
+
+	IElse() {}
+	~IElse() override {}
+
+	void Execute(ProgramState& programState) override
+	{
+		programState.log.push_back("ELSE block started");
+
+		if (programState.branchingStack.empty())
+		{
+			programState.log.push_back("FATAL: ELSE without mathing IF");
+			throw(std::runtime_error("FATAL: ELSE without mathing IF"));
+		}
+
+		bool ifConditionWasTrue = programState.branchingStack.top();
+		programState.branchingStack.pop();
+
+		std::string ifConditionWasTrueStr = ifConditionWasTrue ? "TRUE" : "FALSE";
+		programState.log.push_back("Condition is: " + ifConditionWasTrueStr);
+
+		if (ifConditionWasTrue)
+		{
+			programState.log.push_back("Skipping ELSE body");
+			programState.instructionPointer = programState.instructionPointer->pNext;
+		}
+		else
+		{
+			programState.log.push_back("Entering ELSE body");
+		}
+	}
+
+	std::string GetStringNotation() override
+	{
+		return "IElse()";
+	}
+};
 
 // Branching function
 class IIf : public Instruction
@@ -395,46 +505,12 @@ public:
 			programState.instructionPointer = currentNode->pNext;
 		}
 	}
-};
 
-
-// Else function
-class IElse : public Instruction
-{
-
-public:
-
-	IElse() {}
-	~IElse() override {}
-
-	void Execute(ProgramState& programState) override
+	std::string GetStringNotation() override
 	{
-		programState.log.push_back("ELSE block started");
-
-		if (programState.branchingStack.empty())
-		{
-			programState.log.push_back("FATAL: ELSE without mathing IF");
-			throw(std::runtime_error("FATAL: ELSE without mathing IF"));
-		}
-
-		bool ifConditionWasTrue = programState.branchingStack.top();
-		programState.branchingStack.pop();
-
-		std::string ifConditionWasTrueStr = ifConditionWasTrue ? "TRUE" : "FALSE";
-		programState.log.push_back("Condition is: " + ifConditionWasTrueStr);
-
-		if (ifConditionWasTrue)
-		{
-			programState.log.push_back("Skipping ELSE body");
-			programState.instructionPointer = programState.instructionPointer->pNext;
-		}
-		else
-		{
-			programState.log.push_back("Entering ELSE body");
-		}
+		return "IIf()";
 	}
 };
-
 
 // While loop function
 class IWhile : public Instruction
@@ -444,13 +520,13 @@ private:
 
 public:
 
-	IWhile(std::shared_ptr<Expression> expression) 
+	IWhile(std::shared_ptr<Expression> expression)
 	{
 		condition = expression;
 	}
 	~IWhile() override {}
 
-	void Execute(ProgramState& programState) override 
+	void Execute(ProgramState& programState) override
 	{
 		programState.log.push_back("WHILE block started");
 
@@ -508,5 +584,10 @@ public:
 			programState.log.push_back("Skipping WHILE body");
 			programState.instructionPointer = programState.instructionPointer->pNext;
 		}
+	}
+
+	std::string GetStringNotation() override
+	{
+		return "IWhile()";
 	}
 };

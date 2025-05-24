@@ -205,7 +205,17 @@ public:
 	// Creates an instruction out of stored data
 	virtual std::vector<std::shared_ptr<Instruction>> Collapse() override
 	{
-		// FUNCTIONS blah blah blah
+		// Write function handling
+		if (functionName == "Write")
+		{
+			return { std::make_shared<IWrite>(argumentExpressions) };
+		}
+
+		// Read function handling
+		if (functionName == "Read")
+		{
+			return { std::make_shared<IRead>(argumentExpressions[0])};
+		}
 	}
 };
 

@@ -67,6 +67,14 @@ class ExpressionAnalysisBlockState : public State
 		else	if (operationStr == "/") operation = std::make_shared<DivideOperation>();
 		else	if (operationStr == "mod") operation = std::make_shared<ModOperation>();
 		else	if (operationStr == "div") operation = std::make_shared<DivOperation>();
+
+		else	if (operationStr == ">") operation = std::make_shared<MoreOperation>();
+		else	if (operationStr == ">=") operation = std::make_shared<MoreEqualOperation>();
+		else	if (operationStr == "<") operation = std::make_shared<LessOperation>();
+		else	if (operationStr == "<=") operation = std::make_shared<LessEqualOperation>();
+		else	if (operationStr == "==") operation = std::make_shared<EqualOperation>();
+		else	if (operationStr == "!=") operation = std::make_shared<NotEqualOperation>();
+
 		
 		// Functions (aslo processed as math operators for now)
 		else	if (operationStr == "sin") operation = std::make_shared<SinOperation>();
@@ -83,7 +91,7 @@ class ExpressionAnalysisBlockState : public State
 
 
 public:
-	ExpressionAnalysisBlockState(const AnalysisMachine& analysisMachine) : State(analysisMachine) {}
+	ExpressionAnalysisBlockState(AnalysisMachine& analysisMachine) : State(analysisMachine) {}
 
 
 	~ExpressionAnalysisBlockState() {}
@@ -105,7 +113,7 @@ public:
 	// Called when the machine exits this state
 	virtual void ExitState() override {}
 
-	virtual State* ProcessElement(const Token& nextElement) override 
+	virtual State* ProcessElement(const Token& nextElement) override
 	{
 		// Base loop state
 		if (innerState == "initial")
@@ -152,6 +160,7 @@ public:
 
 			if (nextElement.type == COMMA || nextElement.type == END_LINE)
 			{
+				DumpOperationStack();
 				ExitProcedure(nextElement);
 				return nullptr;
 			}
@@ -200,6 +209,7 @@ public:
 
 				else
 				{
+					DumpOperationStack();
 					ExitProcedure(nextElement);
 					return nullptr;
 				}

@@ -62,7 +62,7 @@ public:
 		// Processing "Program" keyword
 		if (innerState == 0)
 		{
-			CheckTokenType(nextElement, PROGRAM);
+			CheckTokenType(nextElement, { PROGRAM });
 
 			innerState++;
 			return nullptr;
@@ -71,7 +71,7 @@ public:
 		// Processing progam name
 		if (innerState == 1)
 		{
-			CheckTokenType(nextElement, NAME);
+			CheckTokenType(nextElement, { NAME });
 
 			accumulator->StoreElement(nextElement, 0);
 
@@ -82,7 +82,7 @@ public:
 		// End line processig -> Collapsing the accumulator
 		if (innerState == 2)
 		{
-			CheckTokenType(nextElement, END_LINE);
+			CheckTokenType(nextElement, { END_LINE });
 
 			parentMachine.StoreInstruction(accumulator->Collapse()[0]);
 
@@ -95,11 +95,12 @@ public:
 		{
 			parentMachine.levelOffset++;
 
+			CheckTokenType(nextElement, { CONST, VAR, BEGIN });
+
 			if (nextElement.type == CONST)	return constBlockState;
 			if (nextElement.type == VAR)	return varBlockState;
 			if (nextElement.type == BEGIN)	return mainBlockBeginState;
 
-			CheckTokenType(nextElement, BEGIN);
 			return nullptr;
 		}
 	}
@@ -145,7 +146,7 @@ public:
 
 	virtual State* ProcessElement(const Token& nextElement) override 
 	{
-		CheckTokenType(nextElement, NAME);
+		CheckTokenType(nextElement, { NAME });
 		parentMachine.StoreInstruction(parentMachine.currentAccumulator->Collapse()[0]);
 
 		parentMachine.levelOffset++;
@@ -193,7 +194,6 @@ public:
 
 		// We have entered the state with the name token, so we need to store it right away
 		accumulator->StoreElement(element, 0);
-		innerState++;
 	}
 
 	// Called when the machine exits this state
@@ -202,11 +202,18 @@ public:
 	virtual State* ProcessElement(const Token& nextElement) override
 	{
 		// state 0: name was processed in the EnterState
+		if (innerState == 1)
+		{
+			CheckTokenType(nextElement, { COLON });
+
+			innerState++;
+			return nullptr;
+		}
 
 		// Type
 		if (innerState == 1)
 		{
-			CheckTokenType(nextElement, NAME);
+			CheckTokenType(nextElement, { NAME });
 			accumulator->StoreElement(nextElement, 1);
 
 			innerState++;
@@ -216,7 +223,7 @@ public:
 		// Assign symbol
 		if (innerState == 2)
 		{
-			CheckTokenType(nextElement, EQUAL);
+			CheckTokenType(nextElement, { EQUAL });
 
 			innerState++;
 			return nullptr;
@@ -225,7 +232,7 @@ public:
 		// Value
 		if (innerState == 3)
 		{
-			CheckTokenType(nextElement, VALUE);
+			CheckTokenType(nextElement, {VALUE_INT, VALUE_DOUBLE, VALUE_STRING});
 			accumulator->StoreElement(nextElement, 2);
 
 			innerState++;
@@ -235,7 +242,7 @@ public:
 		// Endline + COLLAPSE
 		if (innerState == 4)
 		{
-			CheckTokenType(nextElement, END_LINE);
+			CheckTokenType(nextElement, { END_LINE });
 			parentMachine.StoreInstruction(accumulator->Collapse()[0]);
 
 			innerState++;
@@ -245,11 +252,12 @@ public:
 		// NEXT STATE
 		if (innerState == 5)
 		{
+			CheckTokenType(nextElement, {NAME, VAR, BEGIN});
+
 			if (nextElement.type == NAME) return this;
 			if (nextElement.type == VAR) return exitToVarBlockState;
-			if (nextElement.type == BEGIN) return mainBlockBeginState;
+			if (nextElement.type == BEGIN) { parentMachine.levelOffset--; return mainBlockBeginState; }
 
-			CheckTokenType(nextElement, BEGIN);
 			return nullptr;
 		}
 	}
@@ -297,7 +305,7 @@ public:
 
 	virtual State* ProcessElement(const Token& nextElement) override 
 	{
-		CheckTokenType(nextElement, NAME);
+		CheckTokenType(nextElement, { NAME });
 
 		std::vector<std::shared_ptr<Instruction>> varDeclarationInstructions = accumulator->Collapse();
 
@@ -361,7 +369,7 @@ public:
 	{
 		if (innerState == 0)
 		{
-			CheckTokenType(nextElement, NAME);
+			CheckTokenType(nextElement, { NAME });
 			accumulator->StoreElement(nextElement, 0);
 
 			innerState++;
@@ -371,16 +379,16 @@ public:
 		// Expecting a comma or a colon
 		if (innerState == 1)
 		{
+			CheckTokenType(nextElement, { COMMA, COLON });
+
 			// Reverting to state 0
 			if (nextElement.type == COMMA)
 			{
 				innerState = 0;
 				return nullptr;
 			}
-
-			// Continuing to type declaration
-			CheckTokenType(nextElement, COLON);
 			
+			// Continuing to type declaration
 			innerState++;
 			return nullptr;
 		}
@@ -388,7 +396,7 @@ public:
 		// Type
 		if (innerState == 2)
 		{
-			CheckTokenType(nextElement, NAME);
+			CheckTokenType(nextElement, { NAME });
 			accumulator->StoreElement(nextElement, 1);
 
 			innerState++;
@@ -398,7 +406,7 @@ public:
 		// Endline + COLLAPSE
 		if (innerState == 3)
 		{
-			CheckTokenType(nextElement, END_LINE);
+			CheckTokenType(nextElement, { END_LINE });
 			
 			parentMachine.StoreInstruction(accumulator->Collapse()[0]);
 			
@@ -409,11 +417,12 @@ public:
 		// NEXT STATE
 		if (innerState == 4)
 		{
+			CheckTokenType(nextElement, {NAME, CONST, BEGIN});
+
 			if (nextElement.type == NAME) return this;
 			if (nextElement.type == CONST) return exitToConstBlockState;
-			if (nextElement.type == BEGIN) return mainBlockBeginState;
+			if (nextElement.type == BEGIN) { parentMachine.levelOffset--; return mainBlockBeginState; }
 
-			CheckTokenType(nextElement, BEGIN);
 			return nullptr;
 		}
 	}
@@ -516,12 +525,13 @@ public:
 	virtual State* ProcessElement(const Token& nextElement) override 
 	{
 		parentMachine.StoreInstruction(accumulator->Collapse()[0]);
+		
+		CheckTokenType(nextElement, {NAME, IF, END});
 
 		if (nextElement.type == NAME) return nameState;
 		if (nextElement.type == IF || nextElement.type == WHILE) return branchingState;
 		if (nextElement.type == END) return endBlockState;
 
-		CheckTokenType(nextElement, END);
 		return nullptr;
 	}
 };
@@ -576,6 +586,8 @@ public:
 	// If no transition is possible it means that the machine has encountered a syntax error
 	virtual State* ProcessElement(const Token& nextElement) override 
 	{
+		CheckTokenType(nextElement, { ASSIGN_OPERATOR, BRACKET_OPEN });
+
 		// Creating accumulators and transitioning to the state based on the next token
 
 		if (nextElement.type == ASSIGN_OPERATOR)
@@ -594,7 +606,6 @@ public:
 			return functionCallState;
 		}
 
-		CheckTokenType(nextElement, BRACKET_OPEN);
 		return nullptr;
 	}
 };
@@ -648,7 +659,7 @@ public:
 		accumulator = dynamic_cast<AssignVariableAccumulator*>(parentMachine.currentAccumulator);
 
 		// Entering expression analysis state right away
-		parentMachine.EnterExpressionAnalysisState(this, expressionResult, element);
+		parentMachine.EnterExpressionAnalysisState(this, &expressionResult, element);
 	}
 
 	// Called when the machine exits this state
@@ -663,7 +674,7 @@ public:
 		// CAME BACK FROM THE EXPRESSION BLOCK
 		if (innerState == 0)
 		{
-			CheckTokenType(nextElement, END_LINE);
+			CheckTokenType(nextElement, { END_LINE });
 
 			accumulator->StoreExpression(expressionResult, 1);
 
@@ -676,11 +687,12 @@ public:
 		// NEXT STATE
 		if (innerState == 1)
 		{
+			CheckTokenType(nextElement, {NAME, IF, END});
+
 			if (nextElement.type == NAME) return nameState;
 			if (nextElement.type == IF || nextElement.type == WHILE) return branchingState;
 			if (nextElement.type == END) return endBlockState;
 
-			CheckTokenType(nextElement, END);
 			return nullptr;
 		}
 	}
@@ -735,7 +747,7 @@ public:
 		accumulator = dynamic_cast<FunctionCallAccumulator*>(parentMachine.currentAccumulator);
 
 		// Entering expression analysis right away
-		parentMachine.EnterExpressionAnalysisState(this, expressionResult, element);
+		parentMachine.EnterExpressionAnalysisState(this, &expressionResult, element);
 	}
 
 	// Called when the machine exits this state
@@ -753,17 +765,18 @@ public:
 			// Storing expression argument
 			accumulator->StoreExpression(expressionResult, 1);
 
+			CheckTokenType(nextElement, {COMMA, BRACKET_CLOSE});
+
 			// Checking for more arguments
 			if (nextElement.type == COMMA)
 			{
 				innerState = 0;
-				parentMachine.EnterExpressionAnalysisState(this, expressionResult, nextElement);
+				parentMachine.EnterExpressionAnalysisState(this, &expressionResult, nextElement);
 
 				return nullptr;
 			}
 
 			// Closign bracket case
-			CheckTokenType(nextElement, BRACKET_CLOSE);
 
 			innerState++;
 			return nullptr;
@@ -772,7 +785,7 @@ public:
 		// End line + COLLAPSE
 		if (innerState == 1)
 		{
-			CheckTokenType(nextElement, END_LINE);
+			CheckTokenType(nextElement, { END_LINE });
 
 			parentMachine.StoreInstruction(accumulator->Collapse()[0]);
 
@@ -783,11 +796,12 @@ public:
 		// NEXT STATE
 		if (innerState == 2)
 		{
+			CheckTokenType(nextElement, {NAME, IF, END});
+
 			if (nextElement.type == NAME) return nameState;
 			if (nextElement.type == IF || nextElement.type == WHILE) return branchingState;
 			if (nextElement.type == END) return endBlockState;
 
-			CheckTokenType(nextElement, END);
 			return nullptr;
 		}
 	}
@@ -843,7 +857,7 @@ public:
 		}
 
 		// Will never happen, but still
-		CheckTokenType(element, IF);
+		CheckTokenType(element, { IF, WHILE });
 	}
 
 	// Called when the machine exits this state
@@ -904,18 +918,18 @@ public:
 		// Condition start
 		if (innerState == 0)
 		{
-			CheckTokenType(nextElement, BRACKET_OPEN);
+			CheckTokenType(nextElement, { BRACKET_OPEN });
 
 			innerState++;
 			
-			parentMachine.EnterExpressionAnalysisState(this, expressionResult, nextElement);
+			parentMachine.EnterExpressionAnalysisState(this, &expressionResult, nextElement);
 			return nullptr;
 		}
 
 		// BACK FROM EXPRESSION ANALYSIS
 		if (innerState == 1)
 		{
-			CheckTokenType(nextElement, BRACKET_CLOSE);
+			CheckTokenType(nextElement, { BRACKET_CLOSE });
 
 			// Storing condition
 			accumulator->StoreExpression(expressionResult, 0);
@@ -929,10 +943,11 @@ public:
 		// NEXT STATE
 		if (innerState == 2)
 		{
+			CheckTokenType(nextElement, {IF, WHILE, NAME, BEGIN});
+
 			if (nextElement.type == IF || nextElement.type == WHILE || nextElement.type == NAME) return oneLinerHandlerState;
 			if (nextElement.type == BEGIN) return subBlockBeginState;
 
-			CheckTokenType(nextElement, BEGIN);
 			return nullptr;
 		}
 	}
@@ -990,17 +1005,17 @@ public:
 		// Condition start
 		if (innerState == 0)
 		{
-			CheckTokenType(nextElement, BRACKET_OPEN);
+			CheckTokenType(nextElement, { BRACKET_OPEN });
 
 			innerState++;
 
-			parentMachine.EnterExpressionAnalysisState(this, expressionResult, nextElement);
+			parentMachine.EnterExpressionAnalysisState(this, &expressionResult, nextElement);
 		}
 
 		// BACK FROM EXPRESSION ANALYSIS
 		if (innerState == 1)
 		{
-			CheckTokenType(nextElement, BRACKET_CLOSE);
+			CheckTokenType(nextElement, { BRACKET_CLOSE });
 
 			// Storing condition
 			accumulator->StoreExpression(expressionResult, 0);
@@ -1014,10 +1029,11 @@ public:
 		// NEXT STATE
 		if (innerState == 2)
 		{
+			CheckTokenType(nextElement, { IF, WHILE, NAME, BEGIN });
+
 			if (nextElement.type == IF || nextElement.type == WHILE || nextElement.type == NAME) return oneLinerHandlerState;
 			if (nextElement.type == BEGIN) return subBlockBeginState;
 
-			CheckTokenType(nextElement, BEGIN);
 			return nullptr;
 		}
 	}
@@ -1070,10 +1086,11 @@ public:
 
 		parentMachine.StoreInstruction(accumulator->Collapse()[0]);
 
+		CheckTokenType(nextElement, { IF, WHILE, NAME, BEGIN });
+
 		if (nextElement.type == IF || nextElement.type == WHILE || nextElement.type == NAME) return oneLinerHandlerState;
 		if (nextElement.type == BEGIN) return subBlockBeginState;
 
-		CheckTokenType(nextElement, BEGIN);
 		return nullptr;
 	}
 };
@@ -1109,6 +1126,8 @@ public:
 	virtual void EnterState(const Token& element) override 
 	{
 		parentMachine.oneLinerDepth++;
+
+		CheckTokenType(element, { IF, WHILE, NAME });
 
 		if (element.type == IF || element.type == WHILE)
 		{
@@ -1162,6 +1181,8 @@ public:
 	virtual void EnterState(const Token& element) override
 	{
 		parentMachine.levelOffset++;
+
+		CheckTokenType(element, { IF, WHILE, NAME });
 
 		if (element.type == IF || element.type == WHILE)
 		{
@@ -1232,11 +1253,13 @@ public:
 	// If no transition is possible it means that the machine has encountered a syntax error
 	virtual State* ProcessElement(const Token& nextElement) override 
 	{
+		CheckTokenType(nextElement, { IF, WHILE, NAME, ELSE, PROGRAMM_END });
+
 		if (nextElement.type == NAME) return nameState;
 		if (nextElement.type == IF || nextElement.type == WHILE) return branchingState;
 		if (nextElement.type == ELSE) return elseState;
 		
-		if (nextElement.type == PROGRAM_END)
+		if (nextElement.type == PROGRAMM_END)
 		{
 			parentMachine.AnalysisFinished();
 

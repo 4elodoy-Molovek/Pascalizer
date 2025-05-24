@@ -5,12 +5,12 @@
 #include "ValuesTable.h"
 
 /*
- * Struct, containing all data about the current state state of the running program
+ * Struct, containing all data about the current state state of the running program 
  */
 struct ProgramState
 {
 	// Analyzed code of the whole program
-	const HierarchicalList<class Instruction*> code;
+	const HierarchicalList<std::shared_ptr<class Instruction>> code;
 
 	// Table of values (constants and variable)
 	std::map<std::string, std::shared_ptr<Value>> valuesTable;
@@ -27,5 +27,9 @@ struct ProgramState
 	// Caches condition results for 'else' statements
 	std::stack<bool> branchingStack;
 
-	ProgramState(const HierarchicalList<class Instruction*>& inCode) : code(inCode) {}
+	// A poitner to the wrapper
+	class IO_ProcessorInterface* ioProcessor;
+
+
+	ProgramState(const HierarchicalList< std::shared_ptr<class Instruction>>& inCode, class IO_ProcessorInterface* inIOProcessor) : code(inCode), ioProcessor(inIOProcessor) {}
 };
