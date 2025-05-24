@@ -4,6 +4,11 @@ file(GLOB CORE_SOURCES
     "Sources/*.qrc"
 )
 
+file(GLOB CORE_SOURCES 
+    "UIFiles/*.ui"
+    "UIFiles/*.qrc"
+)
+
 file(GLOB CORE_HEADERS 
     "Headers/*.h"
 )
