@@ -12,8 +12,8 @@ target_link_libraries(base_test PRIVATE
 
 # Настройки для импорта символов (Windows)
 if(WIN32)
-    target_compile_definitions(base_test PRIVATE
-        PASCALIZER_CORE_EXPORT=__declspec(dllimport)
+    target_compile_definitions(Pascalizer_core PRIVATE
+    PASCALIZER_CORE_BUILD
     )
 endif()
 

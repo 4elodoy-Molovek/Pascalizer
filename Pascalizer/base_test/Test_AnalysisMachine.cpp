@@ -1,16 +1,73 @@
-#include "gtest.h"
+#include "gtest/gtest.h"
 #include "AnalysisMachine.h"
+#include "ProgramInstructions.h"
+
+#define ANALYSIS_MACHINE_CHECK(tokenStream, expectedCodeNotation)									\
+do																									\
+{																									\
+	AnalysisMachine* analysisMachine = new AnalysisMachine();										\
+
+	for (auto& token : tokenStream)																	\
+		analysisMachine->ProcessElement(token);														\
+
+	HierarchicalList<std::shared_ptr<Instruction>> code = analysisMachine->GetResult();				\
+
+	int i = 0;																						\
+	std::shared_ptr<HListNode<std::shared_ptr<Instruction>>> instructionPointer = code.GetFirst();	\
+	while (instructionPointer)																		\
+	{																								\
+		EXPECT_EQ(expectedCodeNotation[i++], instructionPointer->value->GetStringNotation());		\
+
+		// Modifies instruction pointer, traversing the list in the top to bottom order (default)
+		if (instructionPointer->pSub)																\
+			instructionPointer = instructionPointer->pSub;											\
+		else if (instructionPointer->pNext)															\
+			instructionPointer = instructionPointer->pNext;											\
+		else																						\
+			instructionPointer = instructionPointer->pUp->pNext;									\
+	}																								\
+} while (0)
+
+
 
 
 // Empty program and basics
 TEST(AnalysisMachine, Can_Analyze_Empty_Program)
 {
-	ADD_FAILURE();
+	std::vector<Token> tokenStream =
+	{
+		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+		{BEGIN, "begin"},
+		{END, "end"},
+		{PROGRAMM_END, "."}
+	};
+
+	std::vector<std::string> expectedCodeNotation =
+	{
+		"IProgram(test)"
+	};
+
+	// Standard check
+	ANALYSIS_MACHINE_CHECK(tokenStream, expectedCodeNotation);
 }
 
 TEST(AnalysisMachine, Throws_When_Program_Header_Is_Incorrect)
 {
-	ADD_FAILURE();
+	std::vector<Token> tokenStream =
+	{
+		{PROGRAM, "prog"}, {NAME, "test"},
+		{BEGIN, "begin"},
+		{END, "end"},
+		{PROGRAMM_END, "."}
+	};
+
+	std::vector<std::string> expectedCodeNotation =
+	{
+		"IProgram(test)"
+	};
+
+	// Standard check
+	EXPECT_ANY_THROW(ANALYSIS_MACHINE_CHECK(tokenStream, expectedCodeNotation));
 }
 
 
@@ -18,12 +75,44 @@ TEST(AnalysisMachine, Throws_When_Program_Header_Is_Incorrect)
 
 TEST(AnalysisMachine, Can_Analyze_Int_Const_Declaration)
 {
-	ADD_FAILURE();
+	std::vector<Token> tokenStream =
+	{
+		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+		{CONST, "const"},
+		{NAME, "Int"}, {COLON, ":"}, {NAME, "int"}, {EQUAL, "="}, {VALUE_INT, "3"},
+		{BEGIN, "begin"},
+		{END, "end"},
+		{PROGRAMM_END, "."}
+	};
+
+	std::vector<std::string> expectedCodeNotation =
+	{
+		"IProgram(test)", "IConstBlock()", "IDeclareConst(Int, 3)"
+	};
+
+	// Standard check
+	ANALYSIS_MACHINE_CHECK(tokenStream, expectedCodeNotation);
 }
 
 TEST(AnalysisMachine, Can_Analyze_Double_Const_Declaration)
 {
-	ADD_FAILURE();
+	std::vector<Token> tokenStream =
+	{
+		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+		{CONST, "const"},
+		{NAME, "Doub"}, {COLON, ":"}, {NAME, "double"}, {EQUAL, "="}, {VALUE_INT, "3.14"},
+		{BEGIN, "begin"},
+		{END, "end"},
+		{PROGRAMM_END, "."}
+	};
+
+	std::vector<std::string> expectedCodeNotation =
+	{
+		"IProgram(test)", "IConstBlock()", "IDeclareConst(Doub, 3.14)"
+	};
+
+	// Standard check
+	ANALYSIS_MACHINE_CHECK(tokenStream, expectedCodeNotation);
 }
 
 TEST(AnalysisMachine, Can_Analyze_String_Const_Declaration)

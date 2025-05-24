@@ -67,6 +67,14 @@ class ExpressionAnalysisBlockState : public State
 		else	if (operationStr == "/") operation = std::make_shared<DivideOperation>();
 		else	if (operationStr == "mod") operation = std::make_shared<ModOperation>();
 		else	if (operationStr == "div") operation = std::make_shared<DivOperation>();
+
+		else	if (operationStr == ">") operation = std::make_shared<GreaterOperation>();
+		else	if (operationStr == ">=") operation = std::make_shared<GreaterEqualOperation>();
+		else	if (operationStr == "<") operation = std::make_shared<LessOperation>();
+		else	if (operationStr == "<=") operation = std::make_shared<LessEqualOperation>();
+		else	if (operationStr == "==") operation = std::make_shared<EqualsOperation>();
+		else	if (operationStr == "!=") operation = std::make_shared<NotEqualsOperation>();
+
 		
 		// Functions (aslo processed as math operators for now)
 		else	if (operationStr == "sin") operation = std::make_shared<SinOperation>();

@@ -401,4 +401,6 @@ FodyWeavers.xsd
 
 
 # Ignoring cMake build direcories
-*build/
+build/
+Pascalizer/build/
+

@@ -193,7 +193,6 @@ public:
 
 		// We have entered the state with the name token, so we need to store it right away
 		accumulator->StoreElement(element, 0);
-		innerState++;
 	}
 
 	// Called when the machine exits this state
@@ -202,6 +201,13 @@ public:
 	virtual State* ProcessElement(const Token& nextElement) override
 	{
 		// state 0: name was processed in the EnterState
+		if (innerState == 1)
+		{
+			CheckTokenType(nextElement, COLON);
+
+			innerState++;
+			return nullptr;
+		}
 
 		// Type
 		if (innerState == 1)

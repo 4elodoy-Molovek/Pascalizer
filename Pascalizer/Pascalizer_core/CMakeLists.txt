@@ -21,8 +21,9 @@ if(WIN32)
         WIN32_EXECUTABLE ON
     )
     target_compile_definitions(Pascalizer_core PRIVATE
-        PASCALIZER_CORE_EXPORT=__declspec(dllexport)
+    PASCALIZER_CORE_BUILD
     )
+
 endif()
 
 # Подключение Qt

@@ -48,7 +48,7 @@ public:
 
 	// Returns a POINTER to the first element of the list
 	// Will be used for interpretation
-	HListNode<T>* GetFirst() { return pFirst; }
+	std::shared_ptr<HListNode<T>> GetFirst() { return pFirst; }
 
 
 	const HierarchicalList& operator= (const HierarchicalList& rhs) { return *this; }

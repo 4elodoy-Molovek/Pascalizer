@@ -151,9 +151,9 @@ public:
 			return;
 		}
 
-		if (levelOffset == 0)	codeResult.AddNextElement(instruction);
-		else if (levelOffset == -1)	codeResult.AddUpElement(instruction);
-		else if (levelOffset == 1)	codeResult.AddSubElement(instruction);
+				if (levelOffset == 0)	codeResult.AddNextElement(instruction);
+		else	if (levelOffset == -1)	codeResult.AddUpElement(instruction);
+		else	if (levelOffset == 1)	codeResult.AddSubElement(instruction);
 
 		else throw(std::exception("ANALYSIS DEVELOPMENT ERROR: Invalid level offset!"));
 
