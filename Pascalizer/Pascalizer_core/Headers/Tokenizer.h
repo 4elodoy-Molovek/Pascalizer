@@ -15,17 +15,19 @@ enum STATES { ZERO_STATE, WORD_STATE, COLON_STATE, ASSIGN_STATE, QUOTES_STATE, C
 class Tokenizer
 {
 
-	/* Tokenized stores it's results into this cache field, returning only a const reference
+	/* Tokenizer stores it's results into this cache field, returning only a const reference
 	 * This allows us to avoid unnecessary copying later on
 	 */
 	std::vector<Token> cachedTokens;
 
 private:
 
-	Token identifyName(const string& name) {
+	Token identifyName(const string& name) 
+	{
 		Token token;
 
-		while (true) {
+		while (true) 
+		{
 			// brgin end
 			if (name == "begin") {
 				token = { TokenType::BEGIN, "begin" };
@@ -89,7 +91,8 @@ private:
 		return token;
 	}
 
-	Token identifySymbol(const char& let, string& buf_name, int& state) {
+	Token identifySymbol(const char& let, string& buf_name, int& state) 
+	{
 		Token tokElemnet{ TokenType::NULL_TOKEN, " " };
 		while (true) {
 			if (('a' <= let && let <= 'z') || ('A' <= let && let <= 'Z')) {
@@ -166,7 +169,8 @@ public:
 	~Tokenizer() = default;
 
 	// Tokenizes source code, splitting it into elements
-	const std::vector<Token>& TokenizeCode(const std::string& sourceCode) {
+	const std::vector<Token>& TokenizeCode(const std::string& sourceCode) 
+	{
 		string txt = sourceCode;
 		string buf_name = "";
 		int state = ZERO_STATE;
@@ -355,7 +359,8 @@ public:
 	}
 
 	//Returns a reference to an indexed tokenized element //! ÿ ýòî íå ÷åêàë
-	const Token& GetToken(size_t index) const {
+	const Token& GetToken(size_t index) const 
+	{
 		return cachedTokens[index];
 	}
 

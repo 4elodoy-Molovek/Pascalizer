@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "IO_ProcessorInterface.h"
 
 
 std::string strType[3] = { "INT", "DOUBLE", "STRING" }; //for logs and exceptions
@@ -186,22 +187,44 @@ public:
 
 
 // Reads input from keyboard, writing it into the given variable
-class IRead : public Instruction
+class IRead : public Instruction, public IO_InstructionInterface
 {
 private:
-	std::string _varName;
+	std::shared_ptr<Expression> _varNameExpression;
+
+	std::string cachedVarName;
+	ProgramState* programStatePtr;
 
 public:
 
-	IRead(const std::string& varName)
+	IRead(std::shared_ptr<Expression> varNameExpression)
 	{
-		_varName = varName;
+		_varNameExpression = varNameExpression;
 	}
 	~IRead() override {}
 
 	void Execute(ProgramState& programState) override
 	{
+		// Calculating var name expression
+		std::shared_ptr<Value> nameValue = _varNameExpression->Caculate(programState);
+
+		if (nameValue->GetType() != STRING) throw(std::runtime_error("FATAL: Read instruction received a non-string variable name"));
+
+		std::string cachedVarName = dynamic_cast<StringValue*>(nameValue.get())->value;
+
+		if (programState.valuesTable.count(cachedVarName) == 0) throw(std::runtime_error("FATAL: Read instruction trying to write into an invalid variable '" + _varName + "'!"));
+
+
+		programStatePtr = &programState;
+
 		programState.log.push_back("Reading from standard input...");
+
+		programState.ioProcessor->CallReceiveUserInput(this);
+	}
+
+	// Called when the user input has been received after this instruction requested it
+	virtual void OnUserInputReceived(const std::string& userInput) override
+	{
 		std::string input;
 		std::shared_ptr<Value> value;
 
@@ -211,60 +234,60 @@ public:
 		double doubleInput = std::stod(input, &doublePos);
 		if (intPos == input.size()) // if got an int
 		{
-			programState.log.push_back("Got INT: " + input);
-			if (programState.valuesTable[_varName]->GetType() == Type::INT)
+			programStatePtr->log.push_back("Got INT: " + input);
+			if (programStatePtr->valuesTable[cachedVarName]->GetType() == Type::INT)
 			{
 				value = std::make_shared<IntValue>(intInput);
-				programState.valuesTable[_varName] = value;
-				programState.log.push_back("Assigned to var " + _varName);
+				programStatePtr->valuesTable[cachedVarName] = value;
+				programStatePtr->log.push_back("Assigned to var " + cachedVarName);
 			}
-			else if (programState.valuesTable[_varName]->GetType() == Type::DOUBLE)
+			else if (programStatePtr->valuesTable[cachedVarName]->GetType() == Type::DOUBLE)
 			{
 				value = std::make_shared<DoubleValue>(intInput);
-				programState.valuesTable[_varName] = value;
-				programState.log.push_back("Assigned to var " + _varName);
+				programStatePtr->valuesTable[cachedVarName] = value;
+				programStatePtr->log.push_back("Assigned to var " + cachedVarName);
 			}
 			else
 			{
-				programState.log.push_back("FATAL: tried to assign INT to " + strType[programState.valuesTable[_varName]->GetType()]);
-				throw(std::runtime_error("FATAL: tried to assign INT to " + strType[programState.valuesTable[_varName]->GetType()]));
+				programStatePtr->log.push_back("FATAL: tried to assign INT to " + strType[programStatePtr->valuesTable[cachedVarName]->GetType()]);
+				throw(std::runtime_error("FATAL: tried to assign INT to " + strType[programStatePtr->valuesTable[cachedVarName]->GetType()]));
 			}
 
 		}
 		else if (doublePos == input.size()) // if got a double
 		{
-			programState.log.push_back("Got DOUBLE: " + input);
-			if (programState.valuesTable[_varName]->GetType() == Type::DOUBLE)
+			programStatePtr->log.push_back("Got DOUBLE: " + input);
+			if (programStatePtr->valuesTable[cachedVarName]->GetType() == Type::DOUBLE)
 			{
 				value = std::make_shared<DoubleValue>(doubleInput);
-				programState.valuesTable[_varName] = value;
-				programState.log.push_back("Assigned to var " + _varName);
+				programStatePtr->valuesTable[cachedVarName] = value;
+				programStatePtr->log.push_back("Assigned to var " + cachedVarName);
 			}
-			else if (programState.valuesTable[_varName]->GetType() == Type::INT)
+			else if (programStatePtr->valuesTable[cachedVarName]->GetType() == Type::INT)
 			{
 				value = std::make_shared<IntValue>(std::round(doubleInput));
-				programState.valuesTable[_varName] = value;
-				programState.log.push_back("Assigned to var " + _varName);
+				programStatePtr->valuesTable[cachedVarName] = value;
+				programStatePtr->log.push_back("Assigned to var " + cachedVarName);
 			}
 			else
 			{
-				programState.log.push_back("FATAL: tried to assign DOUBLE to " + strType[programState.valuesTable[_varName]->GetType()]);
-				throw(std::runtime_error("FATAL: tried to assign DOUBLE to " + strType[programState.valuesTable[_varName]->GetType()]));
+				programStatePtr->log.push_back("FATAL: tried to assign DOUBLE to " + strType[programStatePtr->valuesTable[cachedVarName]->GetType()]);
+				throw(std::runtime_error("FATAL: tried to assign DOUBLE to " + strType[programStatePtr->valuesTable[cachedVarName]->GetType()]));
 			}
 		}
 		else // if got a string
 		{
-			programState.log.push_back("Got STRING");
-			if (programState.valuesTable[_varName]->GetType() == Type::STRING)
+			programStatePtr->log.push_back("Got STRING");
+			if (programStatePtr->valuesTable[cachedVarName]->GetType() == Type::STRING)
 			{
 				value = std::make_shared<StringValue>(doubleInput);
-				programState.valuesTable[_varName] = value;
-				programState.log.push_back("Assigned to var " + _varName);
+				programStatePtr->valuesTable[cachedVarName] = value;
+				programStatePtr->log.push_back("Assigned to var " + cachedVarName);
 			}
 			else
 			{
-				programState.log.push_back("FATAL: tried to assign DOUBLE to " + strType[programState.valuesTable[_varName]->GetType()]);
-				throw(std::runtime_error("FATAL: tried to assign DOUBLE to " + strType[programState.valuesTable[_varName]->GetType()]));
+				programStatePtr->log.push_back("FATAL: tried to assign DOUBLE to " + strType[programStatePtr->valuesTable[cachedVarName]->GetType()]);
+				throw(std::runtime_error("FATAL: tried to assign DOUBLE to " + strType[programStatePtr->valuesTable[cachedVarName]->GetType()]));
 			}
 		}
 	}
@@ -320,7 +343,7 @@ public:
 		}
 
 		programState.log.push_back("OUTPUT: " + output);
-		std::cout << output;
+		programState.ioProcessor->CallOutputString(output);
 	}
 };
 

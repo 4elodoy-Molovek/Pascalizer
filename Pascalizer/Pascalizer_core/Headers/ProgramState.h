@@ -27,6 +27,9 @@ struct ProgramState
 	// Caches condition results for 'else' statements
 	std::stack<bool> branchingStack;
 
+	// A poitner to the wrapper
+	class IO_ProcessorInterface* ioProcessor;
 
-	ProgramState(const HierarchicalList<class Instruction*>& inCode) : code(inCode) {}
+
+	ProgramState(const HierarchicalList< std::shared_ptr<Instruction>>& inCode, class IO_ProcessorInterface* inIOProcessor) : code(inCode), ioProcessor(inIOProcessor) {}
 };

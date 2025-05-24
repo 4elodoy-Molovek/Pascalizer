@@ -77,6 +77,7 @@ public:
 };
 
 
+enum AnalysisStatus { ONGOING, FINISHED, ERROR };
 
 /*
  * A state machine, that analyses tokenized source code step by step
@@ -86,6 +87,9 @@ class AnalysisMachine
 	// Vector of all states, filled up during the construction, used to destroy the machine
 	std::vector<State*> states;
 
+	// A pointer to the initial state of the machine (used for resetting the state machine for continuos use)
+	State* initialState;
+
 	// Resulting analyzed code
 	HierarchicalList<std::shared_ptr<Instruction>> codeResult;
 
@@ -93,6 +97,12 @@ class AnalysisMachine
 
 	// Current state of the machine
 	State* currentState;
+
+	// Current status of the analysis process
+	AnalysisStatus analysisStatus = ONGOING;
+
+	// Errors, that were encountered during the analysis process
+	std::vector<std::string> analysisErrorLog;
 
 
 	// EXPRESSION ANALYSIS BLOCK
@@ -104,7 +114,7 @@ class AnalysisMachine
 	State* expressionBlockExitTarget;
 
 	// A reference, where the result of expression analysis block's work will be put
-	std::shared_ptr<Expression>& cachedExpressionAnalysisResultOutput;
+	std::shared_ptr<Expression>* cachedExpressionAnalysisResultOutput;
 
 
 public:
@@ -173,7 +183,7 @@ public:
 	// Called, when the state machine has reached the end of analysis
 	void AnalysisFinished()
 	{
-
+		analysisStatus = FINISHED;
 	}
 
 
@@ -185,7 +195,7 @@ public:
 	 *	The result of the analysis will be stored in @outResult
 	 *  @entryToken is just passed to the EnterState of expression analysis block
 	 */
-	void EnterExpressionAnalysisState(State* exitTarget, std::shared_ptr<Expression>& outResult, const Token& entryToken)
+	void EnterExpressionAnalysisState(State* exitTarget, std::shared_ptr<Expression>* outResult, const Token& entryToken)
 	{
 		expressionBlockExitTarget = exitTarget;
 		cachedExpressionAnalysisResultOutput = outResult;
@@ -199,7 +209,7 @@ public:
 	void ExpressionAnalysisFinished(std::shared_ptr<Expression> result, const Token& exitToken)
 	{
 		// Storing result in the requested location
-		cachedExpressionAnalysisResultOutput = result;
+		*cachedExpressionAnalysisResultOutput = result;
 
 		// Returning to the state that called the analysis block
 		currentState->ExitState();
@@ -219,12 +229,24 @@ public:
 	// Processes a single source code element
 	void ProcessElement(const Token& element)
 	{
-		State* newState = currentState->ProcessElement(element);
-		if (newState)
+		if (analysisStatus == ONGOING)
 		{
-			currentState->ExitState();
-			currentState = newState;
-			newState->EnterState(element);
+			try
+			{
+				State* newState = currentState->ProcessElement(element);
+				if (newState)
+				{
+					currentState->ExitState();
+					currentState = newState;
+					newState->EnterState(element);
+				}
+			}
+
+			catch (std::exception e)
+			{
+				analysisErrorLog.push_back(std::string(e.what()));
+				analysisStatus = ERROR;
+			}
 		}
 	}
 
@@ -233,6 +255,10 @@ public:
 
 	// Cleans up the state machine before the next use
 	void CleanUp();
+
+	AnalysisStatus GetStatus() { return analysisStatus; }
+
+	const std::vector<std::string>& GetErrorLog() { return analysisErrorLog; }
 
 	//// State is made a friend class of the machine, to allow states to:
 	////		- Create new Accumulators;

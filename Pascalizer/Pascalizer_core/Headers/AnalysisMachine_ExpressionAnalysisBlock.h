@@ -160,6 +160,7 @@ public:
 
 			if (nextElement.type == COMMA || nextElement.type == END_LINE)
 			{
+				DumpOperationStack();
 				ExitProcedure(nextElement);
 				return nullptr;
 			}
@@ -208,6 +209,7 @@ public:
 
 				else
 				{
+					DumpOperationStack();
 					ExitProcedure(nextElement);
 					return nullptr;
 				}

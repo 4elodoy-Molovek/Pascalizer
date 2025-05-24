@@ -1,6 +1,7 @@
 #pragma once
 #include "ProgramState.h"
 
+
 /*
  * A base class for program instructions, that are generated in Analysis Machine and later executed in the interpreter
  */
@@ -19,4 +20,15 @@ public:
 	// Used for testing
 	// Retunns "Instruction(arguments)"
 	virtual std::string GetStringNotation() = 0;
+};
+
+
+// Used by instructions that receive user input
+class IO_InstructionInterface
+{
+
+public:
+
+	// Called when the user input has been received after this instruction requested it
+	virtual void OnUserInputReceived(const std::string& userInput) = 0;
 };

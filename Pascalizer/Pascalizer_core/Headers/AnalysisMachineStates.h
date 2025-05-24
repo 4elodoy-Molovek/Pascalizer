@@ -256,7 +256,7 @@ public:
 
 			if (nextElement.type == NAME) return this;
 			if (nextElement.type == VAR) return exitToVarBlockState;
-			if (nextElement.type == BEGIN) return mainBlockBeginState;
+			if (nextElement.type == BEGIN) { parentMachine.levelOffset--; return mainBlockBeginState; }
 
 			return nullptr;
 		}
@@ -421,7 +421,7 @@ public:
 
 			if (nextElement.type == NAME) return this;
 			if (nextElement.type == CONST) return exitToConstBlockState;
-			if (nextElement.type == BEGIN) return mainBlockBeginState;
+			if (nextElement.type == BEGIN) { parentMachine.levelOffset--; return mainBlockBeginState; }
 
 			return nullptr;
 		}
@@ -659,7 +659,7 @@ public:
 		accumulator = dynamic_cast<AssignVariableAccumulator*>(parentMachine.currentAccumulator);
 
 		// Entering expression analysis state right away
-		parentMachine.EnterExpressionAnalysisState(this, expressionResult, element);
+		parentMachine.EnterExpressionAnalysisState(this, &expressionResult, element);
 	}
 
 	// Called when the machine exits this state
@@ -747,7 +747,7 @@ public:
 		accumulator = dynamic_cast<FunctionCallAccumulator*>(parentMachine.currentAccumulator);
 
 		// Entering expression analysis right away
-		parentMachine.EnterExpressionAnalysisState(this, expressionResult, element);
+		parentMachine.EnterExpressionAnalysisState(this, &expressionResult, element);
 	}
 
 	// Called when the machine exits this state
@@ -771,7 +771,7 @@ public:
 			if (nextElement.type == COMMA)
 			{
 				innerState = 0;
-				parentMachine.EnterExpressionAnalysisState(this, expressionResult, nextElement);
+				parentMachine.EnterExpressionAnalysisState(this, &expressionResult, nextElement);
 
 				return nullptr;
 			}
@@ -922,7 +922,7 @@ public:
 
 			innerState++;
 			
-			parentMachine.EnterExpressionAnalysisState(this, expressionResult, nextElement);
+			parentMachine.EnterExpressionAnalysisState(this, &expressionResult, nextElement);
 			return nullptr;
 		}
 
@@ -1009,7 +1009,7 @@ public:
 
 			innerState++;
 
-			parentMachine.EnterExpressionAnalysisState(this, expressionResult, nextElement);
+			parentMachine.EnterExpressionAnalysisState(this, &expressionResult, nextElement);
 		}
 
 		// BACK FROM EXPRESSION ANALYSIS
