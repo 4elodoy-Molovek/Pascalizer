@@ -1,6 +1,7 @@
 #pragma once
 #include "Instruction.h"
 #include "ExpressionEvaluationBlock.h"
+#include "ValuesTable.h"
 #include <cmath>
 #include <vector>
 #include <string>

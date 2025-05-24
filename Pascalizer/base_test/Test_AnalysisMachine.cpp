@@ -79,7 +79,7 @@ TEST(AnalysisMachine, Can_Analyze_Int_Const_Declaration)
 	{
 		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
 		{CONST, "const"},
-		{NAME, "Int"}, {COLON, ":"}, {NAME, "int"}, {EQUAL, "="}, {VALUE_INT, "3"},
+		{NAME, "Int"}, {COLON, ":"}, {NAME, "int"}, {EQUAL, "="}, {VALUE_INT, "3"}, {END_LINE, ";"},
 		{BEGIN, "begin"},
 		{END, "end"},
 		{PROGRAMM_END, "."}
@@ -100,7 +100,7 @@ TEST(AnalysisMachine, Can_Analyze_Double_Const_Declaration)
 	{
 		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
 		{CONST, "const"},
-		{NAME, "Doub"}, {COLON, ":"}, {NAME, "double"}, {EQUAL, "="}, {VALUE_INT, "3.14"},
+		{NAME, "Doub"}, {COLON, ":"}, {NAME, "double"}, {EQUAL, "="}, {VALUE_DOUBLE, "3.14"}, {END_LINE, ";"},
 		{BEGIN, "begin"},
 		{END, "end"},
 		{PROGRAMM_END, "."}
@@ -117,37 +117,207 @@ TEST(AnalysisMachine, Can_Analyze_Double_Const_Declaration)
 
 TEST(AnalysisMachine, Can_Analyze_String_Const_Declaration)
 {
-	ADD_FAILURE();
+	std::vector<Token> tokenStream =
+	{
+		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+		{CONST, "const"},
+		{NAME, "Str"}, {COLON, ":"}, {NAME, "string"}, {EQUAL, "="}, {VALUE_STRING, "some thing like a name, idk"}, {END_LINE, ";"},
+		{BEGIN, "begin"},
+		{END, "end"},
+		{PROGRAMM_END, "."}
+	};
+
+	std::vector<std::string> expectedCodeNotation =
+	{
+		"IProgram(test)", "IConstBlock()", "IDeclareConst(Str, some thing like a name, idk)"
+	};
+
+	// Standard check
+	ANALYSIS_MACHINE_CHECK(tokenStream, expectedCodeNotation);
 }
 
 TEST(AnalysisMachine, Can_Analyze_Multiple_Const_Declarations)
 {
-	ADD_FAILURE();
+	std::vector<Token> tokenStream =
+	{
+		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+		{CONST, "const"},
+		{NAME, "Str"}, {COLON, ":"}, {NAME, "string"}, {EQUAL, "="}, {VALUE_STRING, "some thing like a name, idk"}, {END_LINE, ";"},
+		{NAME, "Doub"}, {COLON, ":"}, {NAME, "double"}, {EQUAL, "="}, {VALUE_DOUBLE, "3.14"}, {END_LINE, ";"},
+		{NAME, "Int"}, {COLON, ":"}, {NAME, "int"}, {EQUAL, "="}, {VALUE_INT, "3"}, {END_LINE, ";"},
+		{BEGIN, "begin"},
+		{END, "end"},
+		{PROGRAMM_END, "."}
+	};
+
+	std::vector<std::string> expectedCodeNotation =
+	{
+		"IProgram(test)", "IConstBlock()", 
+		"IDeclareConst(Str, some thing like a name, idk)", "IDeclareConst(Doub, 3.14)", "IDeclareConst(Int, 3)"
+	};
+
+	// Standard check
+	ANALYSIS_MACHINE_CHECK(tokenStream, expectedCodeNotation);
 }
 
 TEST(AnalysisMachine, Throws_When_Incorrect_Const_Type)
 {
-	ADD_FAILURE();
+	std::vector<Token> tokenStream =
+	{
+		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+		{CONST, "const"},
+		{NAME, "Str"}, {COLON, ":"}, {NAME, "not_a_type"}, {EQUAL, "="}, {VALUE_STRING, "some thing like a name, idk"}, {END_LINE, ";"},
+		{BEGIN, "begin"},
+		{END, "end"},
+		{PROGRAMM_END, "."}
+	};
+
+	std::vector<std::string> expectedCodeNotation =
+	{
+		"IProgram(test)", "IConstBlock()", "IDeclareConst(Str, some thing like a name, idk)"
+	};
+
+	// Standard check
+	EXPECT_ANY_THROW(ANALYSIS_MACHINE_CHECK(tokenStream, expectedCodeNotation));
 }
 
 TEST(AnalysisMachine, Throws_When_Incorrect_Int_Const_Initialization)
 {
-	ADD_FAILURE();
+	std::vector<Token> tokenStream =
+	{
+		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+		{CONST, "const"},
+		{NAME, "Int"}, {COLON, ":"}, {NAME, "int"}, {EQUAL, "="}, {VALUE_STRING, "aboba"}, {END_LINE, ";"},
+		{BEGIN, "begin"},
+		{END, "end"},
+		{PROGRAMM_END, "."}
+	};
+
+	std::vector<std::string> expectedCodeNotation =
+	{
+		"IProgram(test)", "IConstBlock()", "IDeclareConst(Int, 3)"
+	};
+
+	// Standard check
+	EXPECT_ANY_THROW(ANALYSIS_MACHINE_CHECK(tokenStream, expectedCodeNotation));
 }
 
 TEST(AnalysisMachine, Throws_When_Incorrect_Double_Const_Initialization)
 {
-	ADD_FAILURE();
-}
+	std::vector<Token> tokenStream =
+	{
+		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+		{CONST, "const"},
+		{NAME, "Doub"}, {COLON, ":"}, {NAME, "double"}, {EQUAL, "="}, {VALUE_STRING, "aboba"}, {END_LINE, ";"},
+		{BEGIN, "begin"},
+		{END, "end"},
+		{PROGRAMM_END, "."}
+	};
 
-TEST(AnalysisMachine, Throws_When_Incorrect_String_Const_Initialization)
-{
-	ADD_FAILURE();
+	std::vector<std::string> expectedCodeNotation =
+	{
+		"IProgram(test)", "IConstBlock()", "IDeclareConst(Doub, 3.14)"
+	};
+
+	// Standard check
+	EXPECT_ANY_THROW(ANALYSIS_MACHINE_CHECK(tokenStream, expectedCodeNotation));
 }
 
 TEST(AnalysisMachine, Throws_When_Unexpected_Token_In_Const_Declaration)
 {
-	ADD_FAILURE();
+	std::vector<Token> tokenStream =
+	{
+		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+		{CONST, "const"},
+		{COLON, ":"}, {NAME, "double"}, {EQUAL, "="}, {VALUE_STRING, "aboba"}, {END_LINE, ";"},
+		{BEGIN, "begin"},
+		{END, "end"},
+		{PROGRAMM_END, "."}
+	};
+
+	std::vector<std::string> expectedCodeNotation =
+	{
+		"IProgram(test)", "IConstBlock()", "IDeclareConst(Doub, 3.14)"
+	};
+
+	// Standard check
+	EXPECT_ANY_THROW(ANALYSIS_MACHINE_CHECK(tokenStream, expectedCodeNotation));
+
+
+	std::vector<Token> tokenStream =
+	{
+		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+		{CONST, "const"},
+		{NAME, "Doub"}, {NAME, "double"}, {EQUAL, "="}, {VALUE_STRING, "aboba"}, {END_LINE, ";"},
+		{BEGIN, "begin"},
+		{END, "end"},
+		{PROGRAMM_END, "."}
+	};
+
+	std::vector<std::string> expectedCodeNotation =
+	{
+		"IProgram(test)", "IConstBlock()", "IDeclareConst(Doub, 3.14)"
+	};
+
+	// Standard check
+	EXPECT_ANY_THROW(ANALYSIS_MACHINE_CHECK(tokenStream, expectedCodeNotation));
+
+
+	std::vector<Token> tokenStream =
+	{
+		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+		{CONST, "const"},
+		{NAME, "Doub"}, {COLON, ":"}, {NAME, "double"}, {VALUE_STRING, "aboba"}, {END_LINE, ";"},
+		{BEGIN, "begin"},
+		{END, "end"},
+		{PROGRAMM_END, "."}
+	};
+
+	std::vector<std::string> expectedCodeNotation =
+	{
+		"IProgram(test)", "IConstBlock()", "IDeclareConst(Doub, 3.14)"
+	};
+
+	// Standard check
+	EXPECT_ANY_THROW(ANALYSIS_MACHINE_CHECK(tokenStream, expectedCodeNotation));
+
+
+	std::vector<Token> tokenStream =
+	{
+		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+		{CONST, "const"},
+		{NAME, "Doub"}, {COLON, ":"}, {NAME, "double"}, {EQUAL, "="}, {END_LINE, ";"},
+		{BEGIN, "begin"},
+		{END, "end"},
+		{PROGRAMM_END, "."}
+	};
+
+	std::vector<std::string> expectedCodeNotation =
+	{
+		"IProgram(test)", "IConstBlock()", "IDeclareConst(Doub, 3.14)"
+	};
+
+	// Standard check
+	EXPECT_ANY_THROW(ANALYSIS_MACHINE_CHECK(tokenStream, expectedCodeNotation));
+
+
+	std::vector<Token> tokenStream =
+	{
+		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+		{CONST, "const"},
+		{NAME, "Doub"}, {COLON, ":"}, {NAME, "double"}, {EQUAL, "="}, {VALUE_STRING, "aboba"},
+		{BEGIN, "begin"},
+		{END, "end"},
+		{PROGRAMM_END, "."}
+	};
+
+	std::vector<std::string> expectedCodeNotation =
+	{
+		"IProgram(test)", "IConstBlock()", "IDeclareConst(Doub, 3.14)"
+	};
+
+	// Standard check
+	EXPECT_ANY_THROW(ANALYSIS_MACHINE_CHECK(tokenStream, expectedCodeNotation));
 }
 
 
@@ -155,7 +325,23 @@ TEST(AnalysisMachine, Throws_When_Unexpected_Token_In_Const_Declaration)
 
 TEST(AnalysisMachine, Can_Analyze_Int_Variable_Declaration)
 {
-	ADD_FAILURE();
+	std::vector<Token> tokenStream =
+	{
+		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+		{CONST, "const"},
+		{NAME, "Int"}, {COLON, ":"}, {NAME, "int"}, {END_LINE, ";"},
+		{BEGIN, "begin"},
+		{END, "end"},
+		{PROGRAMM_END, "."}
+	};
+
+	std::vector<std::string> expectedCodeNotation =
+	{
+		"IProgram(test)", "IConstBlock()", "IDeclareVar(Int)"
+	};
+
+	// Standard check
+	ANALYSIS_MACHINE_CHECK(tokenStream, expectedCodeNotation);
 }
 
 TEST(AnalysisMachine, Can_Analyze_Double_Variable_Declaration)

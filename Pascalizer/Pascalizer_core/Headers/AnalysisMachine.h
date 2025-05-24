@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <stdexcept>
 #include "Tokens.h"
 #include "Instruction.h"
 #include "AnalysisMachine_ExpressionAnalysisBlock.h"
@@ -48,10 +49,10 @@ protected:
 protected:
 
 	// If token type doesn'y match the expected one: throws an error: "Received token type doesn't match the expected one"
-	void CheckTokenType(const Token& receivedToken, TokenType expectedTokenType)
+	void CheckTokenType(const Token& receivedToken, const std::set<TokenType>& expectedTokenTypes)
 	{
-		if (receivedToken.type != expectedTokenType) return;
-			//throw(std::exception("ANALYSIS ERROR: Unexpected token at token '" + receivedToken.value + "', expected:"));
+		if (expectedTokenTypes.count(receivedToken.type) == 0)
+			throw(std::runtime_error("ANALYSIS ERROR: Unexpected token at token '" + receivedToken.value + "'!"));
 	}
 
 public:
