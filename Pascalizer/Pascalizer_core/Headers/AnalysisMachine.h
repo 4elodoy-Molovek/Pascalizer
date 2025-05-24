@@ -1,9 +1,11 @@
 #pragma once
 #include <vector>
 #include <stdexcept>
+#include <set>
 #include "Tokens.h"
 #include "Instruction.h"
 #include "HierarchicalList.h"
+#include "ExpressionEvaluationBlock.h"
 
 /*
  * Program module, responsible for:
@@ -145,7 +147,7 @@ public:
 		currentAccumulator = nullptr;
 
 		T* newAccumulator = new T();
-		currentAccumulator = T*;
+		currentAccumulator = newAccumulator;
 
 		return newAccumulator;
 	}

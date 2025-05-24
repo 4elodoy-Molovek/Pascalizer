@@ -1,5 +1,0 @@
-if(EXISTS "C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/base_test[1]_tests.cmake")
-  include("C:/Users/4elodoy Molovek/source/repos/Pascalizer/Pascalizer/build/base_test/base_test[1]_tests.cmake")
-else()
-  add_test(base_test_NOT_BUILT base_test_NOT_BUILT)
-endif()

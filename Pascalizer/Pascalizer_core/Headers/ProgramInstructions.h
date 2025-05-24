@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <stdexcept>
 #include "IO_ProcessorInterface.h"
 
 
@@ -210,9 +211,9 @@ public:
 
 		if (nameValue->GetType() != STRING) throw(std::runtime_error("FATAL: Read instruction received a non-string variable name"));
 
-		std::string cachedVarName = dynamic_cast<StringValue*>(nameValue.get())->value;
+		std::string cachedVarName = std::dynamic_pointer_cast<StringValue>(nameValue)->value;
 
-		if (programState.valuesTable.count(cachedVarName) == 0) throw(std::runtime_error("FATAL: Read instruction trying to write into an invalid variable '" + _varName + "'!"));
+		if (programState.valuesTable.count(cachedVarName) == 0) throw(std::runtime_error("FATAL: Read instruction trying to write into an invalid variable '" + cachedVarName + "'!"));
 
 
 		programStatePtr = &programState;
@@ -280,7 +281,7 @@ public:
 			programStatePtr->log.push_back("Got STRING");
 			if (programStatePtr->valuesTable[cachedVarName]->GetType() == Type::STRING)
 			{
-				value = std::make_shared<StringValue>(doubleInput);
+				value = std::make_shared<StringValue>(input);
 				programStatePtr->valuesTable[cachedVarName] = value;
 				programStatePtr->log.push_back("Assigned to var " + cachedVarName);
 			}
@@ -347,6 +348,43 @@ public:
 	}
 };
 
+
+// Else function
+class IElse : public Instruction
+{
+
+public:
+
+	IElse() {}
+	~IElse() override {}
+
+	void Execute(ProgramState& programState) override
+	{
+		programState.log.push_back("ELSE block started");
+
+		if (programState.branchingStack.empty())
+		{
+			programState.log.push_back("FATAL: ELSE without mathing IF");
+			throw(std::runtime_error("FATAL: ELSE without mathing IF"));
+		}
+
+		bool ifConditionWasTrue = programState.branchingStack.top();
+		programState.branchingStack.pop();
+
+		std::string ifConditionWasTrueStr = ifConditionWasTrue ? "TRUE" : "FALSE";
+		programState.log.push_back("Condition is: " + ifConditionWasTrueStr);
+
+		if (ifConditionWasTrue)
+		{
+			programState.log.push_back("Skipping ELSE body");
+			programState.instructionPointer = programState.instructionPointer->pNext;
+		}
+		else
+		{
+			programState.log.push_back("Entering ELSE body");
+		}
+	}
+};
 
 
 // Branching function
@@ -417,44 +455,6 @@ public:
 		{
 			programState.log.push_back("Skipping IF body");
 			programState.instructionPointer = currentNode->pNext;
-		}
-	}
-};
-
-
-// Else function
-class IElse : public Instruction
-{
-
-public:
-
-	IElse() {}
-	~IElse() override {}
-
-	void Execute(ProgramState& programState) override
-	{
-		programState.log.push_back("ELSE block started");
-
-		if (programState.branchingStack.empty())
-		{
-			programState.log.push_back("FATAL: ELSE without mathing IF");
-			throw(std::runtime_error("FATAL: ELSE without mathing IF"));
-		}
-
-		bool ifConditionWasTrue = programState.branchingStack.top();
-		programState.branchingStack.pop();
-
-		std::string ifConditionWasTrueStr = ifConditionWasTrue ? "TRUE" : "FALSE";
-		programState.log.push_back("Condition is: " + ifConditionWasTrueStr);
-
-		if (ifConditionWasTrue)
-		{
-			programState.log.push_back("Skipping ELSE body");
-			programState.instructionPointer = programState.instructionPointer->pNext;
-		}
-		else
-		{
-			programState.log.push_back("Entering ELSE body");
 		}
 	}
 };
