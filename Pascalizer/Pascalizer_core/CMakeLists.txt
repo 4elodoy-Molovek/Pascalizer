@@ -91,4 +91,17 @@ if(WIN32)
             "${QT_PLATFORM_PLUGIN}"
             "$<TARGET_FILE_DIR:Pascalizer_core>/platforms/"
     )
+
+    # Получить путь к Qt бинарникам
+    get_filename_component(QT_BIN_DIR "${Qt6_DIR}/../../../bin" ABSOLUTE)
+
+    add_custom_target(deploy_qt
+        COMMAND "${QT_BIN_DIR}/windeployqt.exe"
+            --${CMAKE_BUILD_TYPE}
+            "$<TARGET_FILE:Pascalizer_core>"
+        COMMENT "Deploying Qt runtime with windeployqt..."
+)
+
+add_dependencies(deploy_qt Pascalizer_core)
 endif()
+
