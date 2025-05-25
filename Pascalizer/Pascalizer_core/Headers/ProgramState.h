@@ -10,7 +10,7 @@
 struct ProgramState
 {
 	// Analyzed code of the whole program
-	const HierarchicalList<std::shared_ptr<class Instruction>> code;
+	HierarchicalList<std::shared_ptr<class Instruction>> code;
 
 	// Table of values (constants and variable)
 	std::map<std::string, std::shared_ptr<Value>> valuesTable;
@@ -29,6 +29,9 @@ struct ProgramState
 
 	// A poitner to the wrapper
 	class IO_ProcessorInterface* ioProcessor;
+
+	// Whether the program is waiting for IO to finish
+	bool ioBlock = false;
 
 
 	ProgramState(const HierarchicalList< std::shared_ptr<class Instruction>>& inCode, class IO_ProcessorInterface* inIOProcessor) : code(inCode), ioProcessor(inIOProcessor) {}

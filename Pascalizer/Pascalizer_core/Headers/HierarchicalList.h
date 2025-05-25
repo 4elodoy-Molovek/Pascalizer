@@ -12,13 +12,13 @@ struct HListNode
 	T value;
 
 	// Pointer to the next element on the same level
-	std::shared_ptr<HListNode<T>> pNext;
+	std::shared_ptr<HListNode<T>> pNext = nullptr;
 
 	// Pointer to the first element on the sub level
-	std::shared_ptr<HListNode<T>> pSub;
+	std::shared_ptr<HListNode<T>> pSub = nullptr;
 
 	// Pointer to the parent element of this level
-	std::shared_ptr<HListNode<T>> pUp;
+	std::shared_ptr<HListNode<T>> pUp = nullptr;
 };
 
 
@@ -102,7 +102,7 @@ public:
 
 	// Returns a POINTER to the first element of the list
 	// Will be used for interpretation
-	std::shared_ptr<HListNode<T>> GetFirst() { return pFirst; }
+	const std::shared_ptr<HListNode<T>> GetFirst() { return pFirst; }
 
 	// Makes the list empty
 	void Clear()

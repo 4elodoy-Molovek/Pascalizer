@@ -201,8 +201,8 @@ public:
 
 	virtual State* ProcessElement(const Token& nextElement) override
 	{
-		// state 0: name was processed in the EnterState
-		if (innerState == 1)
+		
+		if (innerState == 0)
 		{
 			CheckTokenType(nextElement, { COLON });
 

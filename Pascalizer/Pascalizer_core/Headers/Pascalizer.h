@@ -18,12 +18,17 @@ class Pascalizer : public IO_ProcessorInterface
 	// A pointer to the instruction, that most recently called for user input
 	IO_InstructionInterface* cachedIOCaller;
 
+	// UI Interface for IO functionality and other stuff
+	IO_UI_Interface* userInterface;
+
 public:
 
 	Pascalizer() {}
 	~Pascalizer() {}
 
 	FileModule& GetFileModule() { return fileModule; }
+
+	void SetUserInterface(IO_UI_Interface* inUserInterface) { userInterface = inUserInterface; }
 
 	// Gets source code from the last loaded file, analyses and runs it
 	void InterpreteCurrentFileSourceCode()
@@ -52,25 +57,21 @@ public:
 		// Analysis suceeded case
 		interpreter.RunProgram(analysisMachine.GetResult(), this);
 
-		UpdateLogs(interpreter.GetCachedLog(), interpreter.GetCachedTable());
+		userInterface->Update();
 	}
 
 
 	// 
 	void AddError(const std::string& error)
 	{
-
+		userInterface->AddError(error);
 	}
 
 	void ClearErrors()
 	{
-
+		userInterface->ClearErrors();
 	}
 
-	void UpdateLogs(const std::vector<std::string>& log, const std::map<std::string, std::shared_ptr<Value>>& valuesTable)
-	{
-
-	}
 
 
 	// Fetching debug info
@@ -85,7 +86,9 @@ public:
 	{
 		cachedIOCaller = ioCaller;
 
-		// TO DO : Actual IO request
+		userInterface->Update();
+
+		userInterface->ReceiveUserInput();
 	}
 
 	// Called when user input has been received
@@ -97,6 +100,7 @@ public:
 	// Call for outputing data using IO interface
 	virtual void CallOutputString(const std::string& output) override
 	{
-		// TO DO : Actual IO request
+		userInterface->Update();
+		userInterface->OutputString(output);
 	}
 };

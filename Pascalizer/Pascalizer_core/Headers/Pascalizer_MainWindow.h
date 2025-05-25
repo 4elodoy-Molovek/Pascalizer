@@ -1,15 +1,17 @@
 #pragma once
 
-#include <QMainWindow>
-#include "ui_Pascalizer_MainWindow.h"
 
+#include "ui_Pascalizer_MainWindow.h"
+#include "IO_ProcessorInterface.h"
+
+#include <QMainWindow>
 #include <QSyntaxHighlighter>
 #include <QTextCharFormat>
 #include <QRegularExpression>
 
 
 
-class Pascalizer_MainWindow : public QMainWindow 
+class Pascalizer_MainWindow : public QMainWindow, public IO_UI_Interface
 {
     Q_OBJECT
 
@@ -22,6 +24,22 @@ public:
     void ShowError(std::string errorMessage);
 
     void UpdateSourceCode();
+
+    // IO Interface
+    // 
+    // Call for outputing data using IO interface
+    virtual void OutputString(const std::string& output) override;
+
+    // Call for user input for I/O instructions
+    virtual void ReceiveUserInput() override;
+
+    // Called when the UI should be updated based on the actions inside the program
+    virtual void Update() override;
+
+    virtual void AddError(const std::string& error) override;
+
+    virtual void ClearErrors() override;
+
 
 signals:
 

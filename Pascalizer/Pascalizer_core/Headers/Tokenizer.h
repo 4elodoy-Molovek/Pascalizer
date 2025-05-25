@@ -102,7 +102,7 @@ private:
 				break;
 			}
 			if (let == '"') {
-				tokElemnet = { TokenType::QUOTES, "\"" };
+				//tokElemnet = { TokenType::QUOTES, "\"" };
 				state = QUOTES_STATE;
 				break;
 			}
@@ -267,7 +267,7 @@ public:
 			{
 				if (let == '"') {
 					cachedTokens.push_back(Token{ TokenType::VALUE_STRING, buf_name });
-					cachedTokens.push_back(Token{ TokenType::QUOTES, "\"" });
+					//cachedTokens.push_back(Token{ TokenType::QUOTES, "\"" });
 					buf_name.clear();
 					state = ZERO_STATE;
 				}

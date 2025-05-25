@@ -164,6 +164,12 @@ public:
 				ExitProcedure(nextElement);
 				return nullptr;
 			}
+
+			else
+			{
+				CheckTokenType(nextElement, { END_LINE });
+				return nullptr;
+			}
 		}
 
 		// Value state
@@ -213,6 +219,12 @@ public:
 					ExitProcedure(nextElement);
 					return nullptr;
 				}
+			}
+
+			else
+			{
+				innerState = "initial";
+				return nullptr;
 			}
 		}
 	}

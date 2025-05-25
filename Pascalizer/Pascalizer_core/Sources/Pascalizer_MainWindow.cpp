@@ -11,6 +11,8 @@ Pascalizer_MainWindow::Pascalizer_MainWindow(Pascalizer* inPascalizer, QWidget* 
 {
     ui.setupUi(this);  // This connects widgets from the .ui file
 
+    pascalizer->SetUserInterface(this);
+
     QObject::connect(ui.actionOpen, &QAction::triggered, this, &Pascalizer_MainWindow::OnClickedOpen);
     QObject::connect(ui.actionSave, &QAction::triggered, this, &Pascalizer_MainWindow::OnClickedSave);
     QObject::connect(ui.actionSave_As, &QAction::triggered, this, &Pascalizer_MainWindow::OnClickedSaveAs);
@@ -31,6 +33,34 @@ void Pascalizer_MainWindow::ShowError(std::string errorMessage)
 void Pascalizer_MainWindow::UpdateSourceCode()
 {
     ui.codeEditor->setPlainText(QString::fromStdString(pascalizer->GetFileModule().GetSourceCode()));
+}
+
+
+
+void Pascalizer_MainWindow::OutputString(const std::string& output)
+{
+}
+
+void Pascalizer_MainWindow::ReceiveUserInput()
+{
+}
+
+void Pascalizer_MainWindow::Update()
+{
+    ui.executionLogList->clear();
+
+    for (auto& logElement : pascalizer->GetCachedLog())
+        ui.executionLogList->addItem(QString::fromStdString(logElement));
+}
+
+void Pascalizer_MainWindow::AddError(const std::string& error)
+{
+    ui.errorList->addItem(QString::fromStdString(error));
+}
+
+void Pascalizer_MainWindow::ClearErrors()
+{
+    ui.errorList->clear();
 }
 
 

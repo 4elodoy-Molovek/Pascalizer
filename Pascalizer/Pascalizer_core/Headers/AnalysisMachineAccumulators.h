@@ -216,6 +216,8 @@ public:
 		{
 			return { std::make_shared<IRead>(argumentExpressions[0])};
 		}
+
+		throw(std::runtime_error("ANALYSIS ERROR: Unknown function '" + functionName + "'!"));
 	}
 };
 

@@ -23,6 +23,8 @@ public:
 	{
 		ProgramState currentState(code, ioProcessor);
 
+		currentState.instructionPointer = currentState.code.GetFirst();
+
 		std::string errorCache = "";
 
 		try
@@ -30,7 +32,7 @@ public:
 			while (currentState.instructionPointer)
 			{
 				// Fetching the current instruction
-				std::shared_ptr<Instruction> currentInstruction = currentState.instructionPointer->value;
+				//std::shared_ptr<Instruction> currentInstruction = currentState.instructionPointer->value;
 				
 				// Notifying the state of the currently executing instruction
 				currentState.currentInstruction = currentState.instructionPointer;
@@ -40,13 +42,19 @@ public:
 					currentState.instructionPointer = currentState.instructionPointer->pSub;
 				else if (currentState.instructionPointer->pNext)
 					currentState.instructionPointer = currentState.instructionPointer->pNext;
-				else
+				else if (currentState.instructionPointer->pUp)
 					currentState.instructionPointer = currentState.instructionPointer->pUp->pNext;
 
+				else
+					currentState.instructionPointer = nullptr;
+
 				// Executes the instruction
-				currentInstruction->Execute(currentState);
+				currentState.currentInstruction->value->Execute(currentState);
 
 				// This way, if instruction modifies the intructionPointer, the program will work correctly
+
+				// Updating cached log for runtime info in the UI
+				cachedLog = currentState.log;
 			}
 		}
 
