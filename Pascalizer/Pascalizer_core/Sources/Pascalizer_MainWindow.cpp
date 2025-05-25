@@ -1,7 +1,6 @@
 #include "Pascalizer_MainWindow.h"
 #include "ui_Pascalizer_MainWindow.h"
 #include "Pascalizer.h"
-
 #include <QFileDialog>
 #include <QFile>
 #include <QTextStream>
@@ -10,18 +9,23 @@
 
 Pascalizer_MainWindow::Pascalizer_MainWindow(Pascalizer* inPascalizer, QWidget* parent) : QMainWindow(parent), pascalizer(inPascalizer)
 {
-    ui.setupUi(this);  // This connects widgets from the .ui file
+    ui->setupUi(this);  // This connects widgets from the .ui file
 
-    QObject::connect(ui.actionOpen, &QAction::triggered, this, &Pascalizer_MainWindow::OnClickedOpen);
-    QObject::connect(ui.actionSave, &QAction::triggered, this, &Pascalizer_MainWindow::OnClickedSave);
-    QObject::connect(ui.actionSave_As, &QAction::triggered, this, &Pascalizer_MainWindow::OnClickedSaveAs);
+    QObject::connect(ui->actionOpen, &QAction::triggered, this, &Pascalizer_MainWindow::OnClickedOpen);
+    QObject::connect(ui->actionSave, &QAction::triggered, this, &Pascalizer_MainWindow::OnClickedSave);
+    QObject::connect(ui->actionSave_As, &QAction::triggered, this, &Pascalizer_MainWindow::OnClickedSaveAs);
 
-    QObject::connect(ui.actionRun, &QAction::triggered, this, &Pascalizer_MainWindow::OnClickedRun);
+    QObject::connect(ui->actionRun, &QAction::triggered, this, &Pascalizer_MainWindow::OnClickedRun);
 
-    QObject::connect(ui.codeEditor, &QPlainTextEdit::textChanged, this, &Pascalizer_MainWindow::OnSourceCodeEdited);
+    QObject::connect(ui->codeEditor, &QPlainTextEdit::textChanged, this, &Pascalizer_MainWindow::OnSourceCodeEdited);
 
     // Attach the syntax highlighter to the plain text edit
-    new SyntaxHighlighter(ui.codeEditor->document());
+    new SyntaxHighlighter(ui->codeEditor->document());
+}
+
+Pascalizer_MainWindow::~Pascalizer_MainWindow()
+{
+    delete ui;
 }
 
 void Pascalizer_MainWindow::ShowError(std::string errorMessage)
@@ -31,7 +35,7 @@ void Pascalizer_MainWindow::ShowError(std::string errorMessage)
 
 void Pascalizer_MainWindow::UpdateSourceCode()
 {
-    ui.codeEditor->setPlainText(QString::fromStdString(pascalizer->GetFileModule().GetSourceCode()));
+    ui->codeEditor->setPlainText(QString::fromStdString(pascalizer->GetFileModule().GetSourceCode()));
 }
 
 
@@ -109,7 +113,7 @@ void Pascalizer_MainWindow::OnClickedRun(bool checked)
 
 void Pascalizer_MainWindow::OnSourceCodeEdited()
 {
-    pascalizer->GetFileModule().GetSourceCode() = ui.codeEditor->toPlainText().toStdString();
+    pascalizer->GetFileModule().GetSourceCode() = ui->codeEditor->toPlainText().toStdString();
 }
 
 // ==========================
