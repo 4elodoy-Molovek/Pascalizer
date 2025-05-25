@@ -229,7 +229,7 @@ TEST(AnalysisMachine, Throws_When_Incorrect_Double_Const_Initialization)
 	};
 
 	// Standard check
-	EXPECT_ANY_THROW(ANALYSIS_MACHINE_TRAVERSE(tokenStream, expectedCodeNotation));
+	EXPECT_ANY_THROW(ANALYSIS_MACHINE_TRAVERSE(tokenStream));
 }
 
 TEST(AnalysisMachine, Throws_When_Unexpected_Token_In_Const_Declaration)

@@ -107,10 +107,15 @@ public:
 	// Makes the list empty
 	void Clear()
 	{
-		UnlinkNode(pFirst);
+		if (pFirst)
+		{
+			UnlinkNode(pFirst);
 
-		pFirst = nullptr;
-		pLast = nullptr;
+			pFirst = nullptr;
+			pLast = nullptr;
+			
+			sz = 0;
+		}
 	}
 
 

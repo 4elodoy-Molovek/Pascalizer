@@ -122,7 +122,7 @@ class AnalysisMachine
 
 public:
 	// Current accumulator of the machine
-	Accumulator* currentAccumulator;
+	Accumulator* currentAccumulator = nullptr;
 
 	/*
 	 * Where should the next instruction be added:
@@ -171,7 +171,7 @@ public:
 
 		else throw(std::exception("ANALYSIS DEVELOPMENT ERROR: Invalid level offset!"));
 
-		levelOffset == 0;
+		levelOffset = 0;
 	}
 
 	// Forcefully transitions the machine to a different state

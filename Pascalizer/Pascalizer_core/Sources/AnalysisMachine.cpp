@@ -96,6 +96,7 @@ AnalysisMachine::AnalysisMachine()
 	// Setting initial state
 	initialState = programVerificationState;
 	currentState = initialState;
+	currentState->EnterState({});
 
 
 	// Expression analysis block
@@ -163,6 +164,7 @@ void AnalysisMachine::CleanUp()
 {
 	codeResult.Clear();
 	currentState = initialState;
+	currentState->EnterState({});
 
 	analysisErrorLog.clear();
 	analysisStatus = ONGOING;

@@ -51,7 +51,7 @@ public:
 	{
 		innerState = 0;
 
-		parentMachine.CreateAccumulator<ProgramVerificationAccumulator>();
+		accumulator = parentMachine.CreateAccumulator<ProgramVerificationAccumulator>();
 	}
 
 	// Called when the machine exits this state
