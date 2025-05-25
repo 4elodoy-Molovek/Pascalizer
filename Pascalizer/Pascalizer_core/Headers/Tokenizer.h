@@ -10,8 +10,10 @@
  */
 using namespace std;
 
-enum STATES { ZERO_STATE, WORD_STATE, COLON_STATE, ASSIGN_STATE, QUOTES_STATE, 
-	CONST_STATE, NOT_EQUAL_STATE, MORE_STATE, LESS_STATE, EQUAL_STATE, EXCLAMATION_STATE, DIV_STATE, COMMENT_STATE};
+enum STATES {
+	ZERO_STATE, WORD_STATE, COLON_STATE, ASSIGN_STATE, QUOTES_STATE,
+	CONST_STATE, NOT_EQUAL_STATE, MORE_STATE, LESS_STATE, EQUAL_STATE, EXCLAMATION_STATE, DIV_STATE, COMMENT_STATE
+};
 
 class Tokenizer
 {
@@ -25,17 +27,33 @@ private:
 
 	Token identifyName(const string& name) {
 		Token token;
-		
+
 		while (true) {
 			// brgin end
 			if (name == "begin") {
-				 token = { TokenType::BEGIN, "begin" };
+				token = { TokenType::BEGIN, "begin" };
 				break;
 			}
 			if (name == "end") {
 				token = { TokenType::END, "end" };
 				break;
 			}
+
+			if (name == "or") {
+				token = { TokenType::OR, "or" };
+				break;
+			}
+
+			if (name == "and") {
+				token = { TokenType::AND, "and" };
+				break;
+			}
+
+			if (name == "not") {
+				token = { TokenType::NOT, "not" };
+				break;
+			}
+
 
 			// specefic
 			if (name == "program") {
@@ -52,7 +70,7 @@ private:
 			}
 			if (name == "end.") {
 				cachedTokens.push_back(Token{ TokenType::END, "end" }); //! ну это капец какой то
-				token = { TokenType::PROGRAMM_END, "." }; 
+				token = { TokenType::PROGRAMM_END, "." };
 				break;
 			}
 
@@ -84,14 +102,14 @@ private:
 				break;
 			}
 
-			token = { TokenType::NAME, name }; 
+			token = { TokenType::NAME, name };
 			break;
 		}
 		return token;
 	}
 
 	Token identifySymbol(const char& let, string& buf_name, int& state) {
-		Token tokElemnet { TokenType::NULL_TOKEN, string(1, WRONG_CHAR_SYMBOL) };
+		Token tokElemnet{ TokenType::NULL_TOKEN, string(1, WRONG_CHAR_SYMBOL) };
 		while (true) {
 			if (('a' <= let && let <= 'z') || ('A' <= let && let <= 'Z')) {
 				buf_name += let;
@@ -166,7 +184,7 @@ private:
 		return tokElemnet;
 	}
 
-public: 
+public:
 
 	Tokenizer() = default;
 	~Tokenizer() = default;
@@ -176,7 +194,7 @@ public:
 		string txt = sourceCode;
 		string buf_name = "";
 		int state = ZERO_STATE;
-		Token tmpTok { TokenType::NULL_TOKEN, " " };
+		Token tmpTok{ TokenType::NULL_TOKEN, " " };
 
 		for (auto let : txt) {
 			switch (state) {
@@ -347,7 +365,7 @@ public:
 				break;
 			}
 
-			case DIV_STATE: 
+			case DIV_STATE:
 			{
 				if (let == '/')
 					state = COMMENT_STATE;
@@ -382,7 +400,7 @@ public:
 		return cachedTokens;
 	}
 
-	 //Returns a reference to an indexed tokenized element //! я это не чекал
+	//Returns a reference to an indexed tokenized element //! я это не чекал
 	const Token& GetToken(size_t index) const {
 		return cachedTokens[index];
 	}
@@ -390,4 +408,3 @@ public:
 	size_t GetTokenNumber() const { return cachedTokens.size(); }
 };
 
-	

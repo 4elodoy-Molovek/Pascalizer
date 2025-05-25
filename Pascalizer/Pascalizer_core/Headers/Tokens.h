@@ -11,7 +11,7 @@ enum TokenType
 	INT_VALUE,
 	DOUBLE_VALUE,
 	STRING_VALUE,
-	MATH_OPERATOR, 
+	MATH_OPERATOR,
 	ASSIGN_OPERATOR,
 	BRACKET_OPEN,
 	BRACKET_CLOSE,
@@ -19,7 +19,7 @@ enum TokenType
 	COMMA,
 	COLON,
 	END_LINE,
-	
+
 
 	// tmp
 	PROGRAMM_END,
@@ -38,8 +38,8 @@ enum TokenType
 
 	// Specific
 	PROGRAM,
-	SECTION,
-	PROGRAM_END,
+	SECTION, //-
+	PROGRAM_END, //-
 	WRONG,
 	NULL_TOKEN, // this is not for you
 
@@ -49,7 +49,12 @@ enum TokenType
 	MORE,
 	LESS_EQUAL,
 	EQUAL,
-	NOT_EQUAL
+	NOT_EQUAL,
+
+	// logical operations
+	OR,
+	AND,
+	NOT
 };
 
 struct Token
@@ -58,5 +63,5 @@ struct Token
 	TokenType type;
 
 	// Element's value
-	std::string value;	
+	std::string value;
 };
