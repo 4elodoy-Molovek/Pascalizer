@@ -20,10 +20,6 @@ enum TokenType
 	COLON,
 	END_LINE,
 
-
-	// tmp
-	PROGRAMM_END,
-
 	// Condition
 	IF,
 	THEN,
@@ -38,10 +34,9 @@ enum TokenType
 
 	// Specific
 	PROGRAM,
-	SECTION, //-
-	PROGRAM_END, //-
+	PROGRAMM_END,
 	WRONG,
-	NULL_TOKEN, // this is not for you
+	NULL_TOKEN, // technical
 
 	// comparison
 	MORE_EQUAL,
