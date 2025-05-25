@@ -1,6 +1,22 @@
-file(GLOB CORE_SOURCES 
+cmake_minimum_required(VERSION 3.16)
+
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/UIFiles")
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
+
+file(GLOB CORE_HEADERS 
+    "Headers/*.h"
+)
+
+file(GLOB CORE_SOURCES_NO_MAIN
     "Sources/*.cpp"
 )
+list(FILTER CORE_SOURCES_NO_MAIN EXCLUDE REGEX ".*main\\.cpp$")
+list(FILTER CORE_SOURCES_NO_MAIN EXCLUDE REGEX ".*Pascalizer_MainWindow\\.cpp$")
 
 file(GLOB UI_FILES 
     "UIFiles/*.ui"
@@ -10,17 +26,29 @@ file(GLOB QRC_FILES
     "UIFiles/*.qrc"
 )
 
-file(GLOB CORE_HEADERS 
-    "Headers/*.h"
+add_library(Pascalizer_core_lib STATIC
+    ${CORE_HEADERS}
+    ${CORE_SOURCES_NO_MAIN}
+)
+
+target_include_directories(Pascalizer_core_lib PUBLIC
+    "${CMAKE_CURRENT_SOURCE_DIR}/Headers"
+)
+
+target_link_libraries(Pascalizer_core_lib PUBLIC
+    Qt6::Core
+    Qt6::Widgets
 )
 
 # Исполняемый файл с экспортом символов
 add_executable(Pascalizer_core
-    ${CORE_SOURCES}
-    ${CORE_HEADERS}
     ${UI_FILES}
     ${QRC_FILES}
+    Sources/main.cpp
+    Sources/Pascalizer_MainWindow.cpp
 )
+
+target_link_libraries(Pascalizer_core PRIVATE Pascalizer_core_lib)
 
 # Настройки для Windows
 if(WIN32)
@@ -32,12 +60,6 @@ if(WIN32)
         PASCALIZER_CORE_BUILD
     )
 endif()
-
-# Подключение Qt
-target_link_libraries(Pascalizer_core PRIVATE
-    Qt6::Core
-    Qt6::Widgets
-)
 
 # Относительные пути к заголовкам
 target_include_directories(Pascalizer_core PUBLIC

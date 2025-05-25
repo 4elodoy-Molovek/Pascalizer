@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PascalizerMainWindow</class>
+ <class>Pascalizer_MainWindow</class>
  <widget class="QMainWindow" name="PascalizerMainWindow">
   <property name="geometry">
    <rect>

@@ -1,4 +1,5 @@
 #include "Pascalizer_MainWindow.h"
+#include "ui_Pascalizer_MainWindow.h"
 #include "Pascalizer.h"
 
 #include <QFileDialog>

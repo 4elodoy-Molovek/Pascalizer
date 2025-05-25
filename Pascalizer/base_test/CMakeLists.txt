@@ -6,7 +6,7 @@ add_executable(base_test ${TEST_SOURCES})
 
 # Подключение зависимостей
 target_link_libraries(base_test PRIVATE
-    Pascalizer_core
+    Pascalizer_core_lib
     GTest::gtest_main
 )
 
