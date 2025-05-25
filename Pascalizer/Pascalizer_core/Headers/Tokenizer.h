@@ -10,7 +10,8 @@
  */
 using namespace std;
 
-enum STATES { ZERO_STATE, WORD_STATE, COLON_STATE, ASSIGN_STATE, QUOTES_STATE, CONST_STATE, NOT_EQUAL_STATE, MORE_STATE, LESS_STATE, EQUAL_STATE, EXCLAMATION_STATE};
+enum STATES { ZERO_STATE, WORD_STATE, COLON_STATE, ASSIGN_STATE, QUOTES_STATE, 
+	CONST_STATE, NOT_EQUAL_STATE, MORE_STATE, LESS_STATE, EQUAL_STATE, EXCLAMATION_STATE, DIV_STATE, COMMENT_STATE};
 
 class Tokenizer
 {
@@ -90,16 +91,16 @@ private:
 	}
 
 	Token identifySymbol(const char& let, string& buf_name, int& state) {
-		Token tokElemnet{ TokenType::NULL_TOKEN, " " };
+		Token tokElemnet { TokenType::NULL_TOKEN, string(1, WRONG_CHAR_SYMBOL) };
 		while (true) {
 			if (('a' <= let && let <= 'z') || ('A' <= let && let <= 'Z')) {
 				buf_name += let;
 				state = WORD_STATE;
-				
+
 				break;
 			}
 			if (let == '"') {
-				tokElemnet = { TokenType::QUOTES, "\""};
+				tokElemnet = { TokenType::QUOTES, "\"" };
 				state = QUOTES_STATE;
 				break;
 			}
@@ -129,8 +130,14 @@ private:
 				break;
 			}
 
+			if (let == '/') {
+				state = DIV_STATE;
+				break;
+			}
+
 			switch (let) {
 			case '\n': case ' ': case '\t':
+				state = ZERO_STATE;
 				break;
 			case '(':
 				tokElemnet = { TokenType::BRACKET_OPEN, "(" };
@@ -146,7 +153,6 @@ private:
 				break;
 			case '+':
 			case '-':
-			case '/':
 			case '*':
 				tokElemnet = { TokenType::MATH_OPERATOR, string(1, let) };
 				break;
@@ -205,15 +211,15 @@ public:
 						tmp_point_number += (i == '.');
 					}
 
-					if (tmp_point_number > 1) 
+					if (tmp_point_number > 1)
 						cachedTokens.push_back(Token{ TokenType::WRONG, string(1, WRONG_CHAR_SYMBOL) });
-					if (tmp_point_number == 1) 
-						cachedTokens.push_back(Token{ TokenType::DOUBLE_VALUE, buf_name});
+					if (tmp_point_number == 1)
+						cachedTokens.push_back(Token{ TokenType::DOUBLE_VALUE, buf_name });
 					if (tmp_point_number == 0)
 						cachedTokens.push_back(Token{ TokenType::INT_VALUE, buf_name });
 
 					buf_name.clear();
-					
+
 					// for the symbol
 					tmpTok = identifySymbol(let, buf_name, state);
 					if (tmpTok.type != TokenType::NULL_TOKEN)
@@ -222,20 +228,23 @@ public:
 				}
 				break;
 			}
-			case EXCLAMATION_STATE:
+
+			case EXCLAMATION_STATE: {
 				if (let == '=') {
 					cachedTokens.push_back(Token{ TokenType::NOT_EQUAL, "!=" });
 					state = ZERO_STATE;
 				}
 				else {
 					cachedTokens.push_back(Token{ TokenType::WRONG, string(1, WRONG_CHAR_SYMBOL) });
-					
+
 					tmpTok = identifySymbol(let, buf_name, state);
 					if (tmpTok.type != TokenType::NULL_TOKEN)
 						cachedTokens.push_back(tmpTok);
 					break;
 				}
 				break;
+			}
+
 			case WORD_STATE:
 			{
 				if (('a' <= let && let <= 'z') || ('A' <= let && let <= 'Z') || ('0' <= let && let <= '9') || (let == '_')) {
@@ -250,7 +259,7 @@ public:
 					cachedTokens.push_back(identifyName(buf_name));
 					state = ZERO_STATE;
 					buf_name.clear();
-					
+
 					tmpTok = identifySymbol(let, buf_name, state);
 					if (tmpTok.type != TokenType::NULL_TOKEN)
 						cachedTokens.push_back(tmpTok);
@@ -263,7 +272,7 @@ public:
 			{
 				if (let == '"') {
 					cachedTokens.push_back(Token{ TokenType::STRING_VALUE, buf_name });
-					cachedTokens.push_back(Token{ TokenType::QUOTES, "\""});
+					cachedTokens.push_back(Token{ TokenType::QUOTES, "\"" });
 					buf_name.clear();
 					state = ZERO_STATE;
 				}
@@ -275,7 +284,6 @@ public:
 
 			case COLON_STATE:
 			{
-				if (let == ' ') continue;
 				if (let == '=')
 				{
 					state = ZERO_STATE;
@@ -283,7 +291,7 @@ public:
 				}
 				else {
 					cachedTokens.push_back(Token{ TokenType::COLON, ":" });
-					
+
 					tmpTok = identifySymbol(let, buf_name, state);
 					if (tmpTok.type != TokenType::NULL_TOKEN)
 						cachedTokens.push_back(tmpTok);
@@ -304,7 +312,7 @@ public:
 					break;
 				}
 				cachedTokens.push_back(Token{ TokenType::EQUAL, "=" });
-				
+
 				tmpTok = identifySymbol(let, buf_name, state);
 				if (tmpTok.type != TokenType::NULL_TOKEN)
 					cachedTokens.push_back(tmpTok);
@@ -318,7 +326,7 @@ public:
 					cachedTokens.push_back(Token{ TokenType::NOT_EQUAL, "!=" });
 				}
 				cachedTokens.push_back(Token{ TokenType::LESS, ">" });
-				
+
 				tmpTok = identifySymbol(let, buf_name, state);
 				if (tmpTok.type != TokenType::NULL_TOKEN)
 					cachedTokens.push_back(tmpTok);
@@ -332,10 +340,30 @@ public:
 					cachedTokens.push_back(Token{ TokenType::NOT_EQUAL, "!=" });
 				}
 				cachedTokens.push_back(Token{ TokenType::MORE, "<" });
-				
+
 				tmpTok = identifySymbol(let, buf_name, state);
 				if (tmpTok.type != TokenType::NULL_TOKEN)
 					cachedTokens.push_back(tmpTok);
+				break;
+			}
+
+			case DIV_STATE: 
+			{
+				if (let == '/')
+					state = COMMENT_STATE;
+				else {
+					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, string(1, '/') });
+					tmpTok = identifySymbol(let, buf_name, state);
+					if (tmpTok.type != TokenType::NULL_TOKEN)
+						cachedTokens.push_back(tmpTok);
+				}
+				break;
+			}
+
+			case COMMENT_STATE:
+			{
+				if (let == '\n')
+					state = ZERO_STATE;
 				break;
 			}
 
