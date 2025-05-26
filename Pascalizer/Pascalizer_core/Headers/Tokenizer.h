@@ -249,7 +249,7 @@ public:
 
 			case EXCLAMATION_STATE: {
 				if (let == '=') {
-					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR "!=" });
+					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "!=" });
 					state = ZERO_STATE;
 				}
 				else {
@@ -341,7 +341,7 @@ public:
 			{
 				state = ZERO_STATE;
 				if (let == '>') {
-					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR "!=" });
+					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "!=" });
 				}
 				cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, ">" });
 
@@ -355,7 +355,7 @@ public:
 			{
 				state = ZERO_STATE;
 				if (let == '<') {
-					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR "!=" });
+					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "!=" });
 				}
 				cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "<" });
 
