@@ -9,6 +9,10 @@ std::shared_ptr<Value> operator/(const Value& lhs, const Value& rhs) { return lh
 std::shared_ptr<Value> operator%(const Value& lhs, const Value& rhs) { return lhs.Mod(rhs); }
 std::shared_ptr<Value> div(const Value& lhs, const Value& rhs) { return lhs.Div(rhs); }
 
+std::shared_ptr<Value> not_(const Value& lhs) { return lhs.Not_(); }
+std::shared_ptr<Value> or_(const Value& lhs, const Value& rhs) { return lhs.Or_(rhs); }
+std::shared_ptr<Value> and_(const Value& lhs, const Value& rhs) { return lhs.And_(rhs); }
+
 std::shared_ptr<Value> operator==(const Value& lhs, const Value& rhs) { return lhs.Equal(rhs); }
 std::shared_ptr<Value> operator!=(const Value& lhs, const Value& rhs) { return lhs.NotEqual(rhs); }
 std::shared_ptr<Value> operator<(const Value& lhs, const Value& rhs) { return lhs.Less(rhs); }
@@ -78,6 +82,25 @@ std::shared_ptr<Value> IntValue::Mod(const Value& rhs) const {
         return std::make_shared<DoubleValue>(fmod(double(value), rhs_double->value));
 
     throw std::runtime_error("Unsupported Divide operands");
+}
+
+std::shared_ptr<Value> IntValue::Or_(const Value& rhs) const {
+    if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
+        return std::make_shared<IntValue>(value || rhs_int->value);
+
+    throw std::runtime_error("Unsupported Or operands");
+}
+
+std::shared_ptr<Value> IntValue::And_(const Value& rhs) const {
+    if (auto rhs_int = dynamic_cast<const IntValue*>(&rhs))
+        return std::make_shared<IntValue>(value && rhs_int->value);
+
+    throw std::runtime_error("Unsupported Or operands");
+}
+
+std::shared_ptr<Value> IntValue::Not_() const {
+   return  std::make_shared<IntValue>(!value);
+    throw std::runtime_error("Unsupported Or operands");
 }
 
 std::shared_ptr<Value> IntValue::Div(const Value& rhs) const {
