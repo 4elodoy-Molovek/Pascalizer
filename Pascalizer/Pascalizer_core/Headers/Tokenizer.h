@@ -118,7 +118,7 @@ private:
 				break;
 			}
 			if (let == '"') {
-				tokElemnet = { TokenType::QUOTES, "\"" };
+				//tokElemnet = { TokenType::QUOTES, "\"" };
 				state = QUOTES_STATE;
 				break;
 			}
@@ -290,7 +290,7 @@ public:
 			{
 				if (let == '"') {
 					cachedTokens.push_back(Token{ TokenType::STRING_VALUE, buf_name });
-					cachedTokens.push_back(Token{ TokenType::QUOTES, "\"" });
+					//cachedTokens.push_back(Token{ TokenType::QUOTES, "\"" });
 					buf_name.clear();
 					state = ZERO_STATE;
 				}
@@ -318,7 +318,7 @@ public:
 				break;
 			}
 
-			case EQUAL_STATE:
+			case EQUAL_STATE: 
 			{
 				state = ZERO_STATE;
 				if (let == '>') {
@@ -326,7 +326,7 @@ public:
 					break;
 				}
 				if (let == '<') {
-					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "=>" });
+					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "=<" });
 					break;
 				}
 				cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "=" });
@@ -338,12 +338,12 @@ public:
 			}
 
 			case LESS_STATE:
-			{
+			{ 
 				state = ZERO_STATE;
 				if (let == '>') {
 					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "!=" });
 				}
-				cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, ">" });
+				cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "<" });
 
 				tmpTok = identifySymbol(let, buf_name, state);
 				if (tmpTok.type != TokenType::NULL_TOKEN)
@@ -352,12 +352,12 @@ public:
 			}
 
 			case MORE_STATE:
-			{
+			{ 
 				state = ZERO_STATE;
 				if (let == '<') {
 					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "!=" });
 				}
-				cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "<" });
+				cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, ">" });
 
 				tmpTok = identifySymbol(let, buf_name, state);
 				if (tmpTok.type != TokenType::NULL_TOKEN)
