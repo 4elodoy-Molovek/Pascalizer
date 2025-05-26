@@ -158,7 +158,7 @@ public:
 				return nullptr;
 			}
 
-			if (nextElement.type == COMMA || nextElement.type == END_LINE)
+			if (nextElement.type == COMMA || nextElement.type == END_LINE || (nextElement.type == BRACKET_CLOSE && bracketCounter == 0))
 			{
 				DumpOperationStack();
 				ExitProcedure(nextElement);
@@ -167,7 +167,7 @@ public:
 
 			else
 			{
-				CheckTokenType(nextElement, { END_LINE });
+				CheckTokenType(nextElement, { END_LINE});
 				return nullptr;
 			}
 		}

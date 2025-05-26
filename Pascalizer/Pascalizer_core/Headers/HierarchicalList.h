@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <stdexcept>
 
 /*
  * A non-encapsulated hierarchical list object
@@ -61,6 +62,8 @@ public:
 		}
 
 		pLast->pNext = std::make_shared<HListNode<T>>(element);
+		pLast->pNext->pUp = pLast->pUp;
+
 		pLast = pLast->pNext;
 		
 		sz++;
@@ -78,6 +81,8 @@ public:
 		}
 
 		pLast->pSub = std::make_shared<HListNode<T>>(element);
+		pLast->pSub->pUp = pLast;
+
 		pLast = pLast->pSub;
 
 		sz++;
@@ -94,10 +99,19 @@ public:
 			return;
 		}
 
-		pLast->pUp = std::make_shared<HListNode<T>>(element);
-		pLast = pLast->pUp;
+		if (pLast->pUp)
+		{
 
-		sz++;
+			pLast->pUp->pNext = std::make_shared<HListNode<T>>(element);
+			pLast->pUp->pNext->pUp = pLast->pUp->pUp;
+
+			pLast = pLast->pUp->pNext;
+
+			sz++;
+		}
+
+		else
+			throw(std::runtime_error("LIST ERROR!"));
 	}
 
 	// Returns a POINTER to the first element of the list

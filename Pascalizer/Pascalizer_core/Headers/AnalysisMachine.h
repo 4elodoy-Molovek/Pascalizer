@@ -54,7 +54,13 @@ protected:
 	void CheckTokenType(const Token& receivedToken, const std::set<TokenType>& expectedTokenTypes)
 	{
 		if (expectedTokenTypes.count(receivedToken.type) == 0)
-			throw(std::runtime_error("ANALYSIS ERROR: Unexpected token at token '" + receivedToken.value + "'!"));
+		{
+			std::string expectedTypesStr = "";
+			for (auto& type : expectedTokenTypes)
+				expectedTypesStr += TokenNames::GetTokenTypeName(type) + "; ";
+
+			throw(std::runtime_error("ANALYSIS ERROR: Unexpected token at token '" + receivedToken.value + "', expected: " + expectedTypesStr + " !"));
+		}
 	}
 
 public:

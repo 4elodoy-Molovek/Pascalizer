@@ -16,10 +16,10 @@ class Pascalizer : public IO_ProcessorInterface
 	Interpreter interpreter;
 
 	// A pointer to the instruction, that most recently called for user input
-	IO_InstructionInterface* cachedIOCaller;
+	IO_InstructionInterface* cachedIOCaller = nullptr;
 
 	// UI Interface for IO functionality and other stuff
-	IO_UI_Interface* userInterface;
+	IO_UI_Interface* userInterface = nullptr;
 
 public:
 
