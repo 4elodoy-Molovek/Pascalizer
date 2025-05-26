@@ -21,6 +21,9 @@ struct ProgramState
 	// Pointer to the instruction that is to be executed next
 	std::shared_ptr<HListNode<std::shared_ptr<class Instruction>>> instructionPointer;
 
+	// The instruction, that program should execute once it leaves this code block
+	std::stack<std::shared_ptr<HListNode<std::shared_ptr<class Instruction>>>> codeBlockExitInstructionPointerStack;
+
 	// Program execution log
 	std::vector<std::string> log;
 

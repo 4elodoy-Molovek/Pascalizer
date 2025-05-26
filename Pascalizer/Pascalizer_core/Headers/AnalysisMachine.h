@@ -59,7 +59,7 @@ protected:
 			for (auto& type : expectedTokenTypes)
 				expectedTypesStr += TokenNames::GetTokenTypeName(type) + "; ";
 
-			throw(std::runtime_error("ANALYSIS ERROR: Unexpected token at token '" + receivedToken.value + "', expected: " + expectedTypesStr + " !"));
+			throw(std::runtime_error("ANALYSIS ERROR: Unexpected token at token '" + receivedToken.value + " (" + TokenNames::GetTokenTypeName(receivedToken.type) + ")" + "', expected: " + expectedTypesStr + " !"));
 		}
 	}
 
@@ -165,19 +165,27 @@ public:
 
 		if (oneLinerDepth > 0)
 		{
-			codeResult.AddNextElement(instruction);
+			codeResult.AddSubElement(instruction);
 			oneLinerDepth--;
+			levelOffset++;
 
 			return;
 		}
 
-				if (levelOffset == 0)	codeResult.AddNextElement(instruction);
-		else	if (levelOffset == -1)	codeResult.AddUpElement(instruction);
-		else	if (levelOffset == 1)	codeResult.AddSubElement(instruction);
-
-		else throw(std::exception("ANALYSIS DEVELOPMENT ERROR: Invalid level offset!"));
-
-		levelOffset = 0;
+		if (levelOffset == 0)
+		{
+			codeResult.AddNextElement(instruction);
+		}
+		else if (levelOffset < -1)
+		{
+			codeResult.AddUpElement(instruction);
+			levelOffset++;
+		}
+		else
+		{
+			codeResult.AddSubElement(instruction);
+			levelOffset--;
+		}
 	}
 
 	// Forcefully transitions the machine to a different state

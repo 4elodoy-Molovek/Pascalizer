@@ -116,7 +116,9 @@ public:
 
 	// Returns a POINTER to the first element of the list
 	// Will be used for interpretation
-	const std::shared_ptr<HListNode<T>> GetFirst() { return pFirst; }
+	std::shared_ptr<HListNode<T>> GetFirst() const { return pFirst; }
+
+	std::shared_ptr<HListNode<T>> GetLast() const { return pLast; }
 
 	// Makes the list empty
 	void Clear()

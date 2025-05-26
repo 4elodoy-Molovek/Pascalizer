@@ -196,7 +196,7 @@ public:
 			{
 				AddVariable(lastName);
 				innerState = "reloop";
-				return nullptr;
+				return ProcessElement(nextElement);
 			}
 		}
 
@@ -221,10 +221,11 @@ public:
 				}
 			}
 
+
 			else
 			{
-				innerState = "initial";
-				return nullptr;
+				innerState = "initial";	
+				return ProcessElement(nextElement);
 			}
 		}
 	}

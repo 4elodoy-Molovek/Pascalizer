@@ -93,22 +93,24 @@ public:
 	// Calculates a result of the stored expression
 	std::shared_ptr<Value> Caculate(ProgramState& programState)
 	{
+		auto localPostfix = postfix;
+
 		// Loading variables from the program state
 		for (int i = 0; i < postfix.size(); i++)
 		{
-			if (auto varElement = dynamic_cast<VariableExpressionElement*>(postfix[i].get()))
+			if (auto varElement = dynamic_cast<VariableExpressionElement*>(localPostfix[i].get()))
 			{
 				// Checking if variable is valid
 				if (programState.valuesTable.count(varElement->varName) == 0) throw(std::runtime_error("RUNTIME ERROR: Unknown variable '" + varElement->varName + "'!"));
 
 				// Replacing variable element with a value element
 				std::shared_ptr<Value> varValue = programState.valuesTable[varElement->varName];
-				postfix[i] = std::make_shared<ValueExpressionElement>(varValue);
+				localPostfix[i] = std::make_shared<ValueExpressionElement>(varValue);
 			}
 		}
 
 		std::stack<std::shared_ptr<ValueExpressionElement>> calculationStack;
-		for (std::shared_ptr<ExpressionElement> el : postfix)
+		for (std::shared_ptr<ExpressionElement> el : localPostfix)
 		{
 
 			// if cur_elemnt is value

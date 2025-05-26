@@ -209,7 +209,7 @@ public:
 		if (programState.valuesTable[_name]->GetType() != value->GetType())
 		{
 			programState.log.push_back("FATAL: tried to assign " + strType[programState.valuesTable[_name]->GetType()] + " to " + strType[value->GetType()]);
-			throw("FATAL: tried to assign " + strType[programState.valuesTable[_name]->GetType()] + " to " + strType[value->GetType()]);
+			throw(std::runtime_error("FATAL: tried to assign " + strType[programState.valuesTable[_name]->GetType()] + " to " + strType[value->GetType()]));
 		}
 
 		programState.valuesTable[_name] = value;
@@ -255,12 +255,15 @@ public:
 
 		programState.log.push_back("Reading from standard input...");
 
+		programState.ioBlock = true;
 		programState.ioProcessor->CallReceiveUserInput(this);
 	}
 
 	// Called when the user input has been received after this instruction requested it
 	virtual void OnUserInputReceived(const std::string& userInput) override
 	{
+		programStatePtr->ioBlock = false;
+
 		std::string input;
 		std::shared_ptr<Value> value;
 
@@ -340,7 +343,6 @@ class IWrite : public Instruction
 {
 private:
 	std::vector<std::shared_ptr<Expression>> _expressions;
-	std::string output;
 
 public:
 
@@ -352,6 +354,8 @@ public:
 
 	void Execute(ProgramState& programState) override
 	{
+		std::string output;
+
 		programState.log.push_back("Writing to standard output...");
 
 		programState.log.push_back("Trying to calculate expressions...");
@@ -360,7 +364,7 @@ public:
 		std::shared_ptr<Value> value;
 		for (int i = 0; i < expressionCount; i++)
 		{
-			programState.log.push_back("Calculating expression " + std::to_string(i) + "/" + std::to_string(expressionCount));
+			programState.log.push_back("Calculating expression " + std::to_string(i + 1) + "/" + std::to_string(expressionCount));
 			exp = _expressions[i];
 
 			try
@@ -486,7 +490,7 @@ public:
 		std::string isTrueStr = isTrue ? "TRUE" : "FALSE";
 		programState.log.push_back("Condition is: " + isTrueStr);
 
-		auto currentNode = programState.instructionPointer;
+		auto currentNode = programState.currentInstruction;
 		bool hasElse = currentNode->pNext && std::dynamic_pointer_cast<IElse>(currentNode->pNext->value);
 
 		if (hasElse)
@@ -567,22 +571,12 @@ public:
 		{
 			programState.log.push_back("Entering WHILE body");
 
-			//preparing return to beginning after body
-			auto loopStart = programState.instructionPointer;
-			auto lastChild = loopStart->pSub;
-
-			//finding last body instruction
-			while (lastChild && lastChild->pNext)
-				lastChild = lastChild->pNext;
-
-			//returning to loop beginning
-			if (lastChild)
-				lastChild->pNext = loopStart;
+			programState.codeBlockExitInstructionPointerStack.top() = programState.currentInstruction;
 		}
 		else
 		{
 			programState.log.push_back("Skipping WHILE body");
-			programState.instructionPointer = programState.instructionPointer->pNext;
+			programState.instructionPointer = programState.currentInstruction->pNext;
 		}
 	}
 

@@ -166,6 +166,9 @@ void AnalysisMachine::CleanUp()
 	currentState = initialState;
 	currentState->EnterState({});
 
+	levelOffset = 0;
+	oneLinerDepth = 0;
+
 	analysisErrorLog.clear();
 	analysisStatus = ONGOING;
 }

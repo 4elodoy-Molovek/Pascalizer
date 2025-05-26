@@ -94,7 +94,11 @@ public:
 	// Called when user input has been received
 	virtual void OnUserInputReceived(const std::string& userInput) override
 	{
-		if (cachedIOCaller) cachedIOCaller->OnUserInputReceived(userInput);
+		if (cachedIOCaller)
+		{
+			cachedIOCaller->OnUserInputReceived(userInput);
+			interpreter.ExecuteNextInstruction();
+		}
 	}
 
 	// Call for outputing data using IO interface

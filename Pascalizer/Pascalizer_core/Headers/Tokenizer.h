@@ -175,6 +175,7 @@ public:
 		string buf_name = "";
 		int state = ZERO_STATE;
 		Token tmpTok{ TokenType::NULL_TOKEN, " " };
+		cachedTokens.clear();
 
 		for (auto let : txt) {
 			switch (state) {

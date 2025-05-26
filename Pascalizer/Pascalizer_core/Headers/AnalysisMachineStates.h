@@ -525,8 +525,9 @@ public:
 	virtual State* ProcessElement(const Token& nextElement) override 
 	{
 		parentMachine.StoreInstruction(accumulator->Collapse()[0]);
+		parentMachine.levelOffset = 1;
 		
-		CheckTokenType(nextElement, {NAME, IF, END});
+		CheckTokenType(nextElement, {NAME, IF, WHILE, END});
 
 		if (nextElement.type == NAME) return nameState;
 		if (nextElement.type == IF || nextElement.type == WHILE) return branchingState;
@@ -687,7 +688,7 @@ public:
 		// NEXT STATE
 		if (innerState == 1)
 		{
-			CheckTokenType(nextElement, {NAME, IF, END});
+			CheckTokenType(nextElement, {NAME, IF, WHILE, END});
 
 			if (nextElement.type == NAME) return nameState;
 			if (nextElement.type == IF || nextElement.type == WHILE) return branchingState;
@@ -796,7 +797,7 @@ public:
 		// NEXT STATE
 		if (innerState == 2)
 		{
-			CheckTokenType(nextElement, {NAME, IF, END});
+			CheckTokenType(nextElement, {NAME, IF, WHILE, END});
 
 			if (nextElement.type == NAME) return nameState;
 			if (nextElement.type == IF || nextElement.type == WHILE) return branchingState;
@@ -934,6 +935,18 @@ public:
 			// Storing condition
 			accumulator->StoreExpression(expressionResult, 0);
 
+			innerState++;
+			return nullptr;
+		}
+
+		// Then
+		if (innerState == 2)
+		{
+			CheckTokenType(nextElement, { THEN });
+
+			// Storing condition
+			accumulator->StoreExpression(expressionResult, 0);
+
 			parentMachine.StoreInstruction(accumulator->Collapse()[0]);
 
 			innerState++;
@@ -941,9 +954,9 @@ public:
 		}
 
 		// NEXT STATE
-		if (innerState == 2)
+		if (innerState == 3)
 		{
-			CheckTokenType(nextElement, {IF, WHILE, NAME, BEGIN});
+			CheckTokenType(nextElement, { IF, WHILE, NAME, BEGIN });
 
 			if (nextElement.type == IF || nextElement.type == WHILE || nextElement.type == NAME) return oneLinerHandlerState;
 			if (nextElement.type == BEGIN) return subBlockBeginState;
@@ -1010,6 +1023,7 @@ public:
 			innerState++;
 
 			parentMachine.EnterExpressionAnalysisState(this, &expressionResult, nextElement);
+			return nullptr;
 		}
 
 		// BACK FROM EXPRESSION ANALYSIS
@@ -1081,7 +1095,7 @@ public:
 	// If no transition is possible it means that the machine has encountered a syntax error
 	virtual State* ProcessElement(const Token& nextElement) override 
 	{
-		if (!dynamic_cast<IIf*>(parentMachine.lastStoredInstruction.get()))
+		if (!dynamic_cast<IIf*>(parentMachine.GetResult().GetLast()->pUp->value.get()))
 			throw std::exception("ANALYSIS ERROR: Else with no corresponding 'IF' before it!");
 
 		parentMachine.StoreInstruction(accumulator->Collapse()[0]);
@@ -1182,19 +1196,7 @@ public:
 	{
 		parentMachine.levelOffset++;
 
-		CheckTokenType(element, { IF, WHILE, NAME });
-
-		if (element.type == IF || element.type == WHILE)
-		{
-			parentMachine.ForceTransitionToState(branchingState, element);
-			return;
-		}
-
-		if (element.type == NAME)
-		{
-			parentMachine.ForceTransitionToState(nameState, element);
-			return;
-		}
+		CheckTokenType(element, { BEGIN });
 	}
 
 	// Called when the machine exits this state
@@ -1202,7 +1204,20 @@ public:
 
 	// Determines the next state of the machine based on the incoming element
 	// If no transition is possible it means that the machine has encountered a syntax error
-	virtual State* ProcessElement(const Token& nextElement) override { return nullptr; }
+	virtual State* ProcessElement(const Token& nextElement) override
+	{
+		CheckTokenType(nextElement, { IF, WHILE, NAME });
+
+		if (nextElement.type == IF || nextElement.type == WHILE)
+		{
+			return branchingState;
+		}
+
+		if (nextElement.type == NAME)
+		{
+			return nameState;
+		}
+	}
 };
 
 
@@ -1253,11 +1268,12 @@ public:
 	// If no transition is possible it means that the machine has encountered a syntax error
 	virtual State* ProcessElement(const Token& nextElement) override 
 	{
-		CheckTokenType(nextElement, { IF, WHILE, NAME, ELSE, PROGRAMM_END });
+		CheckTokenType(nextElement, { IF, WHILE, NAME, ELSE, PROGRAMM_END, END });
 
 		if (nextElement.type == NAME) return nameState;
 		if (nextElement.type == IF || nextElement.type == WHILE) return branchingState;
 		if (nextElement.type == ELSE) return elseState;
+		if (nextElement.type == END) return this;
 		
 		if (nextElement.type == PROGRAMM_END)
 		{
