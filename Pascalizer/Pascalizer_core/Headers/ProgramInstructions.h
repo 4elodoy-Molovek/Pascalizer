@@ -189,7 +189,7 @@ public:
 
 		try
 		{
-			value = _expression->Caculate(programState);
+			value = _expression->Calculate(programState);
 		}
 		catch (std::runtime_error e)
 		{
@@ -242,7 +242,18 @@ public:
 	void Execute(ProgramState& programState) override
 	{
 		// Calculating var name expression
-		std::shared_ptr<Value> nameValue = _varNameExpression->Caculate(programState);
+		std::shared_ptr<Value> nameValue;
+		programState.log.push_back("Trying to calculate expression...");
+		try
+		{
+			nameValue = _varNameExpression->Calculate(programState);
+		}
+		catch (std::runtime_error e)
+		{
+			programState.log.push_back(e.what());
+			programState.log.push_back("FATAL: Calculation failed");
+			throw(std::runtime_error("FATAL: Calculation failed"));
+		}
 
 		if (nameValue->GetType() != STRING) throw(std::runtime_error("FATAL: Read instruction received a non-string variable name"));
 
@@ -369,7 +380,7 @@ public:
 
 			try
 			{
-				value = exp->Caculate(programState);
+				value = exp->Calculate(programState);
 			}
 			catch (std::runtime_error e)
 			{
@@ -463,7 +474,7 @@ public:
 
 		try
 		{
-			result = condition->Caculate(programState);
+			result = condition->Calculate(programState);
 		}
 		catch (std::runtime_error e)
 		{
@@ -541,7 +552,7 @@ public:
 
 		try
 		{
-			result = condition->Caculate(programState);
+			result = condition->Calculate(programState);
 		}
 		catch (std::runtime_error e)
 		{

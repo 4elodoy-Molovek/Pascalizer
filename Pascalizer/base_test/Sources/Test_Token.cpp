@@ -27,30 +27,30 @@
 //	std::string pascalCode = "const \n\tPi: double = 3.1415926;";
 //	tokenizer.TokenizeCode(pascalCode);
 //	
-//    // Проверяем const
+//    // РџСЂРѕРІРµСЂСЏРµРј const
 //    auto& constToken = tokenizer.GetToken(0);
 //    EXPECT_EQ(constToken.type, CONST);
 //    EXPECT_EQ(constToken.value, "const");
 //    
-//    // Проверяем Pi
+//    // РџСЂРѕРІРµСЂСЏРµРј Pi
 //    auto& piToken = tokenizer.GetToken(1);
 //    EXPECT_EQ(piToken.type, NAME);
 //    EXPECT_EQ(piToken.value, "Pi");
 //    
-//    // Проверяем двоеточие
+//    // РџСЂРѕРІРµСЂСЏРµРј РґРІРѕРµС‚РѕС‡РёРµ
 //    auto& colonToken = tokenizer.GetToken(2);
 //    EXPECT_EQ(colonToken.type, COLON);
 //    
-//    // Проверяем double
+//    // РџСЂРѕРІРµСЂСЏРµРј double
 //    auto& doubleToken = tokenizer.GetToken(3);
 //    EXPECT_EQ(doubleToken.type, NAME);
 //    EXPECT_EQ(doubleToken.value, "double");
 //    
-//    // Проверяем =
+//    // РџСЂРѕРІРµСЂСЏРµРј =
 //    auto& assignToken = tokenizer.GetToken(4);
 //    EXPECT_EQ(assignToken.type, ASSIGN_OPERATOR);
 //    
-//    // Проверяем значение
+//    // РџСЂРѕРІРµСЂСЏРµРј Р·РЅР°С‡РµРЅРёРµ
 //    auto& valueToken = tokenizer.GetToken(5);
 //    EXPECT_EQ(valueToken.type, VALUE);
 //    EXPECT_EQ(valueToken.value, "3.1415926");
@@ -62,21 +62,21 @@
 //	tokenizer.TokenizeCode(pascalCode);
 //	
 //	
-//    // Проверяем var
+//    // РџСЂРѕРІРµСЂСЏРµРј var
 //    auto& varToken = tokenizer.GetToken(0);
 //    EXPECT_EQ(varToken.type, VAR);
 //    EXPECT_EQ(varToken.value, "var");
 //    
-//    // Проверяем num1
+//    // РџСЂРѕРІРµСЂСЏРµРј num1
 //    auto& num1Token = tokenizer.GetToken(1);
 //    EXPECT_EQ(num1Token.type, NAME);
 //    EXPECT_EQ(num1Token.value, "num1");
 //    
-//    // Проверяем запятую
+//    // РџСЂРѕРІРµСЂСЏРµРј Р·Р°РїСЏС‚СѓСЋ
 //    auto& commaToken = tokenizer.GetToken(2);
 //    EXPECT_EQ(commaToken.type, COMMA);
 //    
-//    // Проверяем num2
+//    // РџСЂРѕРІРµСЂСЏРµРј num2
 //    auto& num2Token = tokenizer.GetToken(3);
 //    EXPECT_EQ(num2Token.type, NAME);
 //    EXPECT_EQ(num2Token.value, "num2");
@@ -99,7 +99,7 @@
 //	std::string pascalCode = "begin \n\t someVar := 42; \n\t Write("somaString"); end";
 //	tokenizer.TokenizeCode(pascalCode);
 //	
-//    // Проверяем begin
+//    // РџСЂРѕРІРµСЂСЏРµРј begin
 //    auto& beginToken = tokenizer.GetToken(19);
 //    EXPECT_EQ(beginToken.type, BEGIN);
 //    EXPECT_EQ(beginToken.value, "begin");
@@ -116,26 +116,26 @@
 //	std::string pascalCode = "if (1 == 1) then begin \n\t someVar := 42; \n\t Write("somaString"); end";
 //	tokenizer.TokenizeCode(pascalCode);
 //	
-//    // Проверяем if
+//    // РџСЂРѕРІРµСЂСЏРµРј if
 //    auto& token = tokenizer.GetToken(0);
 //    EXPECT_EQ(token.type, IF);
 //    EXPECT_EQ(token.value, "if");
 //    
-//    // Проверяем открывающую скобку
+//    // РџСЂРѕРІРµСЂСЏРµРј РѕС‚РєСЂС‹РІР°СЋС‰СѓСЋ СЃРєРѕР±РєСѓ
 //    token = tokenizer.GetToken(1);
 //    EXPECT_EQ(token.type, BRACKET_OPEN);
 //	
 //	size_t i = 1;
-//	// Проверяем закрывающую скобку    
+//	// РџСЂРѕРІРµСЂСЏРµРј Р·Р°РєСЂС‹РІР°СЋС‰СѓСЋ СЃРєРѕР±РєСѓ    
 //	while (tokenizer.GetToken(2) != BRACKET_CLOSE && i < tokenizer.GetTokenNumber()) 
 //		i++;
 //	
-//	 // Проверяем then
+//	 // РџСЂРѕРІРµСЂСЏРµРј then
 //	token = tokenizer.GetToken(i);
 //    EXPECT_EQ(token.type, BRACKET_CLOSE);
 //    EXPECT_EQ(token.value, ")");
 //	
-//    // Проверяем then
+//    // РџСЂРѕРІРµСЂСЏРµРј then
 //	token = tokenizer.GetToken(i+1);
 //    EXPECT_EQ(token.type, THEN);
 //    EXPECT_EQ(token.value, "then");
@@ -255,17 +255,17 @@
 //    Res, d: double;
 //begin
 //    num1 := 5;
-//    Write("Введите четное целое число: ");
+//    Write("Р’РІРµРґРёС‚Рµ С‡РµС‚РЅРѕРµ С†РµР»РѕРµ С‡РёСЃР»Рѕ: ");
 //    Read(num2);
-//    Write("Введите вещественное число: ");
+//    Write("Р’РІРµРґРёС‚Рµ РІРµС‰РµСЃС‚РІРµРЅРЅРѕРµ С‡РёСЃР»Рѕ: ");
 //    Read(d);
 //    if (num2 mod 2 = 0) then
 //    begin
 //        Res := (num1 - num2 * 5 div 2) / (d * 2);
-//        Write("Результат = ", Res);
+//        Write("Р РµР·СѓР»СЊС‚Р°С‚ = ", Res);
 //    end
 //    else
-//        Write("Неверный ввод");
+//        Write("РќРµРІРµСЂРЅС‹Р№ РІРІРѕРґ");
 //end.
 //)";
 //        tokenizer.TokenizeCode(pascalCode);
@@ -284,17 +284,17 @@
 //    Res, d: double;
 //begin
 //    num1 := 5;
-//    Write("Введите четное целое число: ");
+//    Write("Р’РІРµРґРёС‚Рµ С‡РµС‚РЅРѕРµ С†РµР»РѕРµ С‡РёСЃР»Рѕ: ");
 //    Read(num2);
-//    Write("Введите вещественное число: ");
+//    Write("Р’РІРµРґРёС‚Рµ РІРµС‰РµСЃС‚РІРµРЅРЅРѕРµ С‡РёСЃР»Рѕ: ");
 //    Read(d);
 //    if (num2 mod 2 = 0) then
 //    begin
 //        Res := (num1 - num2 * 5 div 2) / (d * 2);
-//        Write("Результат = ", Res);
+//        Write("Р РµР·СѓР»СЊС‚Р°С‚ = ", Res);
 //    end
 //    else
-//        Write("Неверный ввод");
+//        Write("РќРµРІРµСЂРЅС‹Р№ РІРІРѕРґ");
 //end.
 //)";
 //        tokenizer.TokenizeCode(pascalCode);

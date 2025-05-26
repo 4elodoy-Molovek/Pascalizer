@@ -2,21 +2,22 @@ cmake_minimum_required(VERSION 3.16)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/UIFiles")
+set(CMAKE_AUTOUIC OFF)
+# set(CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/UIFiles")
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
-file(GLOB CORE_HEADERS 
+file(GLOB CORE_HEADERS
     "Headers/*.h"
 )
+list(FILTER CORE_HEADERS EXCLUDE REGEX ".*Window\\.h$")
 
 file(GLOB CORE_SOURCES_NO_MAIN
     "Sources/*.cpp"
 )
 list(FILTER CORE_SOURCES_NO_MAIN EXCLUDE REGEX ".*main\\.cpp$")
-list(FILTER CORE_SOURCES_NO_MAIN EXCLUDE REGEX ".*Pascalizer_MainWindow\\.cpp$")
+list(FILTER CORE_SOURCES_NO_MAIN EXCLUDE REGEX ".*Window\\.cpp$")
 
 file(GLOB UI_FILES 
     "UIFiles/*.ui"
@@ -25,6 +26,10 @@ file(GLOB UI_FILES
 file(GLOB QRC_FILES 
     "UIFiles/*.qrc"
 )
+
+if(UI_FILES)
+    qt6_wrap_ui(GENERATED_UI_HEADERS ${UI_FILES})
+endif()
 
 add_library(Pascalizer_core_lib STATIC
     ${CORE_HEADERS}
@@ -44,8 +49,14 @@ target_link_libraries(Pascalizer_core_lib PUBLIC
 add_executable(Pascalizer_core
     ${UI_FILES}
     ${QRC_FILES}
+    ${GENERATED_UI_HEADERS}
     Sources/main.cpp
     Sources/Pascalizer_MainWindow.cpp
+    Headers/Pascalizer_MainWindow.h
+)
+
+target_include_directories(Pascalizer_core PRIVATE
+    "${CMAKE_CURRENT_BINARY_DIR}"  # чтобы #include "ui_*.h" сработал
 )
 
 target_link_libraries(Pascalizer_core PRIVATE Pascalizer_core_lib)

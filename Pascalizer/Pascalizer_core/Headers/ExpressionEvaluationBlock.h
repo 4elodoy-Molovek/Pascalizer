@@ -91,7 +91,7 @@ public:
 	Expression(const std::vector<std::shared_ptr<ExpressionElement>>& inPostfix) : postfix(inPostfix) {}
 
 	// Calculates a result of the stored expression
-	std::shared_ptr<Value> Caculate(ProgramState& programState)
+	std::shared_ptr<Value> Calculate(ProgramState& programState)
 	{
 		auto localPostfix = postfix;
 

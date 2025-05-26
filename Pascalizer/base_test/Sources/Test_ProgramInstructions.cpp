@@ -12,14 +12,14 @@
 //#include "HierarchicalList.h"
 //
 //
-//// Мокаем Expression, чтобы обойти Caculate
+//// РњРѕРєР°РµРј Expression, С‡С‚РѕР±С‹ РѕР±РѕР№С‚Рё Caculate
 //class FakeExpression : public Expression 
 //{
 //public:
 //    FakeExpression(std::shared_ptr<Value> value)
 //        : Expression({}), _value(value) {}
 //
-//    // Точно перегружаем виртуальный метод родителя!
+//    // РўРѕС‡РЅРѕ РїРµСЂРµРіСЂСѓР¶Р°РµРј РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ РјРµС‚РѕРґ СЂРѕРґРёС‚РµР»СЏ!
 //    std::shared_ptr<Value> Caculate(ProgramState& state) 
 //    {
 //        state.log.push_back("FakeExpression used");
@@ -31,7 +31,7 @@
 //};
 //
 //
-//// Мокаем IO-процессор
+//// РњРѕРєР°РµРј IO-РїСЂРѕС†РµСЃСЃРѕСЂ
 //class MockIO : public IO_ProcessorInterface 
 //{
 //public:
@@ -57,7 +57,7 @@
 //
 //
 //
-//// Хелпер для создания состояния
+//// РҐРµР»РїРµСЂ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ СЃРѕСЃС‚РѕСЏРЅРёСЏ
 //ProgramState MakeState() 
 //{
 //    HierarchicalList<std::shared_ptr<Instruction>> dummyCode;
@@ -65,7 +65,7 @@
 //    return ProgramState(dummyCode, &io);
 //}
 //
-//// ---- Тесты ----
+//// ---- РўРµСЃС‚С‹ ----
 //
 //TEST(IProgramTest, ExecutesSuccessfully) 
 //{
@@ -223,7 +223,7 @@
 //    auto read = std::make_shared<IRead>(expr);
 //
 //    io.inputCallback = [&](IO_InstructionInterface* instr) {
-//        instr->OnUserInputReceived("42"); // имитируем получение ввода
+//        instr->OnUserInputReceived("42"); // РёРјРёС‚РёСЂСѓРµРј РїРѕР»СѓС‡РµРЅРёРµ РІРІРѕРґР°
 //    };
 //
 //    read->Execute(state);
@@ -255,7 +255,7 @@
 //    state.branchingStack.push(false);
 //    elseNode->pNext = nullptr;
 //    elseNode->value->Execute(state);
-//    // Проверим, что не скипнуло тело else
+//    // РџСЂРѕРІРµСЂРёРј, С‡С‚Рѕ РЅРµ СЃРєРёРїРЅСѓР»Рѕ С‚РµР»Рѕ else
 //    ASSERT_TRUE(state.log.back().find("Entering ELSE body") != std::string::npos);
 //}
 //
@@ -274,7 +274,7 @@
 //    node->pSub->value = std::make_shared<IMainBlock>();
 //
 //    loop->Execute(state);
-//    // Цикл один раз заходит внутрь
+//    // Р¦РёРєР» РѕРґРёРЅ СЂР°Р· Р·Р°С…РѕРґРёС‚ РІРЅСѓС‚СЂСЊ
 //    ASSERT_TRUE(state.log.back().find("Entering WHILE body") != std::string::npos);
 //}
 //
@@ -298,7 +298,7 @@
 //    auto read = std::make_shared<IRead>(expr);
 //
 //    io.inputCallback = [&](IO_InstructionInterface* instr) {
-//        instr->OnUserInputReceived("hello world"); // строка вместо числа
+//        instr->OnUserInputReceived("hello world"); // СЃС‚СЂРѕРєР° РІРјРµСЃС‚Рѕ С‡РёСЃР»Р°
 //    };
 //
 //    EXPECT_THROW(read->Execute(state), std::runtime_error);
@@ -322,7 +322,7 @@
 //    auto expr = std::make_shared<FakeExpression>(std::make_shared<IntValue>(5));
 //    IAssignVar assign("missing", expr);
 //
-//    // в отличие от других, тут выбрасывается при попытке сравнить типы
+//    // РІ РѕС‚Р»РёС‡РёРµ РѕС‚ РґСЂСѓРіРёС…, С‚СѓС‚ РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ РїСЂРё РїРѕРїС‹С‚РєРµ СЃСЂР°РІРЅРёС‚СЊ С‚РёРїС‹
 //    EXPECT_THROW(assign.Execute(state), std::runtime_error);
 //}
 //
