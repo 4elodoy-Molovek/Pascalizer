@@ -217,7 +217,7 @@ public:
 
 	std::string GetStringNotation() override
 	{
-		return "IAssignVar(" + _name + ", " + ")";
+		return "IAssignVar(" + _name + ")";
 	}
 };
 
