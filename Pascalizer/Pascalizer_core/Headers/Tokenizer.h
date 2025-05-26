@@ -40,17 +40,17 @@ private:
 			}
 
 			if (name == "or") {
-				token = { TokenType::OR, "or" };
+				token = { TokenType::MATH_OPERATOR, "or" };
 				break;
 			}
 
 			if (name == "and") {
-				token = { TokenType::AND, "and" };
+				token = { TokenType::MATH_OPERATOR, "and" };
 				break;
 			}
 
 			if (name == "not") {
-				token = { TokenType::NOT, "not" };
+				token = { TokenType::MATH_OPERATOR, "not" };
 				break;
 			}
 
@@ -249,7 +249,7 @@ public:
 
 			case EXCLAMATION_STATE: {
 				if (let == '=') {
-					cachedTokens.push_back(Token{ TokenType::NOT_EQUAL, "!=" });
+					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR "!=" });
 					state = ZERO_STATE;
 				}
 				else {
@@ -322,14 +322,14 @@ public:
 			{
 				state = ZERO_STATE;
 				if (let == '>') {
-					cachedTokens.push_back(Token{ TokenType::MORE_EQUAL, "=>" });
+					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "=>" });
 					break;
 				}
 				if (let == '<') {
-					cachedTokens.push_back(Token{ TokenType::LESS_EQUAL, "=>" });
+					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "=>" });
 					break;
 				}
-				cachedTokens.push_back(Token{ TokenType::EQUAL, "=" });
+				cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "=" });
 
 				tmpTok = identifySymbol(let, buf_name, state);
 				if (tmpTok.type != TokenType::NULL_TOKEN)
@@ -341,9 +341,9 @@ public:
 			{
 				state = ZERO_STATE;
 				if (let == '>') {
-					cachedTokens.push_back(Token{ TokenType::NOT_EQUAL, "!=" });
+					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR "!=" });
 				}
-				cachedTokens.push_back(Token{ TokenType::LESS, ">" });
+				cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, ">" });
 
 				tmpTok = identifySymbol(let, buf_name, state);
 				if (tmpTok.type != TokenType::NULL_TOKEN)
@@ -355,9 +355,9 @@ public:
 			{
 				state = ZERO_STATE;
 				if (let == '<') {
-					cachedTokens.push_back(Token{ TokenType::NOT_EQUAL, "!=" });
+					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR "!=" });
 				}
-				cachedTokens.push_back(Token{ TokenType::MORE, "<" });
+				cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "<" });
 
 				tmpTok = identifySymbol(let, buf_name, state);
 				if (tmpTok.type != TokenType::NULL_TOKEN)

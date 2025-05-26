@@ -37,19 +37,6 @@ enum TokenType
 	PROGRAMM_END,
 	WRONG,
 	NULL_TOKEN, // technical
-
-	// comparison
-	MORE_EQUAL,
-	LESS,
-	MORE,
-	LESS_EQUAL,
-	EQUAL,
-	NOT_EQUAL,
-
-	// logical operations
-	OR,
-	AND,
-	NOT
 };
 
 struct Token
