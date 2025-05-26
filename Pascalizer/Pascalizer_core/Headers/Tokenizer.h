@@ -10,24 +10,25 @@
  */
 using namespace std;
 
-enum STATES { ZERO_STATE, WORD_STATE, COLON_STATE, ASSIGN_STATE, QUOTES_STATE, CONST_STATE, NOT_EQUAL_STATE, MORE_STATE, LESS_STATE, EQUAL_STATE, EXCLAMATION_STATE };
+enum STATES {
+	ZERO_STATE, WORD_STATE, COLON_STATE, ASSIGN_STATE, QUOTES_STATE,
+	CONST_STATE, NOT_EQUAL_STATE, MORE_STATE, LESS_STATE, EQUAL_STATE, EXCLAMATION_STATE, DIV_STATE, COMMENT_STATE
+};
 
 class Tokenizer
 {
 
-	/* Tokenizer stores it's results into this cache field, returning only a const reference
+	/* Tokenized stores it's results into this cache field, returning only a const reference
 	 * This allows us to avoid unnecessary copying later on
 	 */
 	std::vector<Token> cachedTokens;
 
 private:
 
-	Token identifyName(const string& name) 
-	{
+	Token identifyName(const string& name) {
 		Token token;
 
-		while (true) 
-		{
+		while (true) {
 			// brgin end
 			if (name == "begin") {
 				token = { TokenType::BEGIN, "begin" };
@@ -37,6 +38,22 @@ private:
 				token = { TokenType::END, "end" };
 				break;
 			}
+
+			if (name == "or") {
+				token = { TokenType::MATH_OPERATOR, "or" };
+				break;
+			}
+
+			if (name == "and") {
+				token = { TokenType::MATH_OPERATOR, "and" };
+				break;
+			}
+
+			if (name == "not") {
+				token = { TokenType::MATH_OPERATOR, "not" };
+				break;
+			}
+
 
 			// specefic
 			if (name == "program") {
@@ -91,9 +108,8 @@ private:
 		return token;
 	}
 
-	Token identifySymbol(const char& let, string& buf_name, int& state) 
-	{
-		Token tokElemnet{ TokenType::NULL_TOKEN, " " };
+	Token identifySymbol(const char& let, string& buf_name, int& state) {
+		Token tokElemnet{ TokenType::NULL_TOKEN, string(1, WRONG_CHAR_SYMBOL) };
 		while (true) {
 			if (('a' <= let && let <= 'z') || ('A' <= let && let <= 'Z')) {
 				buf_name += let;
@@ -132,8 +148,14 @@ private:
 				break;
 			}
 
+			if (let == '/') {
+				state = DIV_STATE;
+				break;
+			}
+
 			switch (let) {
 			case '\n': case ' ': case '\t':
+				state = ZERO_STATE;
 				break;
 			case '(':
 				tokElemnet = { TokenType::BRACKET_OPEN, "(" };
@@ -149,7 +171,6 @@ private:
 				break;
 			case '+':
 			case '-':
-			case '/':
 			case '*':
 				tokElemnet = { TokenType::MATH_OPERATOR, string(1, let) };
 				break;
@@ -169,13 +190,11 @@ public:
 	~Tokenizer() = default;
 
 	// Tokenizes source code, splitting it into elements
-	const std::vector<Token>& TokenizeCode(const std::string& sourceCode) 
-	{
+	const std::vector<Token>& TokenizeCode(const std::string& sourceCode) {
 		string txt = sourceCode;
 		string buf_name = "";
 		int state = ZERO_STATE;
 		Token tmpTok{ TokenType::NULL_TOKEN, " " };
-		cachedTokens.clear();
 
 		for (auto let : txt) {
 			switch (state) {
@@ -227,9 +246,10 @@ public:
 				}
 				break;
 			}
-			case EXCLAMATION_STATE:
+
+			case EXCLAMATION_STATE: {
 				if (let == '=') {
-					cachedTokens.push_back(Token{ TokenType::NOT_EQUAL, "!=" });
+					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "!=" });
 					state = ZERO_STATE;
 				}
 				else {
@@ -241,6 +261,8 @@ public:
 					break;
 				}
 				break;
+			}
+
 			case WORD_STATE:
 			{
 				if (('a' <= let && let <= 'z') || ('A' <= let && let <= 'Z') || ('0' <= let && let <= '9') || (let == '_')) {
@@ -280,7 +302,6 @@ public:
 
 			case COLON_STATE:
 			{
-				if (let == ' ') continue;
 				if (let == '=')
 				{
 					state = ZERO_STATE;
@@ -301,14 +322,14 @@ public:
 			{
 				state = ZERO_STATE;
 				if (let == '>') {
-					cachedTokens.push_back(Token{ TokenType::MORE_EQUAL, "=>" });
+					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "=>" });
 					break;
 				}
 				if (let == '<') {
-					cachedTokens.push_back(Token{ TokenType::LESS_EQUAL, "=>" });
+					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "=<" });
 					break;
 				}
-				cachedTokens.push_back(Token{ TokenType::EQUAL, "=" });
+				cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "=" });
 
 				tmpTok = identifySymbol(let, buf_name, state);
 				if (tmpTok.type != TokenType::NULL_TOKEN)
@@ -320,9 +341,9 @@ public:
 			{
 				state = ZERO_STATE;
 				if (let == '>') {
-					cachedTokens.push_back(Token{ TokenType::NOT_EQUAL, "!=" });
+					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "!=" });
 				}
-				cachedTokens.push_back(Token{ TokenType::LESS, ">" });
+				cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "<" });
 
 				tmpTok = identifySymbol(let, buf_name, state);
 				if (tmpTok.type != TokenType::NULL_TOKEN)
@@ -334,13 +355,33 @@ public:
 			{
 				state = ZERO_STATE;
 				if (let == '<') {
-					cachedTokens.push_back(Token{ TokenType::NOT_EQUAL, "!=" });
+					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, "!=" });
 				}
-				cachedTokens.push_back(Token{ TokenType::MORE, "<" });
+				cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, ">" });
 
 				tmpTok = identifySymbol(let, buf_name, state);
 				if (tmpTok.type != TokenType::NULL_TOKEN)
 					cachedTokens.push_back(tmpTok);
+				break;
+			}
+
+			case DIV_STATE:
+			{
+				if (let == '/')
+					state = COMMENT_STATE;
+				else {
+					cachedTokens.push_back(Token{ TokenType::MATH_OPERATOR, string(1, '/') });
+					tmpTok = identifySymbol(let, buf_name, state);
+					if (tmpTok.type != TokenType::NULL_TOKEN)
+						cachedTokens.push_back(tmpTok);
+				}
+				break;
+			}
+
+			case COMMENT_STATE:
+			{
+				if (let == '\n')
+					state = ZERO_STATE;
 				break;
 			}
 
@@ -360,11 +401,9 @@ public:
 	}
 
 	//Returns a reference to an indexed tokenized element //! ÿ ýòî íå ÷åêàë
-	const Token& GetToken(size_t index) const 
-	{
+	const Token& GetToken(size_t index) const {
 		return cachedTokens[index];
 	}
 
 	size_t GetTokenNumber() const { return cachedTokens.size(); }
 };
-

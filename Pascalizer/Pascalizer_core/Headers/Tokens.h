@@ -12,7 +12,7 @@ enum TokenType
 	VALUE_INT,
 	VALUE_DOUBLE,
 	VALUE_STRING,
-	MATH_OPERATOR, 
+	MATH_OPERATOR,
 	ASSIGN_OPERATOR,
 	BRACKET_OPEN,
 	BRACKET_CLOSE,
@@ -20,10 +20,6 @@ enum TokenType
 	COMMA,
 	COLON,
 	END_LINE,
-	
-
-	// tmp
-	PROGRAMM_END,
 
 	// Condition
 	IF,
@@ -39,18 +35,9 @@ enum TokenType
 
 	// Specific
 	PROGRAM,
-	SECTION,
-	PROGRAM_END,
+	PROGRAMM_END,
 	WRONG,
-	NULL_TOKEN, // this is not for you
-
-	// comparison
-	MORE_EQUAL,
-	LESS,
-	MORE,
-	LESS_EQUAL,
-	EQUAL,
-	NOT_EQUAL
+	NULL_TOKEN, // technical
 };
 
 struct Token
@@ -82,7 +69,7 @@ public:
 			{COMMA, "COMMA"},
 			{COLON, "COLON"},
 			{END_LINE, "END_LINE"},
-			{PROGRAMM_END, "PROGRAMM_END"},
+			{PROGRAMM_END, "PROGRAM_END"},
 			{IF, "IF"},
 			{THEN, "THEN"},
 			{ELSE, "ELSE"},
@@ -92,16 +79,8 @@ public:
 			{VAR, "VAR"},
 			{CONST, "CONST"},
 			{PROGRAM, "PROGRAM"},
-			{SECTION, "SECTION"},
-			{PROGRAM_END, "PROGRAM_END"},
 			{WRONG, "WRONG"},
-			{NULL_TOKEN, "NULL_TOKEN"},
-			{MORE_EQUAL, "MORE_EQUAL"},
-			{LESS, "LESS"},
-			{MORE, "MORE"},
-			{LESS_EQUAL, "LESS_EQUAL"},
-			{EQUAL, "EQUAL"},
-			{NOT_EQUAL, "NOT_EQUAL"}
+			{NULL_TOKEN, "NULL_TOKEN"}
 		};
 
 		return names[type];

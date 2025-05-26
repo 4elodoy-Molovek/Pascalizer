@@ -176,11 +176,13 @@ public:
 		{
 			codeResult.AddNextElement(instruction);
 		}
-		else if (levelOffset < -1)
+
+		else if (levelOffset < 0)
 		{
 			codeResult.AddUpElement(instruction);
 			levelOffset++;
 		}
+
 		else
 		{
 			codeResult.AddSubElement(instruction);

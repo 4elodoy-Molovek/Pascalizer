@@ -16,6 +16,7 @@ Pascalizer_MainWindow::Pascalizer_MainWindow(Pascalizer* inPascalizer, QWidget* 
     QObject::connect(ui.actionOpen, &QAction::triggered, this, &Pascalizer_MainWindow::OnClickedOpen);
     QObject::connect(ui.actionSave, &QAction::triggered, this, &Pascalizer_MainWindow::OnClickedSave);
     QObject::connect(ui.actionSave_As, &QAction::triggered, this, &Pascalizer_MainWindow::OnClickedSaveAs);
+    QObject::connect(ui.actionNew, &QAction::triggered, this, &Pascalizer_MainWindow::OnClickedNew);
 
     QObject::connect(ui.actionRun, &QAction::triggered, this, &Pascalizer_MainWindow::OnClickedRun);
 
@@ -121,6 +122,33 @@ void Pascalizer_MainWindow::OnClickedSaveAs(bool checked)
     try
     {
         pascalizer->GetFileModule().SaveFileAs(fileName.toStdString());
+    }
+
+    catch (std::exception e)
+    {
+        ShowError(e.what());
+    }
+}
+
+void Pascalizer_MainWindow::OnClickedNew(bool checked)
+{
+    // Calling file dialog
+    QString fileName = QFileDialog::getSaveFileName(
+        this,
+        "New Source Code File",
+        "", // optional starting directory
+        "Text Files (*.txt);;All Files (*)" // file filters
+    );
+
+    // User cancelled
+    if (fileName.isEmpty())
+        return;
+
+    try
+    {
+        pascalizer->GetFileModule().GetSourceCode() = "";
+        pascalizer->GetFileModule().SaveFileAs(fileName.toStdString());
+        UpdateSourceCode();
     }
 
     catch (std::exception e)

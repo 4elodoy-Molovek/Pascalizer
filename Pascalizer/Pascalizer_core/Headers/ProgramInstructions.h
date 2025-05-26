@@ -425,7 +425,8 @@ public:
 		if (ifConditionWasTrue)
 		{
 			programState.log.push_back("Skipping ELSE body");
-			programState.instructionPointer = programState.instructionPointer->pNext;
+			programState.instructionPointer = programState.currentInstruction->pNext;
+			programState.codeBlockExitInstructionPointerStack.pop();
 		}
 		else
 		{
@@ -507,6 +508,7 @@ public:
 		{
 			programState.log.push_back("Skipping IF body");
 			programState.instructionPointer = currentNode->pNext;
+			programState.codeBlockExitInstructionPointerStack.pop();
 		}
 	}
 
@@ -577,6 +579,7 @@ public:
 		{
 			programState.log.push_back("Skipping WHILE body");
 			programState.instructionPointer = programState.currentInstruction->pNext;
+			programState.codeBlockExitInstructionPointerStack.pop();
 		}
 	}
 

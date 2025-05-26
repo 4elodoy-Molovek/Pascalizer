@@ -223,7 +223,8 @@ public:
 		// Assign symbol
 		if (innerState == 2)
 		{
-			CheckTokenType(nextElement, { EQUAL });
+			CheckTokenType(nextElement, { MATH_OPERATOR });
+			if (nextElement.value != "=") throw(std::runtime_error("ANALYSIS ERROR: Unexpected math operator + " + nextElement.value + " !"));
 
 			innerState++;
 			return nullptr;

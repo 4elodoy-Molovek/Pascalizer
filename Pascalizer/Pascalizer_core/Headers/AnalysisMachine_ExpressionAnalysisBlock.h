@@ -69,10 +69,10 @@ class ExpressionAnalysisBlockState : public State
 		else	if (operationStr == "div") operation = std::make_shared<DivOperation>();
 
 		else	if (operationStr == ">") operation = std::make_shared<MoreOperation>();
-		else	if (operationStr == ">=") operation = std::make_shared<MoreEqualOperation>();
+		else	if (operationStr == "=>") operation = std::make_shared<MoreEqualOperation>();
 		else	if (operationStr == "<") operation = std::make_shared<LessOperation>();
-		else	if (operationStr == "<=") operation = std::make_shared<LessEqualOperation>();
-		else	if (operationStr == "==") operation = std::make_shared<EqualOperation>();
+		else	if (operationStr == "=<") operation = std::make_shared<LessEqualOperation>();
+		else	if (operationStr == "=") operation = std::make_shared<EqualOperation>();
 		else	if (operationStr == "!=") operation = std::make_shared<NotEqualOperation>();
 
 		

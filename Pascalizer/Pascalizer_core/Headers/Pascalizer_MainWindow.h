@@ -48,6 +48,7 @@ public slots:
     void OnClickedOpen(bool checked = false);
     void OnClickedSave(bool checked = false);
     void OnClickedSaveAs(bool checked = false);
+    void OnClickedNew(bool checked = false);
 
     void OnClickedRun(bool checked = false);
 
