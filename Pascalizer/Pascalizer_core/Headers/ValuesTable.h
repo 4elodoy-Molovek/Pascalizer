@@ -31,6 +31,10 @@ public:
     virtual std::shared_ptr<Value> More(const Value& rhs) const { throw std::exception("More not supported"); }
     virtual std::shared_ptr<Value> MoreEqual(const Value& rhs) const { throw std::exception("MoreEqual not supported"); }
 
+    virtual std::shared_ptr<Value> Or_(const Value& rhs) const { throw std::exception("OR not supported"); }
+    virtual std::shared_ptr<Value> And_(const Value& rhs) const { throw std::exception("AND not supported"); }
+    virtual std::shared_ptr<Value> Not_() const { throw std::exception("NOT not supported"); }
+
 
     virtual std::shared_ptr<Value> USin() const { throw std::exception("Sin not supported"); }
     virtual std::string PrintValue() { throw std::exception("Print not supported"); }
@@ -44,6 +48,9 @@ std::shared_ptr<Value> operator/(const Value& lhs, const Value& rhs);
 std::shared_ptr<Value> operator%(const Value& lhs, const Value& rhs);
 std::shared_ptr<Value> div(const Value& lhs, const Value& rhs);
 
+std::shared_ptr<Value> not_(const Value& lhs);
+std::shared_ptr<Value> or_(const Value& lhs, const Value& rhs);
+std::shared_ptr<Value> and_(const Value& lhs, const Value& rhs);
 
 std::shared_ptr<Value> operator==(const Value& lhs, const Value& rhs);
 std::shared_ptr<Value> operator!=(const Value& lhs, const Value& rhs);
@@ -57,8 +64,7 @@ std::shared_ptr<Value> usin(const Value& lhs);
 
 
 
-class IntValue : public Value 
-{
+class IntValue : public Value {
 public:
     int value;
 
@@ -70,6 +76,12 @@ public:
     std::shared_ptr<Value> Divide(const Value& rhs) const override;
     std::shared_ptr<Value> Mod(const Value& rhs) const override;
     std::shared_ptr<Value> Div(const Value& rhs) const override;
+
+    std::shared_ptr<Value> Or_(const Value& rhs) const override;
+    std::shared_ptr<Value> And_(const Value& rhs) const override;
+    std::shared_ptr<Value> Not_() const override;
+
+
 
     std::shared_ptr<Value> Equal(const Value& rhs) const override;
     std::shared_ptr<Value> NotEqual(const Value& rhs) const override;
@@ -85,8 +97,7 @@ public:
 
 
 
-class DoubleValue : public Value 
-{
+class DoubleValue : public Value {
 public:
     double value;
 
@@ -112,12 +123,11 @@ public:
 
 
 
-class StringValue : public Value 
-{
+class StringValue : public Value {
 public:
     std::string value;
 
-    StringValue(const std::string& initialValue);
+    StringValue(const std::string initialValue);
 
     std::shared_ptr<Value> Add(const Value& rhs) const override;
     std::shared_ptr<Value> Multiply(const Value& rhs) const override;

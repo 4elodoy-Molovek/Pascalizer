@@ -17,7 +17,7 @@ enum OperationType
 {
 	OP_NONE, OP_ADD, OP_SUBTRACT, OP_DIVIDE, OP_MULTIPLY, OP_MOD, OP_DIV,
 	OP_MORE, OP_EQUAL, OP_MORE_EQUAL, OP_LESS, OP_NOT_EQUAL, OP_LESS_EQUAL,
-	OP_SIN
+	OP_SIN, OP_OR, OP_AND, OP_NOT
 };
 
 /*
@@ -369,4 +369,57 @@ public:
 		auto rhs = calculationStack.top(); calculationStack.pop(); //? ÷òî âîçâðàòèò top/pop èç ïóñòîãî ñòåêà
 		calculationStack.push(std::make_shared<ValueExpressionElement>(usin(*(rhs->value))));
 	}
+};
+
+
+class OrOperation final : public OperationExpressionElement
+{
+public:
+
+	OrOperation() { type = OP_OR; }
+	~OrOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop();
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>(or_((*lhs->value), (*rhs->value))));
+	}
+
+};
+
+class AndOperation final : public OperationExpressionElement
+{
+public:
+
+	AndOperation() { type = OP_AND; }
+	~AndOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop();
+		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>(and_((*lhs->value), (*rhs->value))));
+	}
+};
+
+class NotOperation final : public OperationExpressionElement
+{
+public:
+
+	NotOperation() { type = OP_NOT; }
+	~NotOperation() {}
+
+	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
+	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
+	{
+		auto rhs = calculationStack.top(); calculationStack.pop();
+
+		calculationStack.push(std::make_shared<ValueExpressionElement>(not_(*rhs->value)));
+	}
+
 };
