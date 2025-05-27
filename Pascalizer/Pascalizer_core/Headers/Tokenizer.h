@@ -199,7 +199,7 @@ public:
 		int state = ZERO_STATE;
 		Token tmpTok{ TokenType::NULL_TOKEN, " " };
 
-		for (auto let : txt) {
+		for (auto let : txt + " ") {
 			switch (state) {
 			case ZERO_STATE:
 			{

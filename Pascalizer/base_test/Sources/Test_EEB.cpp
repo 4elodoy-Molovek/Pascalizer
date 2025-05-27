@@ -5,9 +5,9 @@
 #include <ProgramInstructions.h>
 
 
-HierarchicalList< std::shared_ptr<Instruction>> code;
-IO_ProcessorInterface fakeIOProcessor;
-ProgramState programState(code, &fakeIOProcessor);
+static HierarchicalList< std::shared_ptr<Instruction>> code;
+static IO_ProcessorInterface fakeIOProcessor;
+static ProgramState programState(code, &fakeIOProcessor);
 
 
 // Helper function to create and evaluate simple binary expressions

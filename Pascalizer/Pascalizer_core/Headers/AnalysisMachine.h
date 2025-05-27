@@ -207,14 +207,14 @@ public:
 	// Called, when the state machine has reached the end of analysis
 	void AnalysisFinished()
 	{
-		if (level == 2 || level == 1)
+		//if (level == 2 || level == 1)
 			analysisStatus = FINISHED;
 
-		else
+		/*else
 		{
 			analysisStatus = ERROR;
 			analysisErrorLog.push_back("ANALYSIS ERROR: Not all code blocks have an end!");
-		}
+		}*/
 	}
 
 
