@@ -1,0 +1,27 @@
+program Test;
+
+const
+	pi : double = 3.14;
+	flag : int = 1;
+
+var
+	i : int;
+
+begin
+	Write("Enter number: ");
+	Read("i");
+
+	while (i < 10)
+	begin
+		Write(i);
+		
+		if (i = 3) then
+		begin
+			Write("Three");	
+		end
+		i := i + 1;
+	end
+	
+	Write("Hello world!");
+	
+end.
