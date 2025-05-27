@@ -40,7 +40,7 @@ AnalysisMachine::AnalysisMachine()
 	ConstBlockState* cosntBlockState = new ConstBlockState(*this, constDeclarationState);
 	VarBlockState* varBlockState = new VarBlockState(*this, varDeclarationState);
 	BlockExitState* exitToVarBlockState = new BlockExitState(*this, varBlockState);
-	BlockExitState* exitToConstBlockState = new BlockExitState(*this, constDeclarationState);
+	BlockExitState* exitToConstBlockState = new BlockExitState(*this, cosntBlockState);
 
 	ProgramVerificationState* programVerificationState = new ProgramVerificationState(*this, mainBlockBeginState, cosntBlockState, varBlockState);
 

@@ -113,6 +113,8 @@ class AnalysisMachine
 	// Errors, that were encountered during the analysis process
 	std::vector<std::string> analysisErrorLog;
 
+	int level = 0;
+
 
 	// EXPRESSION ANALYSIS BLOCK
 
@@ -168,6 +170,7 @@ public:
 			codeResult.AddSubElement(instruction);
 			oneLinerDepth--;
 			levelOffset--;
+			level++;
 
 			return;
 		}
@@ -181,12 +184,14 @@ public:
 		{
 			codeResult.AddUpElement(instruction);
 			levelOffset++;
+			level--;
 		}
 
 		else
 		{
 			codeResult.AddSubElement(instruction);
 			levelOffset--;
+			level++;
 		}
 	}
 
@@ -202,7 +207,14 @@ public:
 	// Called, when the state machine has reached the end of analysis
 	void AnalysisFinished()
 	{
-		analysisStatus = FINISHED;
+		if (level == 1)
+			analysisStatus = FINISHED;
+
+		else
+		{
+			analysisStatus = ERROR;
+			analysisErrorLog.push_back("ANALYSIS ERROR: Not all code blocks have an end!");
+		}
 	}
 
 

@@ -10,7 +10,7 @@
 #include "IO_ProcessorInterface.h"
 
 
-std::string strType[3] = { "INT", "DOUBLE", "STRING" }; //for logs and exceptions
+static std::string strType[3] = { "INT", "DOUBLE", "STRING" }; //for logs and exceptions
 
 // Head of the program
 class IProgram : public Instruction

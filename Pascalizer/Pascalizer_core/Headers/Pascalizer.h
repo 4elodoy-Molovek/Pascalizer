@@ -54,6 +54,12 @@ public:
 			return;
 		}
 
+		if (analysisMachine.GetStatus() == ONGOING)
+		{
+			AddError("ANALYSIS ERROR: No program end found!");
+			return;
+		}
+
 		// Analysis suceeded case
 		interpreter.RunProgram(analysisMachine.GetResult(), this);
 
