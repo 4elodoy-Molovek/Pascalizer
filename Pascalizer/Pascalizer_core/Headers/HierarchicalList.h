@@ -89,7 +89,7 @@ public:
 	}
 
 	// Adds element as the next element of the parent of this level
-	void AddUpElement(const T& element)
+	void AddUpElement(const T& element, size_t upIndex = 1)
 	{
 		if (!pFirst)
 		{
@@ -99,19 +99,21 @@ public:
 			return;
 		}
 
-		if (pLast->pUp)
+		auto targetUp = pLast;
+		for (size_t i = 0; i < upIndex; i++)
 		{
-
-			pLast->pUp->pNext = std::make_shared<HListNode<T>>(element);
-			pLast->pUp->pNext->pUp = pLast->pUp->pUp;
-
-			pLast = pLast->pUp->pNext;
-
-			sz++;
+			if (targetUp->pUp) targetUp = targetUp->pUp;
+			else throw(std::runtime_error("LIST ERROR: Incorrect up index (up element does not exist)!"));
 		}
 
-		else
-			throw(std::runtime_error("LIST ERROR!"));
+
+		targetUp->pNext = std::make_shared<HListNode<T>>(element);
+		targetUp->pNext->pUp = targetUp->pUp;
+
+		pLast = targetUp->pNext;
+
+		sz++;
+
 	}
 
 	// Returns a POINTER to the first element of the list

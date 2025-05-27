@@ -182,8 +182,8 @@ public:
 
 		else if (levelOffset < 0)
 		{
-			codeResult.AddUpElement(instruction);
-			levelOffset++;
+			codeResult.AddUpElement(instruction, -1 * levelOffset);
+			levelOffset = 0;
 			level--;
 		}
 
