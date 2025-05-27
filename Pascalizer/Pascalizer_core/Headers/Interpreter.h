@@ -122,5 +122,9 @@ public:
 		if (currentState) return currentState->log;
 		return cachedLog; 
 	}
-	const std::map<std::string, std::shared_ptr<Value>>& GetCachedTable() { return cachedTable; }
+	const std::map<std::string, std::shared_ptr<Value>>& GetCachedTable()
+	{
+		if (currentState) return currentState->valuesTable;
+		return cachedTable;
+	}
 };

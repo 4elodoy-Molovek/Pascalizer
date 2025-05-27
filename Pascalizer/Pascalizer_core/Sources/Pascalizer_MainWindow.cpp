@@ -87,6 +87,20 @@ void Pascalizer_MainWindow::Update()
 
     for (auto& logElement : pascalizer->GetCachedLog())
         ui.executionLogList->addItem(QString::fromStdString(logElement));
+
+    ui.valuesTableTable->clear();
+    ui.valuesTableTable->setRowCount(0);
+    for (auto& value : pascalizer->GetCachedValuesTable())
+    {
+        ui.valuesTableTable->insertRow(ui.valuesTableTable->rowCount());
+        ui.valuesTableTable->model()->setData(ui.valuesTableTable->model()->index(ui.valuesTableTable->rowCount() - 1, 0), QString::fromStdString(value.first));
+        ui.valuesTableTable->model()->setData(ui.valuesTableTable->model()->index(ui.valuesTableTable->rowCount() - 1, 1), QString::fromStdString(value.second->PrintValue()));
+    }
+
+    QStringList labels;
+    labels.append(QString::fromStdString("Name"));
+    labels.append(QString::fromStdString("Value"));
+    ui.valuesTableTable->setHorizontalHeaderLabels(labels);
 }
 
 void Pascalizer_MainWindow::AddError(const std::string& error)
@@ -104,6 +118,7 @@ void Pascalizer_MainWindow::ClearEverything()
     console->clear();
     ui.errorList->clear();
     ui.executionLogList->clear();
+    ui.valuesTableTable->clear();
 }
 
 void Pascalizer_MainWindow::OnFailedToLauch()
