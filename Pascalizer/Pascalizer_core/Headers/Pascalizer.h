@@ -98,6 +98,8 @@ public:
 		{
 			cachedIOCaller->OnUserInputReceived(userInput);
 			interpreter.ExecuteNextInstruction();
+
+			cachedIOCaller = nullptr;
 		}
 	}
 

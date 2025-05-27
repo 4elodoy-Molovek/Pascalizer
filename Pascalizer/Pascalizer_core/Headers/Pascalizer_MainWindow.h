@@ -8,6 +8,8 @@
 #include <QSyntaxHighlighter>
 #include <QTextCharFormat>
 #include <QRegularExpression>
+#include <QTextEdit>
+#include <QStringList>
 
 
 
@@ -18,10 +20,14 @@ class Pascalizer_MainWindow : public QMainWindow, public IO_UI_Interface
 protected:
    class Pascalizer* pascalizer;
 
+   class ConsoleWidget* console;
+
 public:
     explicit Pascalizer_MainWindow(class Pascalizer* inPascalizer, QWidget* parent = nullptr);
 
     void ShowError(std::string errorMessage);
+
+    void SetupConsole();
 
     void UpdateSourceCode();
 
@@ -54,6 +60,8 @@ public slots:
 
     void OnSourceCodeEdited();
 
+    void OnConsoleEntered(const QString& command);
+
 private:
     Ui::PascalizerMainWindow ui;
 };
@@ -82,4 +90,31 @@ private:
     QTextCharFormat keywordFormat;
     QTextCharFormat commentFormat;
     QTextCharFormat stringFormat;
+};
+
+
+// ===========================
+// Console Widget
+class ConsoleWidget : public QTextEdit
+{
+    Q_OBJECT
+
+public:
+    explicit ConsoleWidget(QWidget * parent = nullptr);
+
+    void printOutput(const QString& text);
+    void printPrompt(const QString& prompt = "> ");
+
+signals:
+    void commandEntered(const QString& command);
+
+protected:
+    void keyPressEvent(QKeyEvent* event) override;
+
+private:
+    int inputStartPos;
+    QString currentPrompt;
+
+    void insertPrompt();
+    QString getCurrentInput() const;
 };

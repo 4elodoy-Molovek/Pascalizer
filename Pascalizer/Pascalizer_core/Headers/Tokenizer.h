@@ -94,11 +94,11 @@ private:
 
 			// math
 			if (name == "div") {
-				token = { TokenType::MATH_OPERATOR, "/" }; //! êàêîé ó íåãî div
+				token = { TokenType::MATH_OPERATOR, "div" }; //! êàêîé ó íåãî div
 				break;
 			}
 			if (name == "mod") {
-				token = { TokenType::MATH_OPERATOR, "%" }; //! êàêîé ó íåãî mod
+				token = { TokenType::MATH_OPERATOR, "mod" }; //! êàêîé ó íåãî mod
 				break;
 			}
 
@@ -190,7 +190,10 @@ public:
 	~Tokenizer() = default;
 
 	// Tokenizes source code, splitting it into elements
-	const std::vector<Token>& TokenizeCode(const std::string& sourceCode) {
+	const std::vector<Token>& TokenizeCode(const std::string& sourceCode) 
+	{
+		cachedTokens.clear();
+
 		string txt = sourceCode;
 		string buf_name = "";
 		int state = ZERO_STATE;

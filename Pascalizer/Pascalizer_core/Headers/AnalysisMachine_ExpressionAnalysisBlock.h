@@ -35,6 +35,33 @@ class ExpressionAnalysisBlockState : public State
 	// Pushes operation into the operation stack
 	void PushOperation(const std::string& operationStr) 
 	{
+		std::map<std::string, int> operatorPrecedence =
+		{
+			{"not", 4},     // Unary logical NOT
+			{"*", 3},       // Multiplication
+			{"/", 3},       // Division
+			{"mod", 3},     // Modulo
+			{"div", 3},     // Integer division
+			{"+", 2},       // Addition
+			{"-", 2},       // Subtraction
+
+			{">", 1},       // Comparison
+			{"<", 1},
+			{">=", 1},
+			{"<=", 1},
+			{"=", 1},
+			{"!=", 1},
+
+			{"and", 0},     // Logical AND
+			{"or", -1},     // Logical OR
+		};
+
+		while (!operationStack.empty() && (operatorPrecedence[operationStack.top()] >= operatorPrecedence[operationStr]))
+		{
+			postfix.push_back(CreateOperationElement(operationStack.top()));
+			operationStack.pop();
+		}
+
 		operationStack.push(operationStr);
 	}
 

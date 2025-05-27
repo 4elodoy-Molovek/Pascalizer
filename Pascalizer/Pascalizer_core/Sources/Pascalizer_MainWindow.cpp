@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QMessageBox>
+#include <QKeyEvent>
 
 
 Pascalizer_MainWindow::Pascalizer_MainWindow(Pascalizer* inPascalizer, QWidget* parent) : QMainWindow(parent), pascalizer(inPascalizer)
@@ -22,6 +23,9 @@ Pascalizer_MainWindow::Pascalizer_MainWindow(Pascalizer* inPascalizer, QWidget* 
 
     QObject::connect(ui.codeEditor, &QPlainTextEdit::textChanged, this, &Pascalizer_MainWindow::OnSourceCodeEdited);
 
+    SetupConsole();
+    QObject::connect(console, &ConsoleWidget::commandEntered, this, &Pascalizer_MainWindow::OnConsoleEntered);
+
     // Attach the syntax highlighter to the plain text edit
     new SyntaxHighlighter(ui.codeEditor->document());
 }
@@ -29,6 +33,34 @@ Pascalizer_MainWindow::Pascalizer_MainWindow(Pascalizer* inPascalizer, QWidget* 
 void Pascalizer_MainWindow::ShowError(std::string errorMessage)
 {
     throw(std::runtime_error(errorMessage));
+}
+
+void Pascalizer_MainWindow::SetupConsole()
+{
+    // Save parent and layout info
+    QWidget* placeholder = ui.consoleP;
+    QWidget* parent = placeholder->parentWidget();
+    QLayout* layout = parent->layout();
+
+    // Create the new console
+    ConsoleWidget* consoleNew = new ConsoleWidget(parent);
+
+    // Replace in layout
+    if (layout) 
+    {
+        int index = layout->indexOf(placeholder);
+        layout->removeWidget(placeholder);
+        placeholder->deleteLater(); // remove the old widget
+        layout->addWidget(consoleNew);
+    }
+    else {
+        // Fallback: manually position
+        consoleNew->setGeometry(placeholder->geometry());
+        placeholder->hide();
+    }
+
+    // Optional: keep a reference
+    console = consoleNew;
 }
 
 void Pascalizer_MainWindow::UpdateSourceCode()
@@ -40,6 +72,7 @@ void Pascalizer_MainWindow::UpdateSourceCode()
 
 void Pascalizer_MainWindow::OutputString(const std::string& output)
 {
+    console->printOutput(QString::fromStdString(output));
 }
 
 void Pascalizer_MainWindow::ReceiveUserInput()
@@ -158,7 +191,6 @@ void Pascalizer_MainWindow::OnClickedNew(bool checked)
 }
 
 
-
 void Pascalizer_MainWindow::OnClickedRun(bool checked)
 {
     pascalizer->InterpreteCurrentFileSourceCode();
@@ -168,6 +200,13 @@ void Pascalizer_MainWindow::OnSourceCodeEdited()
 {
     pascalizer->GetFileModule().GetSourceCode() = ui.codeEditor->toPlainText().toStdString();
 }
+
+void Pascalizer_MainWindow::OnConsoleEntered(const QString& command)
+{
+    pascalizer->OnUserInputReceived(command.toStdString());
+}
+
+
 
 // ==========================
 // Syntax Highlighting
@@ -219,4 +258,77 @@ void SyntaxHighlighter::highlightBlock(const QString& text)
             setFormat(match.capturedStart(), match.capturedLength(), rule.format);
         }
     }
+}
+
+
+// ===========================
+// Console Widget
+
+ConsoleWidget::ConsoleWidget(QWidget* parent) : QTextEdit(parent), inputStartPos(0), currentPrompt("> ")
+{
+    setUndoRedoEnabled(false);
+    setAcceptRichText(false);
+    setWordWrapMode(QTextOption::NoWrap);
+    setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+    setFontPointSize(14);
+    insertPrompt();
+}
+
+void ConsoleWidget::insertPrompt() 
+{
+    moveCursor(QTextCursor::End);
+    insertPlainText(currentPrompt);
+    inputStartPos = textCursor().position();
+}
+
+void ConsoleWidget::printOutput(const QString& text) 
+{
+    moveCursor(QTextCursor::End);
+    insertPlainText(text + "\n");
+    insertPrompt();
+}
+
+void ConsoleWidget::printPrompt(const QString& prompt) 
+{
+    currentPrompt = prompt;
+    insertPrompt();
+}
+
+QString ConsoleWidget::getCurrentInput() const 
+{
+    return toPlainText().mid(inputStartPos);
+}
+
+void ConsoleWidget::keyPressEvent(QKeyEvent* event) 
+{
+    QTextCursor cursor = textCursor();
+
+    if (event->key() == Qt::Key_Backspace && cursor.position() <= inputStartPos) 
+    {
+        return;  // prevent deleting the prompt
+    }
+
+    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) 
+    {
+        QString input = getCurrentInput();
+        moveCursor(QTextCursor::End);
+        insertPlainText("\n");
+
+        emit commandEntered(input.trimmed());
+        insertPrompt();
+        return;
+    }
+
+    // Prevent editing above the prompt
+    if (cursor.position() < inputStartPos &&
+        event->key() != Qt::Key_Left &&
+        event->key() != Qt::Key_Right &&
+        event->key() != Qt::Key_Up &&
+        event->key() != Qt::Key_Down) 
+    {
+        setTextCursor(QTextCursor(document()->findBlock(inputStartPos)));
+        return;
+    }
+
+    QTextEdit::keyPressEvent(event);
 }
