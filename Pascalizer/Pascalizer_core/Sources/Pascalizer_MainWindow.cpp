@@ -99,6 +99,24 @@ void Pascalizer_MainWindow::ClearErrors()
     ui.errorList->clear();
 }
 
+void Pascalizer_MainWindow::ClearEverything()
+{
+    console->clear();
+    ui.errorList->clear();
+    ui.executionLogList->clear();
+}
+
+void Pascalizer_MainWindow::OnFailedToLauch()
+{
+    ui.tabWidget->setCurrentIndex(0);
+}
+
+void Pascalizer_MainWindow::OnLauched()
+{
+    console->clear();
+    ui.tabWidget->setCurrentIndex(1);
+}
+
 
 // Signals
 void Pascalizer_MainWindow::OnClickedOpen(bool checked)
@@ -119,6 +137,7 @@ void Pascalizer_MainWindow::OnClickedOpen(bool checked)
     {
         pascalizer->GetFileModule().LoadFile(fileName.toStdString());
         UpdateSourceCode();
+        ClearEverything();
     }
 
     catch (std::exception e)
@@ -184,6 +203,7 @@ void Pascalizer_MainWindow::OnClickedNew(bool checked)
         pascalizer->GetFileModule().GetSourceCode() = "";
         pascalizer->GetFileModule().SaveFileAs(fileName.toStdString());
         UpdateSourceCode();
+        ClearEverything();
     }
 
     catch (std::exception e)

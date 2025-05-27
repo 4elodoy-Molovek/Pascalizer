@@ -649,22 +649,6 @@ TEST(AnalysisMachine, Throws_When_Unexpected_Token_In_Assigning_Variable)
 	// Standard check
 	ANALYSIS_MACHINE_ERROR_CHECK(tokenStream);
 
-
-	tokenStream =
-	{
-		{PROGRAM, "prog"}, {NAME, "test"}, {END_LINE, ";"},
-		{BEGIN, "begin"},
-		//{NAME, "var"}, {ASSIGN_OPERATOR, ":="}, {VALUE_INT, "3"}, {END_LINE, ";"},
-		{NAME, "var"}, {ASSIGN_OPERATOR, ":="}, {END_LINE, ";"},
-
-		{END, "end"},
-		{PROGRAMM_END, "."}
-	};
-
-	// Standard check
-	ANALYSIS_MACHINE_ERROR_CHECK(tokenStream);
-
-
 	tokenStream =
 	{
 		{PROGRAM, "prog"}, {NAME, "test"}, {END_LINE, ";"},

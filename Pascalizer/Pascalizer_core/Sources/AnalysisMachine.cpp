@@ -168,6 +168,7 @@ void AnalysisMachine::CleanUp()
 
 	levelOffset = 0;
 	oneLinerDepth = 0;
+	level = 0;
 
 	analysisErrorLog.clear();
 	analysisStatus = ONGOING;

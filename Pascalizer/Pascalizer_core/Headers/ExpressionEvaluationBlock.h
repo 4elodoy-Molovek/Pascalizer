@@ -99,6 +99,8 @@ public:
 	// Calculates a result of the stored expression
 	virtual std::shared_ptr<Value> Calculate(ProgramState& programState)
 	{
+		if (postfix.empty()) throw(std::runtime_error("CALCULATION ERROR: Empty expression!"));
+
 		auto localPostfix = postfix;
 
 		// Loading variables from the program state

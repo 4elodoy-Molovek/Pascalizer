@@ -51,14 +51,18 @@ public:
 			for (auto& error : analysisMachine.GetErrorLog())
 				AddError(error);
 
+			userInterface->OnFailedToLauch();
 			return;
 		}
 
 		if (analysisMachine.GetStatus() == ONGOING)
 		{
 			AddError("ANALYSIS ERROR: No program end found!");
+			userInterface->OnFailedToLauch();
 			return;
 		}
+
+		userInterface->OnLauched();
 
 		// Analysis suceeded case
 		interpreter.RunProgram(analysisMachine.GetResult(), this);
