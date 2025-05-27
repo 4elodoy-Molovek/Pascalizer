@@ -502,7 +502,7 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
-		if (calculationStack.size() < 2) throw(std::runtime_error("CALCULATION ERROR: not requires one argument!"));
+		if (calculationStack.size() < 1) throw(std::runtime_error("CALCULATION ERROR: not requires one argument!"));
 
 		auto rhs = calculationStack.top(); calculationStack.pop();
 

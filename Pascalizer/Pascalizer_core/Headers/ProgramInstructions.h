@@ -49,7 +49,8 @@ public:
 	void Execute(ProgramState& programState) override
 	{
 		programState.log.push_back("Const block started");
-		programState.codeBlockExitInstructionPointerStack.push(programState.currentInstruction->pNext);
+		if (programState.currentInstruction)
+			programState.codeBlockExitInstructionPointerStack.push(programState.currentInstruction->pNext);
 	};
 
 	std::string GetStringNotation() override
@@ -69,7 +70,8 @@ public:
 	void Execute(ProgramState& programState) override
 	{
 		programState.log.push_back("Var block started");
-		programState.codeBlockExitInstructionPointerStack.push(programState.currentInstruction->pNext);
+		if (programState.currentInstruction)
+			programState.codeBlockExitInstructionPointerStack.push(programState.currentInstruction->pNext);
 	};
 
 	std::string GetStringNotation() override

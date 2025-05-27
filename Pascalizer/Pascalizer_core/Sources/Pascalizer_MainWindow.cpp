@@ -87,8 +87,8 @@ void Pascalizer_MainWindow::Update()
     ui.executionLogList->clear();
     
     auto log = pascalizer->GetCachedLog();
-    //for (auto& logElement : log)
-     //   ui.executionLogList->addItem(QString::fromStdString(logElement));
+    for (auto& logElement : log)
+        ui.executionLogList->addItem(QString::fromStdString(logElement));
 
     ui.valuesTableTable->clear();
     ui.valuesTableTable->setRowCount(0);
