@@ -35,4 +35,10 @@ public:
 	virtual void AddError(const std::string& error) {}
 
 	virtual void ClearErrors() {}
+
+	virtual void ClearEverything() {}
+
+	virtual void OnFailedToLauch() {}
+
+	virtual void OnLauched() {}
 };

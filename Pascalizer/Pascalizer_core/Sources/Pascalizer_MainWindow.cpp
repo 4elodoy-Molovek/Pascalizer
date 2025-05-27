@@ -11,6 +11,7 @@
 Pascalizer_MainWindow::Pascalizer_MainWindow(Pascalizer* inPascalizer, QWidget* parent) : QMainWindow(parent), pascalizer(inPascalizer)
 {
     ui.setupUi(this);  // This connects widgets from the .ui file
+    ui.centralwidget->setWindowTitle("Pascalizer");
 
     pascalizer->SetUserInterface(this);
 
@@ -87,6 +88,22 @@ void Pascalizer_MainWindow::Update()
 
     for (auto& logElement : pascalizer->GetCachedLog())
         ui.executionLogList->addItem(QString::fromStdString(logElement));
+
+    ui.valuesTableTable->clear();
+    ui.valuesTableTable->setRowCount(0);
+
+    auto tableContent = pascalizer->GetCachedValuesTable();
+    for (auto& value : tableContent)
+    {
+        ui.valuesTableTable->insertRow(ui.valuesTableTable->rowCount());
+        ui.valuesTableTable->model()->setData(ui.valuesTableTable->model()->index(ui.valuesTableTable->rowCount() - 1, 0), QString::fromStdString(value.first));
+        ui.valuesTableTable->model()->setData(ui.valuesTableTable->model()->index(ui.valuesTableTable->rowCount() - 1, 1), QString::fromStdString(value.second->PrintValue()));
+    }
+
+    QStringList labels;
+    labels.append(QString::fromStdString("Name"));
+    labels.append(QString::fromStdString("Value"));
+    ui.valuesTableTable->setHorizontalHeaderLabels(labels);
 }
 
 void Pascalizer_MainWindow::AddError(const std::string& error)
@@ -97,6 +114,25 @@ void Pascalizer_MainWindow::AddError(const std::string& error)
 void Pascalizer_MainWindow::ClearErrors()
 {
     ui.errorList->clear();
+}
+
+void Pascalizer_MainWindow::ClearEverything()
+{
+    console->clear();
+    ui.errorList->clear();
+    ui.executionLogList->clear();
+    ui.valuesTableTable->clear();
+}
+
+void Pascalizer_MainWindow::OnFailedToLauch()
+{
+    ui.tabWidget->setCurrentIndex(0);
+}
+
+void Pascalizer_MainWindow::OnLauched()
+{
+    console->clear();
+    ui.tabWidget->setCurrentIndex(1);
 }
 
 
@@ -119,6 +155,7 @@ void Pascalizer_MainWindow::OnClickedOpen(bool checked)
     {
         pascalizer->GetFileModule().LoadFile(fileName.toStdString());
         UpdateSourceCode();
+        ClearEverything();
     }
 
     catch (std::exception e)
@@ -184,6 +221,7 @@ void Pascalizer_MainWindow::OnClickedNew(bool checked)
         pascalizer->GetFileModule().GetSourceCode() = "";
         pascalizer->GetFileModule().SaveFileAs(fileName.toStdString());
         UpdateSourceCode();
+        ClearEverything();
     }
 
     catch (std::exception e)
@@ -220,7 +258,7 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument* parent) : QSyntaxHighlighter
     keywordFormat.setFontWeight(QFont::Bold);
     const QStringList mainKeywords = 
     {
-        "\\bprogram\\b", "\\bbegin\\b", "\\bend\\b", "\\bvar\\b", "\\bconst\\b", "\\bif\\b", "\\belse\\b", "\\bwhile\\b"
+        "\\bprogram\\b", "\\bbegin\\b", "\\bend\\b", "\\bvar\\b", "\\bconst\\b", "\\bif\\b", "\\belse\\b", "\\bwhile\\b", "\\bthen\\b"
     };
 
 
@@ -234,9 +272,19 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument* parent) : QSyntaxHighlighter
         "\\bint\\b", "\\bdouble\\b", "\\bstring\\b"
     };
 
-
     for (const QString& pattern : typeKeywords)
         rules.append({ QRegularExpression(pattern), keywordFormat });
+
+    keywordFormat.setForeground(QColor(80, 80, 255));
+    keywordFormat.setFontWeight(QFont::Bold);
+    const QStringList functionKeywords =
+    {
+        "\\bWrite\\b", "\\bRead\\b"
+    };
+
+    for (const QString& pattern : functionKeywords)
+        rules.append({ QRegularExpression(pattern), keywordFormat });
+
 
 
     // Strings
@@ -273,6 +321,7 @@ ConsoleWidget::ConsoleWidget(QWidget* parent) : QTextEdit(parent), inputStartPos
     setWordWrapMode(QTextOption::WrapAnywhere);
     //setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     setFontPointSize(25);
+
     insertPrompt();
 }
 

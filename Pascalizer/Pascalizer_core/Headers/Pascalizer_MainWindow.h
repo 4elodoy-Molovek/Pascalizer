@@ -46,6 +46,12 @@ public:
 
     virtual void ClearErrors() override;
 
+    virtual void ClearEverything() override;
+
+    virtual void OnFailedToLauch() override;
+
+    virtual void OnLauched() override;
+
 
 signals:
 

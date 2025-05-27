@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <stack>
+#include <vector>
 #include "HierarchicalList.h"
 #include "ValuesTable.h"
 

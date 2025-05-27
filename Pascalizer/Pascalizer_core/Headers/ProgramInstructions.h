@@ -10,7 +10,7 @@
 #include "IO_ProcessorInterface.h"
 
 
-std::string strType[3] = { "INT", "DOUBLE", "STRING" }; //for logs and exceptions
+static std::string strType[3] = { "INT", "DOUBLE", "STRING" }; //for logs and exceptions
 
 // Head of the program
 class IProgram : public Instruction
@@ -239,8 +239,8 @@ private:
 
 	bool IsInt(const std::string& str)
 	{
-		for (auto c : str)
-			if (!std::isdigit(c))
+		for (int i = 0; i < str.length(); i++)
+			if (!std::isdigit(str[i]) && !(str[i] == '-' && i == 0))
 				return false;
 
 		return true;
@@ -248,8 +248,8 @@ private:
 
 	bool IsDouble(const std::string& str)
 	{
-		for (auto c : str)
-			if (!std::isdigit(c) && c != '.')
+		for( int i = 0; i < str.length(); i++)
+			if (!std::isdigit(str[i]) && str[i] != '.' && !(str[i] == '-' && i == 0))
 				return false;
 
 		return true;
