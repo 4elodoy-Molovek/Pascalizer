@@ -167,7 +167,7 @@ public:
 		{
 			codeResult.AddSubElement(instruction);
 			oneLinerDepth--;
-			levelOffset++;
+			levelOffset--;
 
 			return;
 		}

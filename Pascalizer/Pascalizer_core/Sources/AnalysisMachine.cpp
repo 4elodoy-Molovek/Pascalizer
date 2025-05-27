@@ -29,8 +29,8 @@ AnalysisMachine::AnalysisMachine()
 	ElseState* elseState = new ElseState(*this, oneLinerHandlerState, subBlockBeginState);
 	BranchingBlock* branchingBlockState = new BranchingBlock(*this, ifState, whileState);
 
-	VariableAssignState* variableAssignState = new VariableAssignState(*this, nullptr, branchingBlockState, endBlockState);
-	FunctionCallState* functionCallState = new FunctionCallState(*this, nullptr, branchingBlockState, endBlockState);
+	VariableAssignState* variableAssignState = new VariableAssignState(*this, nullptr, branchingBlockState, endBlockState, elseState);
+	FunctionCallState* functionCallState = new FunctionCallState(*this, nullptr, branchingBlockState, endBlockState, elseState);
 	NameBlockState* nameBlockState = new NameBlockState(*this, variableAssignState, functionCallState);
 
 	MainBlockBeginState* mainBlockBeginState = new MainBlockBeginState(*this, nameBlockState, branchingBlockState, endBlockState);

@@ -28,6 +28,8 @@ class ExpressionElement
 public:
 	ExpressionElement() {}
 	virtual ~ExpressionElement() {}
+
+	virtual std::string GetStringNotation() { return ""; }
 };
 
 
@@ -42,6 +44,8 @@ public:
 
 	ValueExpressionElement(std::shared_ptr<Value> inValue) : value(inValue) {}
 	~ValueExpressionElement() {}
+
+	virtual std::string GetStringNotation() override { return value->PrintValue(); }
 };
 
 /*
@@ -55,6 +59,8 @@ public:
 
 	VariableExpressionElement(std::string inVarName) : varName(inVarName) {}
 	~VariableExpressionElement() {}
+
+	virtual std::string GetStringNotation() override { return varName; }
 };
 
 /*
@@ -91,7 +97,7 @@ public:
 	Expression(const std::vector<std::shared_ptr<ExpressionElement>>& inPostfix) : postfix(inPostfix) {}
 
 	// Calculates a result of the stored expression
-	std::shared_ptr<Value> Calculate(ProgramState& programState)
+	virtual std::shared_ptr<Value> Calculate(ProgramState& programState)
 	{
 		auto localPostfix = postfix;
 
@@ -132,6 +138,15 @@ public:
 		}
 		return calculationStack.top()->value;
 	}
+
+	std::string GetStringPostfix()
+	{
+		std::string result = "";
+		for (auto& elem : postfix)
+			result += elem->GetStringNotation() + " ";
+
+		return result;
+	}
 };
 
 
@@ -153,9 +168,11 @@ public:
 
 		auto lhs = calculationStack.top(); calculationStack.pop();
 
-		calculationStack.push(std::make_shared<ValueExpressionElement>(*(rhs->value) + *(lhs->value)));
+		calculationStack.push(std::make_shared<ValueExpressionElement>(*(lhs->value) + *(rhs->value)));
 		//? ñëîæåíèå ïðèíèìàåò îáû÷íûå -ïîèíòåðû- ïåðåìåííûå, íî âîçâðàùàåò shared
 	}
+
+	virtual std::string GetStringNotation() override { return "+"; }
 };
 
 
@@ -172,9 +189,11 @@ public:
 		auto rhs = calculationStack.top(); calculationStack.pop(); //? ÷òî âîçâðàòèò top/pop èç ïóñòîãî ñòåêà
 		auto lhs = (calculationStack.top()); calculationStack.pop();
 
-		calculationStack.push(std::make_shared<ValueExpressionElement>(*(rhs->value) * *(lhs->value)));
+		calculationStack.push(std::make_shared<ValueExpressionElement>(*(lhs->value) * *(rhs->value)));
 		//? ñëîæåíèå ïðèíèìàåò îáû÷íûå -ïîèíòåðû- ïåðåìåííûå, íî âîçâðàùàåò shared
 	}
+
+	virtual std::string GetStringNotation() override { return "*"; }
 };
 
 
@@ -194,6 +213,8 @@ public:
 		calculationStack.push(std::make_shared<ValueExpressionElement>(*(lhs->value) - *(rhs->value)));
 		//? ñëîæåíèå ïðèíèìàåò îáû÷íûå -ïîèíòåðû- ïåðåìåííûå, íî âîçâðàùàåò shared
 	}
+
+	virtual std::string GetStringNotation() override { return "-"; }
 };
 
 
@@ -213,6 +234,8 @@ public:
 		calculationStack.push(std::make_shared<ValueExpressionElement>(*(lhs->value) / *(rhs->value)));
 		//? ñëîæåíèå ïðèíèìàåò îáû÷íûå -ïîèíòåðû- ïåðåìåííûå, íî âîçâðàùàåò shared
 	}
+
+	virtual std::string GetStringNotation() override { return "/"; }
 };
 
 
@@ -233,6 +256,8 @@ public:
 		calculationStack.push(std::make_shared<ValueExpressionElement>(*(lhs->value) % *(rhs->value)));
 		//? ñëîæåíèå ïðèíèìàåò îáû÷íûå -ïîèíòåðû- ïåðåìåííûå, íî âîçâðàùàåò shared
 	}
+
+	virtual std::string GetStringNotation() override { return "mod"; }
 };
 
 
@@ -251,6 +276,8 @@ public:
 
 		calculationStack.push(std::make_shared<ValueExpressionElement>(div((*lhs->value), (*rhs->value))));
 	}
+
+	virtual std::string GetStringNotation() override { return "div"; }
 };
 
 class EqualOperation final : public OperationExpressionElement
@@ -268,6 +295,8 @@ public:
 
 		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) == (*rhs->value)));
 	}
+
+	virtual std::string GetStringNotation() override { return "="; }
 };
 
 class NotEqualOperation final : public OperationExpressionElement
@@ -285,6 +314,8 @@ public:
 
 		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) != (*rhs->value)));
 	}
+
+	virtual std::string GetStringNotation() override { return "!="; }
 };
 
 class LessOperation final : public OperationExpressionElement
@@ -302,6 +333,8 @@ public:
 
 		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) < (*rhs->value)));
 	}
+
+	virtual std::string GetStringNotation() override { return "<"; }
 };
 
 class LessEqualOperation final : public OperationExpressionElement
@@ -319,6 +352,8 @@ public:
 
 		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) <= (*rhs->value)));
 	}
+
+	virtual std::string GetStringNotation() override { return "=<"; }
 };
 
 class MoreOperation final : public OperationExpressionElement
@@ -336,6 +371,8 @@ public:
 
 		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) > (*rhs->value)));
 	}
+
+	virtual std::string GetStringNotation() override { return ">"; }
 };
 
 class MoreEqualOperation final : public OperationExpressionElement
@@ -353,6 +390,8 @@ public:
 
 		calculationStack.push(std::make_shared<ValueExpressionElement>((*lhs->value) >= (*rhs->value)));
 	}
+
+	virtual std::string GetStringNotation() override { return "=>"; }
 };
 
 
@@ -369,6 +408,8 @@ public:
 		auto rhs = calculationStack.top(); calculationStack.pop(); //? ÷òî âîçâðàòèò top/pop èç ïóñòîãî ñòåêà
 		calculationStack.push(std::make_shared<ValueExpressionElement>(usin(*(rhs->value))));
 	}
+
+	virtual std::string GetStringNotation() override { return "sin"; }
 };
 
 
@@ -387,7 +428,7 @@ public:
 
 		calculationStack.push(std::make_shared<ValueExpressionElement>(or_((*lhs->value), (*rhs->value))));
 	}
-
+	virtual std::string GetStringNotation() override { return "or"; }
 };
 
 class AndOperation final : public OperationExpressionElement
@@ -405,6 +446,7 @@ public:
 
 		calculationStack.push(std::make_shared<ValueExpressionElement>(and_((*lhs->value), (*rhs->value))));
 	}
+	virtual std::string GetStringNotation() override { return "and"; }
 };
 
 class NotOperation final : public OperationExpressionElement
@@ -422,4 +464,5 @@ public:
 		calculationStack.push(std::make_shared<ValueExpressionElement>(not_(*rhs->value)));
 	}
 
+	virtual std::string GetStringNotation() override { return "not"; }
 };

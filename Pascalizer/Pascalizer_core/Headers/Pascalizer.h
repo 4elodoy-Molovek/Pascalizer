@@ -96,10 +96,10 @@ public:
 	{
 		if (cachedIOCaller)
 		{
-			cachedIOCaller->OnUserInputReceived(userInput);
-			interpreter.ExecuteNextInstruction();
-
+			IO_InstructionInterface* localIOCaller = cachedIOCaller;
 			cachedIOCaller = nullptr;
+			interpreter.ProcessInstructionUserInput(localIOCaller, userInput);
+			
 		}
 	}
 
@@ -108,5 +108,10 @@ public:
 	{
 		userInterface->Update();
 		userInterface->OutputString(output);
+	}
+
+	virtual void CallExecutionFinished() override
+	{
+		userInterface->Update();
 	}
 };

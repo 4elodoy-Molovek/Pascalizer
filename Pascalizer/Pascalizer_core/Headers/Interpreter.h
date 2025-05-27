@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Instruction.h"
+#include "IO_ProcessorInterface.h"
 
 /*
  * Program module, responsible for
@@ -18,9 +19,8 @@ class Interpreter
 	void FinishProgram()
 	{
 		// Cacheing debug values
-		cachedLog = currentState->log;
-
 		cachedTable = currentState->valuesTable;
+		currentState->ioProcessor->CallExecutionFinished();
 
 		delete currentState;
 	}
@@ -38,6 +38,7 @@ public:
 		currentState->instructionPointer = currentState->code.GetFirst();
 
 		ExecuteNextInstruction();
+
 	}
 
 	void ExecuteNextInstruction()
@@ -96,6 +97,30 @@ public:
 		}
 	}
 
-	const std::vector<std::string>& GetCachedLog() { return cachedLog; }
+	void ProcessInstructionUserInput(IO_InstructionInterface* instruction, const std::string& input)
+	{
+		if (currentState)
+		{
+			try
+			{
+				instruction->OnUserInputReceived(input);
+
+				if (!currentState->ioBlock)
+					ExecuteNextInstruction();
+			}
+
+			catch (std::exception e)
+			{
+				cachedLog.push_back("PROGRAM CRASH DETECTED: " + std::string(e.what()));
+				FinishProgram();
+			}
+		}
+	}
+
+	const std::vector<std::string>& GetCachedLog() 
+	{
+		if (currentState) return currentState->log;
+		return cachedLog; 
+	}
 	const std::map<std::string, std::shared_ptr<Value>>& GetCachedTable() { return cachedTable; }
 };

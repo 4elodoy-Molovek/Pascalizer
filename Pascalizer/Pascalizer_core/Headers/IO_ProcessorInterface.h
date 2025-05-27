@@ -6,13 +6,16 @@ class IO_ProcessorInterface
 public:
 
 	// Call for user input for I/O instructions
-	virtual void CallReceiveUserInput(class IO_InstructionInterface* ioCaller) = 0;
+	virtual void CallReceiveUserInput(class IO_InstructionInterface* ioCaller) {};
 
 	// Called when user input has been received
-	virtual void OnUserInputReceived(const std::string& userInput) = 0;
+	virtual void OnUserInputReceived(const std::string& userInput) {};
 
 	// Call for outputing data using IO interface
-	virtual void CallOutputString(const std::string& output) = 0;
+	virtual void CallOutputString(const std::string& output) {};
+
+
+	virtual void CallExecutionFinished() {}
 };
 
 

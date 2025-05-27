@@ -52,6 +52,45 @@
 //}
 //
 //
+//static std::vector<std::shared_ptr<Instruction>> ANALYSIS_MACHINE_INSTRUCTION_VECTOR(const std::vector<Token>& tokenStream)
+//{
+//	std::vector<std::shared_ptr<Instruction>> outCode;
+//
+//	AnalysisMachine* analysisMachine = new AnalysisMachine();
+//
+//	for (auto& token : tokenStream)
+//		analysisMachine->ProcessElement(token);
+//
+//	HierarchicalList<std::shared_ptr<Instruction>> code = analysisMachine->GetResult();
+//
+//	int i = 0;
+//	int level = 0;
+//	std::shared_ptr<HListNode<std::shared_ptr<Instruction>>> instructionPointer = code.GetFirst();
+//	while (instructionPointer)
+//	{
+//		outCode.push_back(instructionPointer->value);
+//
+//		if (instructionPointer->pSub)
+//		{
+//			instructionPointer = instructionPointer->pSub;
+//			level++;
+//		}
+//		else if (instructionPointer->pNext)
+//		{
+//			instructionPointer = instructionPointer->pNext;
+//		}
+//		else
+//		{
+//			instructionPointer = instructionPointer->pUp->pNext;
+//			level--;
+//		}
+//	}
+//	delete analysisMachine;
+//
+//	return outCode;
+//}
+//
+//
 //
 //
 //// Empty program and basics
@@ -649,18 +688,55 @@
 //
 //TEST(AnalysisMachine, Throws_When_Unexpected_Token_In_If_Statement)
 //{
-//	ADD_FAILURE();
+//	std::vector<Token> tokenStream =
+//	{
+//		{PROGRAM, "prog"}, {NAME, "test"}, {END_LINE, ";"},
+//		{BEGIN, "begin"},
+//		{IF, "if"}, {BRACKET_OPEN, "("}, {VALUE_INT, "1"}, {BRACKET_CLOSE, ")"}, {BEGIN, "begin"},
+//		{NAME, "Write"}, {BRACKET_OPEN, "("}, {VALUE_INT, "3"}, {BRACKET_CLOSE, ")"}, {END_LINE, ";"},
+//		{END, "end"},
+//		{END, "end"},
+//		{PROGRAMM_END, "."}
+//	};
+//
+//	// Standard check
+//	ANALYSIS_MACHINE_ERROR_CHECK(tokenStream);
 //}
 //
 //// Branching and code blocks
 //TEST(AnalysisMachine, Throws_When_No_Code_Block_End_Found)
 //{
-//	ADD_FAILURE();
+//	std::vector<Token> tokenStream =
+//	{
+//		{PROGRAM, "prog"}, {NAME, "test"}, {END_LINE, ";"},
+//		{BEGIN, "begin"},
+//		{IF, "if"}, {BRACKET_OPEN, "("}, {VALUE_INT, "1"}, {BRACKET_CLOSE, ")"}, {THEN, "then"}, { BEGIN, "begin" },
+//		{NAME, "Write"}, {BRACKET_OPEN, "("}, {VALUE_INT, "3"}, {BRACKET_CLOSE, ")"}, {END_LINE, ";"},
+//		{END, "end"},
+//		{PROGRAMM_END, "."}
+//	};
+//
+//	// Standard check
+//	ANALYSIS_MACHINE_ERROR_CHECK(tokenStream);
 //}
 //
 //TEST(AnalysisMachine, Throws_When_Else_With_No_If_Prior_To_It)
 //{
-//	ADD_FAILURE();
+//	std::vector<Token> tokenStream =
+//	{
+//		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+//		{CONST, "var"},
+//		{BEGIN, "begin"},
+//		{NAME, "Write"}, {BRACKET_OPEN, "("}, {VALUE_STRING, "Hello World!"}, {BRACKET_CLOSE, ")"}, {END_LINE, ";"},
+//		{ELSE, "else"}, {BEGIN, "begin"},
+//		{VALUE_STRING, "Not really Hello World!"},
+//		{END, "end"},
+//		{END, "end"},
+//		{PROGRAMM_END, "."}
+//	};
+//
+//	// Standard check
+//	ANALYSIS_MACHINE_ERROR_CHECK(tokenStream);
 //}
 //
 //
@@ -857,15 +933,82 @@
 //	ANALYSIS_MACHINE_CHECK(tokenStream, expectedCodeNotation);
 //}
 //
+//
 //// Expressions
 //TEST(AnalysisMachine, Can_Handle_Expressions_In_Variable_Assignment)
 //{
-//	ADD_FAILURE();
+//	std::vector<Token> tokenStream =
+//	{
+//		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+//		{CONST, "var"},
+//		{NAME, "Int"}, {COLON, ":"}, {NAME, "int"}, {END_LINE, ";"},
+//		{BEGIN, "begin"},
+//		{NAME, "Int"}, {ASSIGN_OPERATOR, ":="}, {VALUE_INT, "3"}, {MATH_OPERATOR, "+"}, {VALUE_INT, "4"}, {MATH_OPERATOR, "*"}, {VALUE_INT, "2"}, {END_LINE, ";"},
+//		{END, "end"},
+//		{PROGRAMM_END, "."}
+//	};
+//
+//	// Standard check
+//	auto intructions = ANALYSIS_MACHINE_INSTRUCTION_VECTOR(tokenStream);
+//
+//	IAssignVar* assignVar = dynamic_cast<IAssignVar*>(intructions[4].get());
+//	EXPECT_EQ("3 4 2 * + ", assignVar->GetExpressionNotation());
+//
+//	std::vector<Token> tokenStream =
+//	{
+//		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+//		{CONST, "var"},
+//		{NAME, "Int"}, {COLON, ":"}, {NAME, "int"}, {END_LINE, ";"},
+//		{BEGIN, "begin"},
+//		{NAME, "Int"}, {ASSIGN_OPERATOR, ":="}, {VALUE_INT, "3"}, {MATH_OPERATOR, "+"}, {VALUE_INT, "4"}, {MATH_OPERATOR, "*"}, {VALUE_INT, "2"},
+//		{MATH_OPERATOR, "="}, {VALUE_INT, "11"}, {MATH_OPERATOR, "and"}, {VALUE_INT, "10"}, {MATH_OPERATOR, "div"}, {VALUE_INT, "2"}, {MATH_OPERATOR, "="}, {VALUE_INT, "5"}, {END_LINE, ";"},
+//		{END, "end"},
+//		{PROGRAMM_END, "."}
+//	};
+//
+//	// Standard check
+//	auto intructions = ANALYSIS_MACHINE_INSTRUCTION_VECTOR(tokenStream);
+//
+//	IAssignVar* assignVar = dynamic_cast<IAssignVar*>(intructions[4].get());
+//	EXPECT_EQ("3 4 2 * + 11 = 10 2 div 5 = and ", assignVar->GetExpressionNotation());
 //}
 //
 //TEST(AnalysisMachine, Can_Handle_Expressions_In_Function_Calls)
 //{
-//	ADD_FAILURE();
+//	std::vector<Token> tokenStream =
+//	{
+//		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+//		{CONST, "var"},
+//		{NAME, "Int"}, {COLON, ":"}, {NAME, "int"}, {END_LINE, ";"},
+//		{BEGIN, "begin"},
+//		{NAME, "Write"}, {BRACKET_OPEN, "("}, {VALUE_INT, "3"}, {MATH_OPERATOR, "+"}, {VALUE_INT, "4"}, {MATH_OPERATOR, "*"}, {VALUE_INT, "2"}, {BRACKET_CLOSE, ")"}, {END_LINE, ";"},
+//		{END, "end"},
+//		{PROGRAMM_END, "."}
+//	};
+//
+//	// Standard check
+//	auto intructions = ANALYSIS_MACHINE_INSTRUCTION_VECTOR(tokenStream);
+//
+//	IAssignVar* assignVar = dynamic_cast<IAssignVar*>(intructions[4].get());
+//	EXPECT_EQ("3 4 2 * + ", assignVar->GetExpressionNotation());
+//
+//	std::vector<Token> tokenStream =
+//	{
+//		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+//		{CONST, "var"},
+//		{NAME, "Int"}, {COLON, ":"}, {NAME, "int"}, {END_LINE, ";"},
+//		{BEGIN, "begin"},
+//		{NAME, "Write"}, {BRACKET_OPEN, "("}, {VALUE_INT, "3"}, {MATH_OPERATOR, "+"}, {VALUE_INT, "4"}, {MATH_OPERATOR, "*"}, {VALUE_INT, "2"},
+//		{MATH_OPERATOR, "="}, {VALUE_INT, "11"}, {MATH_OPERATOR, "and"}, {VALUE_INT, "10"}, {MATH_OPERATOR, "div"}, {VALUE_INT, "2"}, {MATH_OPERATOR, "="}, {VALUE_INT, "5"}, {END_LINE, ";"},
+//		{END, "end"},
+//		{PROGRAMM_END, "."}
+//	};
+//
+//	// Standard check
+//	auto intructions = ANALYSIS_MACHINE_INSTRUCTION_VECTOR(tokenStream);
+//
+//	IAssignVar* assignVar = dynamic_cast<IAssignVar*>(intructions[4].get());
+//	EXPECT_EQ("3 4 2 * + 11 = 10 2 div 5 = and ", assignVar->GetExpressionNotation());
 //}
 //
 //TEST(AnalysisMachine, Can_Handle_Expressions_In_If_Conditions)

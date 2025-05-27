@@ -61,6 +61,8 @@ void Pascalizer_MainWindow::SetupConsole()
 
     // Optional: keep a reference
     console = consoleNew;
+
+    console->setFontPointSize(25);
 }
 
 void Pascalizer_MainWindow::UpdateSourceCode()
@@ -268,9 +270,9 @@ ConsoleWidget::ConsoleWidget(QWidget* parent) : QTextEdit(parent), inputStartPos
 {
     setUndoRedoEnabled(false);
     setAcceptRichText(false);
-    setWordWrapMode(QTextOption::NoWrap);
-    setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
-    setFontPointSize(14);
+    setWordWrapMode(QTextOption::WrapAnywhere);
+    //setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+    setFontPointSize(25);
     insertPrompt();
 }
 
@@ -313,9 +315,10 @@ void ConsoleWidget::keyPressEvent(QKeyEvent* event)
         QString input = getCurrentInput();
         moveCursor(QTextCursor::End);
         insertPlainText("\n");
+        insertPrompt();
 
         emit commandEntered(input.trimmed());
-        insertPrompt();
+        
         return;
     }
 

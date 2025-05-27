@@ -409,7 +409,8 @@ public:
 		{
 			CheckTokenType(nextElement, { END_LINE });
 			
-			parentMachine.StoreInstruction(accumulator->Collapse()[0]);
+			for (auto& instr : accumulator->Collapse())
+				parentMachine.StoreInstruction(instr);
 			
 			innerState++;
 			return nullptr;
@@ -627,6 +628,7 @@ public:
 	State* nameState;
 	State* branchingState;
 	State* endBlockState;
+	State* elseState;
 
 	// Inner state
 	int innerState = 0;
@@ -640,12 +642,14 @@ public:
 	VariableAssignState(AnalysisMachine& analysisMachine,
 		State* inNameState,
 		State* inBranchingState,
-		State* inEndBlockState)
+		State* inEndBlockState,
+		State* inElseState)
 		: State(analysisMachine)
 	{
 		nameState = inNameState;
 		branchingState = inBranchingState;
 		endBlockState = inEndBlockState;
+		elseState = inElseState;
 	}
 
 
@@ -689,11 +693,12 @@ public:
 		// NEXT STATE
 		if (innerState == 1)
 		{
-			CheckTokenType(nextElement, {NAME, IF, WHILE, END});
+			CheckTokenType(nextElement, {NAME, IF, WHILE, END, ELSE});
 
 			if (nextElement.type == NAME) return nameState;
 			if (nextElement.type == IF || nextElement.type == WHILE) return branchingState;
 			if (nextElement.type == END) return endBlockState;
+			if (nextElement.type == ELSE) return elseState;
 
 			return nullptr;
 		}
@@ -715,6 +720,7 @@ public:
 	State* nameState;
 	State* branchingState;
 	State* endBlockState;
+	State* elseState;
 
 	// Inner state
 	int innerState = 0;
@@ -728,12 +734,14 @@ public:
 	FunctionCallState(AnalysisMachine& analysisMachine,
 		State* inNameState,
 		State* inBranchingState,
-		State* inEndBlockState)
+		State* inEndBlockState,
+		State* inElseState)
 		: State(analysisMachine)
 	{
 		nameState = inNameState;
 		branchingState = inBranchingState;
 		endBlockState = inEndBlockState;
+		elseState = inElseState;
 	}
 
 
@@ -798,11 +806,12 @@ public:
 		// NEXT STATE
 		if (innerState == 2)
 		{
-			CheckTokenType(nextElement, {NAME, IF, WHILE, END});
+			CheckTokenType(nextElement, {NAME, IF, WHILE, END, ELSE});
 
 			if (nextElement.type == NAME) return nameState;
 			if (nextElement.type == IF || nextElement.type == WHILE) return branchingState;
 			if (nextElement.type == END) return endBlockState;
+			if (nextElement.type == ELSE) return elseState;
 
 			return nullptr;
 		}

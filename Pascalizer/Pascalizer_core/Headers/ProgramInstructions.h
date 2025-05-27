@@ -219,6 +219,11 @@ public:
 	{
 		return "IAssignVar(" + _name + ")";
 	}
+
+	std::string GetExpressionNotation()
+	{
+		return _expression->GetStringPostfix();
+	}
 };
 
 
@@ -230,6 +235,25 @@ private:
 
 	std::string cachedVarName;
 	ProgramState* programStatePtr;
+
+
+	bool IsInt(const std::string& str)
+	{
+		for (auto c : str)
+			if (!std::isdigit(c))
+				return false;
+
+		return true;
+	}
+
+	bool IsDouble(const std::string& str)
+	{
+		for (auto c : str)
+			if (!std::isdigit(c) && c != '.')
+				return false;
+
+		return true;
+	}
 
 public:
 
@@ -257,7 +281,7 @@ public:
 
 		if (nameValue->GetType() != STRING) throw(std::runtime_error("FATAL: Read instruction received a non-string variable name"));
 
-		std::string cachedVarName = dynamic_cast<StringValue*>(nameValue.get())->value;
+		cachedVarName = dynamic_cast<StringValue*>(nameValue.get())->value;
 
 		if (programState.valuesTable.count(cachedVarName) == 0) throw(std::runtime_error("FATAL: Read instruction trying to write into an invalid variable '" + cachedVarName + "'!"));
 
@@ -275,15 +299,14 @@ public:
 	{
 		programStatePtr->ioBlock = false;
 
-		std::string input;
+		std::string input = userInput;
 		std::shared_ptr<Value> value;
-
-		size_t intPos;
-		size_t doublePos;
-		int intInput = std::stoi(input, &intPos);
-		double doubleInput = std::stod(input, &doublePos);
-		if (intPos == input.size()) // if got an int
+	
+		
+		if (IsInt(input)) // if got an int
 		{
+			int intInput = std::stoi(input);
+
 			programStatePtr->log.push_back("Got INT: " + input);
 			if (programStatePtr->valuesTable[cachedVarName]->GetType() == Type::INT)
 			{
@@ -304,8 +327,9 @@ public:
 			}
 
 		}
-		else if (doublePos == input.size()) // if got a double
+		else if (IsDouble(input)) // if got a double
 		{
+			double doubleInput = std::stod(input);
 			programStatePtr->log.push_back("Got DOUBLE: " + input);
 			if (programStatePtr->valuesTable[cachedVarName]->GetType() == Type::DOUBLE)
 			{
@@ -345,6 +369,11 @@ public:
 	std::string GetStringNotation() override
 	{
 		return "IRead()";
+	}
+
+	std::string GetExpressionNotation()
+	{
+		return _varNameExpression->GetStringPostfix();
 	}
 };
 
@@ -405,6 +434,15 @@ public:
 	std::string GetStringNotation() override
 	{
 		return "IWrite()";
+	}
+
+	std::string GetExpressionNotation()
+	{
+		std::string result = "";
+		for (auto& expr : _expressions)
+			result += expr->GetStringPostfix() + ", ";
+
+		return result;
 	}
 };
 
@@ -527,6 +565,11 @@ public:
 	{
 		return "IIf()";
 	}
+
+	std::string GetExpressionNotation()
+	{
+		return condition->GetStringPostfix();
+	}
 };
 
 // While loop function
@@ -597,5 +640,10 @@ public:
 	std::string GetStringNotation() override
 	{
 		return "IWhile()";
+	}
+
+	std::string GetExpressionNotation()
+	{
+		return condition->GetStringPostfix();
 	}
 };
