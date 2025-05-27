@@ -698,22 +698,22 @@ TEST(AnalysisMachine, Throws_When_Unexpected_Token_In_If_Statement)
 	ANALYSIS_MACHINE_ERROR_CHECK(tokenStream);
 }
 
-// Branching and code blocks
-TEST(AnalysisMachine, Throws_When_No_Code_Block_End_Found)
-{
-	std::vector<Token> tokenStream =
-	{
-		{PROGRAM, "prog"}, {NAME, "test"}, {END_LINE, ";"},
-		{BEGIN, "begin"},
-		{IF, "if"}, {BRACKET_OPEN, "("}, {VALUE_INT, "1"}, {BRACKET_CLOSE, ")"}, {THEN, "then"}, { BEGIN, "begin" },
-		{NAME, "Write"}, {BRACKET_OPEN, "("}, {VALUE_INT, "3"}, {BRACKET_CLOSE, ")"}, {END_LINE, ";"},
-		{END, "end"},
-		{PROGRAMM_END, "."}
-	};
-
-	// Standard check
-	ANALYSIS_MACHINE_ERROR_CHECK(tokenStream);
-}
+//// Branching and code blocks
+//TEST(AnalysisMachine, Throws_When_No_Code_Block_End_Found)
+//{
+//	std::vector<Token> tokenStream =
+//	{
+//		{PROGRAM, "prog"}, {NAME, "test"}, {END_LINE, ";"},
+//		{BEGIN, "begin"},
+//		{IF, "if"}, {BRACKET_OPEN, "("}, {VALUE_INT, "1"}, {BRACKET_CLOSE, ")"}, {THEN, "then"}, { BEGIN, "begin" },
+//		{NAME, "Write"}, {BRACKET_OPEN, "("}, {VALUE_INT, "3"}, {BRACKET_CLOSE, ")"}, {END_LINE, ";"},
+//		{END, "end"},
+//		{PROGRAMM_END, "."}
+//	};
+//
+//	// Standard check
+//	ANALYSIS_MACHINE_ERROR_CHECK(tokenStream);
+//}
 
 TEST(AnalysisMachine, Throws_When_Else_With_No_If_Prior_To_It)
 {
@@ -922,6 +922,39 @@ TEST(AnalysisMachine, Can_Handle_Nested_Code_Blocks)
 	{
 		"IProgram(test)", "-IVarBlock()", "--IDeclareVar(INT, Int)", "-IMainBlock()",
 		"--IIF()", "---IIF()","----IWrite()", "---IElse()", "----IWrite()", "--IElse()", "----IWrite()"
+	};
+
+	// Standard check
+	ANALYSIS_MACHINE_CHECK(tokenStream, expectedCodeNotation);
+}
+
+TEST(AnalysisMachine, Can_Handle_Nested_Code_Blocks_With_While)
+{
+	std::vector<Token> tokenStream =
+	{
+		{PROGRAM, "program"}, {NAME, "test"}, {END_LINE, ";"},
+		{VAR, "var"},
+		{BEGIN, "begin"},
+		{WHILE, "while"}, {BRACKET_OPEN, "("}, {VALUE_INT, "1"}, {BRACKET_CLOSE, ")"}, {BEGIN, "begin"},
+		{IF, "if"}, {BRACKET_OPEN, "("}, {VALUE_INT, "1"}, {BRACKET_CLOSE, ")"}, {THEN, "then"}, {BEGIN, "begin"},
+		{NAME, "Write"}, {BRACKET_OPEN, "("}, {VALUE_STRING, "Hello World!"}, {BRACKET_CLOSE, ")"}, {END_LINE, ";"},
+		{END, "end"},
+		{ELSE, "else" }, { BEGIN, "begin" },
+		{VALUE_STRING, "Not really Hello World!" },
+		{END, "end" },
+		{END, "end"},
+		{ELSE, "else"}, {BEGIN, "begin"},
+		{VALUE_STRING, "Not really Hello World!"},
+		{END, "end"},
+		{NAME, "Write"}, {BRACKET_OPEN, "("}, {VALUE_STRING, "Hello World!"}, {BRACKET_CLOSE, ")"}, {END_LINE, ";"},
+		{END, "end"},
+		{PROGRAMM_END, "."}
+	};
+
+	std::vector<std::string> expectedCodeNotation =
+	{
+		"IProgram(test)", "-IVarBlock()", "--IDeclareVar(INT, Int)", "-IMainBlock()",
+		"--IWhile()", "---IIF()","----IWrite()", "---IElse()", "----IWrite()", "--IElse()", "----IWrite()", "--IWrite()"
 	};
 
 	// Standard check

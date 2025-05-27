@@ -124,7 +124,7 @@ public:
 	}
 	const std::map<std::string, std::shared_ptr<Value>>& GetCachedTable()
 	{
-		if (currentState) return currentState->valuesTable;
+		//if (currentState) return currentState->valuesTable;
 		return cachedTable;
 	}
 };

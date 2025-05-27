@@ -11,6 +11,7 @@
 Pascalizer_MainWindow::Pascalizer_MainWindow(Pascalizer* inPascalizer, QWidget* parent) : QMainWindow(parent), pascalizer(inPascalizer)
 {
     ui.setupUi(this);  // This connects widgets from the .ui file
+    ui.centralwidget->setWindowTitle("Pascalizer");
 
     pascalizer->SetUserInterface(this);
 
@@ -90,7 +91,9 @@ void Pascalizer_MainWindow::Update()
 
     ui.valuesTableTable->clear();
     ui.valuesTableTable->setRowCount(0);
-    for (auto& value : pascalizer->GetCachedValuesTable())
+
+    auto tableContent = pascalizer->GetCachedValuesTable();
+    for (auto& value : tableContent)
     {
         ui.valuesTableTable->insertRow(ui.valuesTableTable->rowCount());
         ui.valuesTableTable->model()->setData(ui.valuesTableTable->model()->index(ui.valuesTableTable->rowCount() - 1, 0), QString::fromStdString(value.first));
@@ -255,7 +258,7 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument* parent) : QSyntaxHighlighter
     keywordFormat.setFontWeight(QFont::Bold);
     const QStringList mainKeywords = 
     {
-        "\\bprogram\\b", "\\bbegin\\b", "\\bend\\b", "\\bvar\\b", "\\bconst\\b", "\\bif\\b", "\\belse\\b", "\\bwhile\\b"
+        "\\bprogram\\b", "\\bbegin\\b", "\\bend\\b", "\\bvar\\b", "\\bconst\\b", "\\bif\\b", "\\belse\\b", "\\bwhile\\b", "\\bthen\\b"
     };
 
 
@@ -269,9 +272,19 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument* parent) : QSyntaxHighlighter
         "\\bint\\b", "\\bdouble\\b", "\\bstring\\b"
     };
 
-
     for (const QString& pattern : typeKeywords)
         rules.append({ QRegularExpression(pattern), keywordFormat });
+
+    keywordFormat.setForeground(QColor(80, 80, 255));
+    keywordFormat.setFontWeight(QFont::Bold);
+    const QStringList functionKeywords =
+    {
+        "\\bWrite\\b", "\\bRead\\b"
+    };
+
+    for (const QString& pattern : functionKeywords)
+        rules.append({ QRegularExpression(pattern), keywordFormat });
+
 
 
     // Strings
@@ -308,6 +321,7 @@ ConsoleWidget::ConsoleWidget(QWidget* parent) : QTextEdit(parent), inputStartPos
     setWordWrapMode(QTextOption::WrapAnywhere);
     //setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     setFontPointSize(25);
+
     insertPrompt();
 }
 
