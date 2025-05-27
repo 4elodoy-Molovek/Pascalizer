@@ -1,346 +1,316 @@
-//#define ASSERT_LOG_CONTAINS(state, substring)                                   \
-//    ASSERT_FALSE((state).log.empty()) << "Log is empty!";                       \
-//    ASSERT_NE((state).log.back().find(substring), std::string::npos)            \
-//        << "Log does not contain expected substring: " << substring
-//
-//
-//#include <gtest/gtest.h>
-//#include "ProgramInstructions.h"
-//#include "ValuesTable.h"
-//#include "ExpressionEvaluationBlock.h"
-//#include "IO_ProcessorInterface.h"
-//#include "HierarchicalList.h"
-//
-//
-//// Мокаем Expression, чтобы обойти Caculate
-//class FakeExpression : public Expression 
-//{
-//public:
-//    FakeExpression(std::shared_ptr<Value> value)
-//        : Expression({}), _value(value) {}
-//
-//    // Точно перегружаем виртуальный метод родителя!
-//    std::shared_ptr<Value> Caculate(ProgramState& state) 
-//    {
-//        state.log.push_back("FakeExpression used");
-//        return _value;
-//    }
-//
-//private:
-//    std::shared_ptr<Value> _value;
-//};
-//
-//
-//// Мокаем IO-процессор
-//class MockIO : public IO_ProcessorInterface 
-//{
-//public:
-//    std::string capturedOutput;
-//    std::function<void(IO_InstructionInterface*)> inputCallback;
-//    std::function<void(const std::string&)> inputHandler;
-//
-//    void CallReceiveUserInput(IO_InstructionInterface* instruction) override 
-//    {
-//        if (inputCallback) inputCallback(instruction);
-//    }
-//
-//    void OnUserInputReceived(const std::string& userInput) override 
-//    {
-//        if (inputHandler) inputHandler(userInput);
-//    }
-//
-//    void CallOutputString(const std::string& output) override 
-//    {
-//        capturedOutput = output;
-//    }
-//};
-//
-//
-//
-//// Хелпер для создания состояния
-//ProgramState MakeState() 
-//{
-//    HierarchicalList<std::shared_ptr<Instruction>> dummyCode;
-//    static MockIO io;
-//    return ProgramState(dummyCode, &io);
-//}
-//
-//// ---- Тесты ----
-//
-//TEST(IProgramTest, ExecutesSuccessfully) 
-//{
-//    auto state = MakeState();
-//    IProgram program("TestProgram");
-//    program.Execute(state);
-//    ASSERT_EQ(state.log.back(), "Program started, name: TestProgram");
-//}
-//
-//TEST(IConstBlockTest, LogsStart) 
-//{
-//    auto state = MakeState();
-//    IConstBlock block;
-//    block.Execute(state);
-//    ASSERT_EQ(state.log.back(), "Const block started");
-//}
-//
-//TEST(IVarBlockTest, LogsStart) 
-//{
-//    auto state = MakeState();
-//    IVarBlock block;
-//    block.Execute(state);
-//    ASSERT_EQ(state.log.back(), "Var block started");
-//}
-//
-//TEST(IMainBlockTest, LogsStart) 
-//{
-//    auto state = MakeState();
-//    IMainBlock block;
-//    block.Execute(state);
-//    ASSERT_EQ(state.log.back(), "Main block started");
-//}
-//
-//TEST(IDeclareConstTest, DeclaresConstSuccessfully) 
-//{
-//    auto state = MakeState();
-//    auto value = std::make_shared<IntValue>(5);
-//    IDeclareConst inst("c", value);
-//    inst.Execute(state);
-//    ASSERT_EQ(dynamic_cast<IntValue*>(state.valuesTable["c"].get())->value, 5);
-//}
-//
-//TEST(IDeclareVarTest, DeclaresInt) 
-//{
-//    auto state = MakeState();
-//    IDeclareVar inst(INT, "x");
-//    inst.Execute(state);
-//    ASSERT_EQ(dynamic_cast<IntValue*>(state.valuesTable["x"].get())->value, 0);
-//}
-//
-//TEST(IAssignVarTest, AssignsCorrectly) 
-//{
-//    auto state = MakeState();
-//    state.valuesTable["x"] = std::make_shared<IntValue>(0);
-//
-//    auto expr = std::make_shared<FakeExpression>(std::make_shared<IntValue>(123));
-//    IAssignVar assign("x", expr);
-//
-//    ASSERT_NO_THROW(assign.Execute(state));
-//    ASSERT_EQ(dynamic_cast<IntValue*>(state.valuesTable["x"].get())->value, 123);
-//
-//    ASSERT_LOG_CONTAINS(state, "FakeExpression used");
-//}
-//
-//
-//TEST(IAssignVarTest, TypeMismatchThrows) 
-//{
-//    auto state = MakeState();
-//    state.valuesTable["x"] = std::make_shared<IntValue>(0);
-//    auto expr = std::make_shared<FakeExpression>(std::make_shared<StringValue>("oops"));
-//    IAssignVar assign("x", expr);
-//    EXPECT_THROW(assign.Execute(state), std::runtime_error);
-//}
-//
-//TEST(IIfTest, ExecutesTrueBranch) 
-//{
-//    auto state = MakeState();
-//    auto expr = std::make_shared<FakeExpression>(std::make_shared<IntValue>(1));
-//    IIf instr(expr);
-//
-//    auto node = std::make_shared<HListNode<std::shared_ptr<Instruction>>>();
-//    node->value = std::make_shared<IIf>(expr);
-//    state.instructionPointer = node;
-//
-//    instr.Execute(state);
-//    ASSERT_TRUE(state.log.back().find("Entering IF body") != std::string::npos);
-//}
-//
-//TEST(IIfTest, SkipsFalseBranch) 
-//{
-//    auto state = MakeState();
-//    auto expr = std::make_shared<FakeExpression>(std::make_shared<IntValue>(0));
-//    IIf instr(expr);
-//
-//    auto node = std::make_shared<HListNode<std::shared_ptr<Instruction>>>();
-//    auto elseNode = std::make_shared<HListNode<std::shared_ptr<Instruction>>>();
-//    node->value = std::make_shared<IIf>(expr);
-//    node->pNext = elseNode;
-//    elseNode->value = std::make_shared<IElse>();
-//
-//    state.instructionPointer = node;
-//
-//    instr.Execute(state);
-//    ASSERT_EQ(state.instructionPointer, elseNode);
-//}
-//
-//TEST(IElseTest, SkipsIfTrueCondition) 
-//{
-//    auto state = MakeState();
-//    state.branchingStack.push(true);
-//    auto nextNode = std::make_shared<HListNode<std::shared_ptr<Instruction>>>();
-//    state.instructionPointer = std::make_shared<HListNode<std::shared_ptr<Instruction>>>();
-//    state.instructionPointer->pNext = nextNode;
-//
-//    IElse instr;
-//    instr.Execute(state);
-//    ASSERT_EQ(state.instructionPointer, nextNode);
-//}
-//
-//TEST(IWhileTest, SkipsWhenFalse)
-//{
-//    auto state = MakeState();
-//    auto expr = std::make_shared<FakeExpression>(std::make_shared<IntValue>(0));
-//    IWhile loop(expr);
-//
-//    auto node = std::make_shared<HListNode<std::shared_ptr<Instruction>>>();
-//    node->value = std::make_shared<IWhile>(expr);
-//    auto afterNode = std::make_shared<HListNode<std::shared_ptr<Instruction>>>();
-//    node->pNext = afterNode;
-//    state.instructionPointer = node;
-//
-//    loop.Execute(state);
-//    ASSERT_EQ(state.instructionPointer, afterNode);
-//}
-//
-//TEST(IWriteTest, OutputsExpressionValue) 
-//{
-//    auto state = MakeState();
-//    auto expr = std::make_shared<FakeExpression>(std::make_shared<StringValue>("Hello"));
-//    IWrite write({ expr });
-//
-//    write.Execute(state);
-//    auto io = static_cast<MockIO*>(state.ioProcessor);
-//    ASSERT_EQ(io->capturedOutput, "Hello");
-//}
-//
-//TEST(IReadTest, AssignsParsedInputCorrectly) 
-//{
-//    auto& io = *new MockIO();
-//    HierarchicalList<std::shared_ptr<Instruction>> dummyCode;
-//    ProgramState state(dummyCode, &io);
-//    state.valuesTable["x"] = std::make_shared<IntValue>(0);
-//
-//    auto expr = std::make_shared<FakeExpression>(std::make_shared<StringValue>("x"));
-//    auto read = std::make_shared<IRead>(expr);
-//
-//    io.inputCallback = [&](IO_InstructionInterface* instr) {
-//        instr->OnUserInputReceived("42"); // имитируем получение ввода
-//    };
-//
-//    read->Execute(state);
-//    ASSERT_EQ(dynamic_cast<IntValue*>(state.valuesTable["x"].get())->value, 42);
-//}
-//
-//TEST(IElseTest, ThrowsWithoutMatchingIf) {
-//    auto state = MakeState();
-//    IElse instr;
-//    EXPECT_THROW(instr.Execute(state), std::runtime_error);
-//}
-//
-//TEST(IIfElseTest, ExecutesElseBranchWhenFalse) 
-//{
-//    auto state = MakeState();
-//
-//    auto ifNode = std::make_shared<HListNode<std::shared_ptr<Instruction>>>();
-//    auto elseNode = std::make_shared<HListNode<std::shared_ptr<Instruction>>>();
-//
-//    ifNode->value = std::make_shared<IIf>(std::make_shared<FakeExpression>(std::make_shared<IntValue>(0)));
-//    elseNode->value = std::make_shared<IElse>();
-//
-//    ifNode->pNext = elseNode;
-//    state.instructionPointer = ifNode;
-//
-//    ifNode->value->Execute(state);
-//    ASSERT_EQ(state.instructionPointer, elseNode);
-//
-//    state.branchingStack.push(false);
-//    elseNode->pNext = nullptr;
-//    elseNode->value->Execute(state);
-//    // Проверим, что не скипнуло тело else
-//    ASSERT_TRUE(state.log.back().find("Entering ELSE body") != std::string::npos);
-//}
-//
-//TEST(IWhileTest, ExecutesBodyOnce) 
-//{
-//    auto state = MakeState();
-//
-//    auto condition = std::make_shared<FakeExpression>(std::make_shared<IntValue>(1));
-//    auto loop = std::make_shared<IWhile>(condition);
-//
-//    auto node = std::make_shared<HListNode<std::shared_ptr<Instruction>>>();
-//    node->value = loop;
-//    state.instructionPointer = node;
-//
-//    node->pSub = std::make_shared<HListNode<std::shared_ptr<Instruction>>>();
-//    node->pSub->value = std::make_shared<IMainBlock>();
-//
-//    loop->Execute(state);
-//    // Цикл один раз заходит внутрь
-//    ASSERT_TRUE(state.log.back().find("Entering WHILE body") != std::string::npos);
-//}
-//
-//TEST(IReadTest, ThrowsIfVarMissing) 
-//{
-//    auto state = MakeState();
-//    auto expr = std::make_shared<FakeExpression>(std::make_shared<StringValue>("missingVar"));
-//    auto read = std::make_shared<IRead>(expr);
-//
-//    EXPECT_THROW(read->Execute(state), std::runtime_error);
-//}
-//
-//TEST(IReadTest, ThrowsOnWrongTypeAssign) 
-//{
-//    auto& io = *new MockIO();
-//    HierarchicalList<std::shared_ptr<Instruction>> dummyCode;
-//    ProgramState state(dummyCode, &io);
-//    state.valuesTable["x"] = std::make_shared<IntValue>(0);
-//
-//    auto expr = std::make_shared<FakeExpression>(std::make_shared<StringValue>("x"));
-//    auto read = std::make_shared<IRead>(expr);
-//
-//    io.inputCallback = [&](IO_InstructionInterface* instr) {
-//        instr->OnUserInputReceived("hello world"); // строка вместо числа
-//    };
-//
-//    EXPECT_THROW(read->Execute(state), std::runtime_error);
-//}
-//
-//TEST(IWriteTest, OutputsMultipleExpressions) 
-//{
-//    auto state = MakeState();
-//    auto expr1 = std::make_shared<FakeExpression>(std::make_shared<StringValue>("Hi, "));
-//    auto expr2 = std::make_shared<FakeExpression>(std::make_shared<StringValue>("World!"));
-//    IWrite write({ expr1, expr2 });
-//
-//    write.Execute(state);
-//    auto io = static_cast<MockIO*>(state.ioProcessor);
-//    ASSERT_EQ(io->capturedOutput, "Hi, World!");
-//}
-//
-//TEST(IAssignVarTest, ThrowsIfVariableMissing) 
-//{
-//    auto state = MakeState();
-//    auto expr = std::make_shared<FakeExpression>(std::make_shared<IntValue>(5));
-//    IAssignVar assign("missing", expr);
-//
-//    // в отличие от других, тут выбрасывается при попытке сравнить типы
-//    EXPECT_THROW(assign.Execute(state), std::runtime_error);
-//}
-//
-//TEST(ExpressionEvaluationBlockTest, ThrowsOnUnrecognizedElement) 
-//{
-//    class DummyExpr : public ExpressionElement {};
-//    Expression expr({ std::make_shared<DummyExpr>() });
-//
-//    auto state = MakeState();
-//    EXPECT_THROW(expr.Caculate(state), std::exception);
-//}
-//
-//TEST(IWriteTest, HandlesEmptyList) 
-//{
-//    auto state = MakeState();
-//    IWrite write({});
-//    write.Execute(state);
-//
-//    auto io = static_cast<MockIO*>(state.ioProcessor);
-//    ASSERT_EQ(io->capturedOutput, "");
-//}
+﻿#include <ProgramInstructions.h>
+#include <gtest/gtest.h>
+
+HierarchicalList< std::shared_ptr<Instruction>> code;
+IO_ProcessorInterface fakeIOProcessor;
+ProgramState programState(code, &fakeIOProcessor);
+
+class FakeExpression : public Expression
+{
+private:
+    std::shared_ptr<Value> _value;
+public:
+    FakeExpression(std::shared_ptr<Value> value) : Expression({}), _value(value) {}
+
+    std::shared_ptr<Value> Calculate(ProgramState& state) override
+    {
+        state.log.push_back("FakeExpression used");
+        return _value;
+    }
+};
+
+
+TEST(Test_Simple_Logging, IProgram_Writes_To_The_Log)
+{
+    IProgram inst("Test");
+    inst.Execute(programState);
+    EXPECT_EQ(programState.log.back(), "Program started, name: Test");
+}
+
+TEST(Test_Simple_Logging, IConstBlock_Writes_To_The_Log)
+{
+    IConstBlock inst;
+    inst.Execute(programState);
+    EXPECT_EQ(programState.log.back(), "Const block started");
+}
+
+TEST(Test_Simple_Logging, IVarBlock_Writes_To_The_Log)
+{
+    IVarBlock inst;
+    inst.Execute(programState);
+    EXPECT_EQ(programState.log.back(), "Var block started");
+}
+
+TEST(Test_Simple_Logging, IMainBlock_Writes_To_The_Log)
+{
+    IMainBlock inst;
+    inst.Execute(programState);
+    EXPECT_EQ(programState.log.back(), "Main block started");
+}
+
+TEST(Test_IDeclareConst, Declare_INT)
+{
+    std::shared_ptr<Value> val;
+    int ival = 1;
+    val = std::make_shared<IntValue>(ival);
+    IDeclareConst inst("Test", val);
+
+    inst.Execute(programState);
+    EXPECT_EQ(programState.log.back(), "Const Test = 1 declared");
+}
+
+TEST(Test_IDeclareConst, Declare_STRING)
+{
+    std::shared_ptr<Value> val;
+    std::string sval = "1";
+    val = std::make_shared<StringValue>(sval);
+    IDeclareConst inst("Test", val);
+
+    inst.Execute(programState);
+    EXPECT_EQ(programState.log.back(), "Const Test = 1 declared");
+}
+
+TEST(Test_IDeclareConst, Declare_DOUBLE)
+{
+    std::shared_ptr<Value> val;
+    double dval = 1.0f;
+    val = std::make_shared<DoubleValue>(dval);
+    IDeclareConst inst("Test", val);
+
+    inst.Execute(programState);
+    EXPECT_EQ(programState.log.back(), "Const Test = 1.000000 declared");
+}
+
+TEST(Test_IDeclareVar, INT_Var_Declares_Sucessfully)
+{
+    std::string name = "Test";
+    Type type = Type::INT;
+    IDeclareVar inst(type, "Test");
+
+    inst.Execute(programState);
+    EXPECT_EQ(programState.log.back(), "Var Test = 0 declared");
+}
+
+TEST(Test_IDeclareVar, STRING_Var_Declares_Sucessfully)
+{
+    std::string name = "Test";
+    Type type = Type::STRING;
+    IDeclareVar inst(type, "Test");
+
+    inst.Execute(programState);
+    EXPECT_EQ(programState.log.back(), "Var Test =  declared");
+}
+
+TEST(Test_IDeclareVar, DOUBLE_Var_Declares_Sucessfully)
+{
+    std::string name = "Test";
+    Type type = Type::DOUBLE;
+    IDeclareVar inst(type, "Test");
+
+    inst.Execute(programState);
+    EXPECT_EQ(programState.log.back(), "Var Test = 0.000000 declared");
+}
+
+TEST(Test_IAssignVar, INT_Var_Assigns_Successfully)
+{
+    std::string name = "Test";
+    std::shared_ptr<Value> val;
+    int ival = 10;
+    val = std::make_shared<IntValue>(ival);
+    std::shared_ptr sexp = std::make_shared<FakeExpression>(val);
+
+    IDeclareVar decl(Type::INT, name);
+    decl.Execute(programState);
+
+    IAssignVar ass(name, sexp);
+    ass.Execute(programState);
+
+    EXPECT_EQ(programState.valuesTable[name]->PrintValue(), "10");
+}
+
+TEST(Test_IAssignVar, DOUBLE_Var_Assigns_Successfully)
+{
+    std::string name = "Test";
+    std::shared_ptr<Value> val;
+    double ival = 10.000000;
+    val = std::make_shared<DoubleValue>(ival);
+    std::shared_ptr sexp = std::make_shared<FakeExpression>(val);
+
+    IDeclareVar decl(Type::DOUBLE, name);
+    decl.Execute(programState);
+
+    IAssignVar ass(name, sexp);
+    ass.Execute(programState);
+
+    EXPECT_EQ(programState.valuesTable[name]->PrintValue(), "10.000000");
+}
+
+TEST(Test_IAssignVar, STRING_Var_Assigns_Successfully)
+{
+    std::string name = "Test";
+    std::shared_ptr<Value> val;
+    std::string ival = "Hi";
+    val = std::make_shared<StringValue>(ival);
+    std::shared_ptr sexp = std::make_shared<FakeExpression>(val);
+
+    IDeclareVar decl(Type::STRING, name);
+    decl.Execute(programState);
+
+    IAssignVar ass(name, sexp);
+    ass.Execute(programState);
+
+    EXPECT_EQ(programState.valuesTable[name]->PrintValue(), "Hi");
+}
+
+TEST(Test_IAssignVar, Throws_When_Assigning_STRING_To_DOUBLE)
+{
+    std::string name = "Test";
+    std::shared_ptr<Value> val;
+    std::string ival = "Hi";
+    val = std::make_shared<StringValue>(ival);
+    std::shared_ptr sexp = std::make_shared<FakeExpression>(val);
+
+    IDeclareVar decl(Type::DOUBLE, name);
+    decl.Execute(programState);
+
+    IAssignVar ass(name, sexp);
+    EXPECT_ANY_THROW(ass.Execute(programState));
+}
+
+TEST(Test_IAssignVar, Throws_When_Assigning_DOUBLE_To_STRING)
+{
+    std::string name = "Test";
+    std::shared_ptr<Value> val;
+    double ival = 1.0f;
+    val = std::make_shared<DoubleValue>(ival);
+    std::shared_ptr sexp = std::make_shared<FakeExpression>(val);
+
+    IDeclareVar decl(Type::STRING, name);
+    decl.Execute(programState);
+
+    IAssignVar ass(name, sexp);
+    EXPECT_ANY_THROW(ass.Execute(programState));
+}
+
+TEST(Test_IWrite, Writes_INT_To_Log)
+{
+    std::shared_ptr<Value> val = std::make_shared<IntValue>(42);
+    std::shared_ptr<FakeExpression> expr = std::make_shared<FakeExpression>(val);
+    std::vector<std::shared_ptr<Expression>> vexpr;
+    vexpr.push_back(expr);
+
+    IWrite inst(vexpr);
+    inst.Execute(programState);
+
+    EXPECT_EQ(programState.log.back(), "OUTPUT: 42");
+}
+
+TEST(Test_IWrite, Writes_STRING_To_Log)
+{
+    auto val = std::make_shared<StringValue>("Hello");
+    auto expr = std::make_shared<FakeExpression>(val);
+    std::vector<std::shared_ptr<Expression>> vexpr;
+    vexpr.push_back(expr);
+
+    IWrite inst(vexpr);
+    inst.Execute(programState);
+
+    EXPECT_EQ(programState.log.back(), "OUTPUT: Hello");
+}
+
+TEST(Test_IWrite, Writes_DOUBLE_To_Log)
+{
+    auto val = std::make_shared<DoubleValue>(3.14);
+    auto expr = std::make_shared<FakeExpression>(val);
+    std::vector<std::shared_ptr<Expression>> vexpr;
+    vexpr.push_back(expr);
+
+    IWrite inst(vexpr);
+    inst.Execute(programState);
+
+    EXPECT_EQ(programState.log.back(), "OUTPUT: 3.140000");
+}
+
+TEST(Test_IIf, If_True_Executes_IfBody)
+{
+    HierarchicalList<std::shared_ptr<Instruction>> code;
+
+    auto ifInstr = std::make_shared<IIf>(std::make_shared<FakeExpression>(std::make_shared<IntValue>(1)));
+    code.AddNextElement(ifInstr);
+
+    auto writeInstr = std::make_shared<IWrite>(
+        std::vector<std::shared_ptr<Expression>>{
+        std::make_shared<FakeExpression>(std::make_shared<IntValue>(42))
+    });
+    code.AddSubElement(writeInstr);
+
+    ProgramState state(code, &fakeIOProcessor);
+    state.code = code;
+    state.currentInstruction = code.GetFirst();
+    state.instructionPointer = code.GetFirst();
+    state.codeBlockExitInstructionPointerStack.push(nullptr); // фиктивный выход
+
+    state.instructionPointer->value->Execute(state);
+
+    EXPECT_EQ(state.log[0], "IF block started");
+    EXPECT_EQ(state.log.back(), "Entering IF body");
+}
+
+TEST(Test_IIf, If_False_Skips_IfBody)
+{
+    HierarchicalList<std::shared_ptr<Instruction>> code;
+
+    // if (false)
+    auto ifInstr = std::make_shared<IIf>(std::make_shared<FakeExpression>(std::make_shared<IntValue>(0)));
+    code.AddNextElement(ifInstr);
+
+    // тело if
+    auto writeInstr = std::make_shared<IWrite>(
+        std::vector<std::shared_ptr<Expression>>{
+        std::make_shared<FakeExpression>(std::make_shared<IntValue>(42))
+    });
+    code.AddSubElement(writeInstr);
+
+    ProgramState state(code, &fakeIOProcessor);
+    state.code = code;
+    state.currentInstruction = code.GetFirst();
+    state.instructionPointer = code.GetFirst();
+    state.codeBlockExitInstructionPointerStack.push(nullptr); // фиктивный выход
+
+    state.instructionPointer->value->Execute(state);
+
+    EXPECT_EQ(state.log.back(), "Skipping IF body");
+    EXPECT_EQ(state.instructionPointer, code.GetFirst()->pNext); // должно перейти на следующую
+}
+
+TEST(Test_IElse, Executes_When_If_Condition_False)
+{
+    HierarchicalList<std::shared_ptr<Instruction>> code;
+
+    auto ifInstr = std::make_shared<IIf>(std::make_shared<FakeExpression>(std::make_shared<IntValue>(0)));
+    code.AddNextElement(ifInstr);
+
+    auto elseInstr = std::make_shared<IElse>();
+    code.AddNextElement(elseInstr);
+
+    auto writeInstr = std::make_shared<IWrite>(std::vector<std::shared_ptr<Expression>>{
+        std::make_shared<FakeExpression>(std::make_shared<IntValue>(999))
+    });
+    code.AddSubElement(writeInstr);
+
+    ProgramState state(code, &fakeIOProcessor);
+    state.currentInstruction = code.GetFirst();
+    state.instructionPointer = code.GetFirst();
+    state.codeBlockExitInstructionPointerStack.push(nullptr);
+
+    state.currentInstruction->value->Execute(state);
+
+    EXPECT_EQ(state.log.end()[-1], "Skipping IF body");
+
+    // Перейдём к else и выполним
+    state.currentInstruction = state.instructionPointer;
+    state.instructionPointer = state.instructionPointer->pSub;
+    state.currentInstruction->value->Execute(state);
+
+    EXPECT_EQ(state.log.back(), "Entering ELSE body");
+}
