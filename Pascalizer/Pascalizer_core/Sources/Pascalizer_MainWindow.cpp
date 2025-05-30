@@ -33,7 +33,10 @@ Pascalizer_MainWindow::Pascalizer_MainWindow(Pascalizer* inPascalizer, QWidget* 
 
 void Pascalizer_MainWindow::ShowError(std::string errorMessage)
 {
-    throw(std::runtime_error(errorMessage));
+    ClearErrors();
+    AddError(errorMessage);
+
+    ui.tabWidget->setCurrentIndex(0);
 }
 
 void Pascalizer_MainWindow::SetupConsole()
