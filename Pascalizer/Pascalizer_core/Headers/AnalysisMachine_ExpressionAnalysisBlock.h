@@ -35,6 +35,12 @@ class ExpressionAnalysisBlockState : public State
 	// Pushes operation into the operation stack
 	void PushOperation(const std::string& operationStr) 
 	{
+		if (operationStr == "(")
+		{
+			operationStack.push(operationStr);
+			return;
+		}
+
 		std::map<std::string, int> operatorPrecedence =
 		{
 			{"not", 4},     // Unary logical NOT
@@ -68,7 +74,7 @@ class ExpressionAnalysisBlockState : public State
 	// Dumps the operation stack into postfix until it meets the break point
 	void DumpOperationStack() 
 	{
-		const std::set<std::string> breakPoints = { "(", "sin" };
+		const std::set<std::string> breakPoints = { "(" };
 		while (operationStack.size() > 0 && breakPoints.count(operationStack.top()) == 0)
 		{
 			postfix.push_back(CreateOperationElement(operationStack.top()));
@@ -76,11 +82,14 @@ class ExpressionAnalysisBlockState : public State
 		}
 
 		if (operationStack.size() > 0)
-		{
-			// Pushing break point operation (ignoring '(')
-			if (operationStack.top() != "(") postfix.push_back(CreateOperationElement(operationStack.top()));
 			operationStack.pop();
-		}
+
+		//if (operationStack.size() > 0)
+		//{
+		//	// Pushing break point operation (ignoring '(')
+		//	if (operationStack.top() != "(") postfix.push_back(CreateOperationElement(operationStack.top()));
+		//	operationStack.pop();
+		//}
 	}
 
 	//
@@ -162,9 +171,9 @@ public:
 				// Creating value from the contents
 				std::shared_ptr<Value> newValue;
 
-						if (nextElement.type == VALUE_INT) newValue = std::make_shared<IntValue>(std::stoi(nextElement.value));
-				else	if (nextElement.type == VALUE_DOUBLE) newValue = std::make_shared<DoubleValue>(std::stod(nextElement.value));
-				else	if (nextElement.type == VALUE_STRING) newValue = std::make_shared<StringValue>(nextElement.value);
+						if (nextElement.type == VALUE_INT)		newValue = std::make_shared<IntValue>(std::stoi(nextElement.value));
+				else	if (nextElement.type == VALUE_DOUBLE)	newValue = std::make_shared<DoubleValue>(std::stod(nextElement.value));
+				else	if (nextElement.type == VALUE_STRING)	newValue = std::make_shared<StringValue>(nextElement.value);
 
 				AddValue(newValue);
 
