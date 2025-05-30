@@ -165,6 +165,8 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
+		if (calculationStack.size() < 2) throw(std::runtime_error("CALCULATION ERROR: addition requires two arguments"));
+
 		auto rhs = calculationStack.top(); calculationStack.pop(); //? ÷òî âîçâðàòèò top/pop èç ïóñòîãî ñòåêà
 		//auto rhs = rhs_.get();
 
@@ -188,6 +190,8 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
+		if (calculationStack.size() < 2) throw(std::runtime_error("CALCULATION ERROR: multiplication requires two arguments"));
+
 		auto rhs = calculationStack.top(); calculationStack.pop(); //? ÷òî âîçâðàòèò top/pop èç ïóñòîãî ñòåêà
 		auto lhs = (calculationStack.top()); calculationStack.pop();
 
@@ -209,11 +213,24 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
-		auto rhs = calculationStack.top(); calculationStack.pop(); //? ÷òî âîçâðàòèò top/pop èç ïóñòîãî ñòåêà
-		auto lhs = (calculationStack.top()); calculationStack.pop();
+
+		if (calculationStack.size() < 1) throw(std::runtime_error("CALCULATION ERROR: subtraction requires at least one argument!"));
+
+		auto rhs = calculationStack.top();
+		auto lhs = calculationStack.top();
+
+		if (calculationStack.size() == 1) 
+		{
+			lhs = std::make_shared<ValueExpressionElement>(ValueExpressionElement(std::make_shared<IntValue>(0)));
+		}
+		else 
+		{
+			calculationStack.pop();
+			lhs = (calculationStack.top());
+		}
+		calculationStack.pop();
 
 		calculationStack.push(std::make_shared<ValueExpressionElement>(*(lhs->value) - *(rhs->value)));
-		//? ñëîæåíèå ïðèíèìàåò îáû÷íûå -ïîèíòåðû- ïåðåìåííûå, íî âîçâðàùàåò shared
 	}
 
 	virtual std::string GetStringNotation() override { return "-"; }
@@ -230,6 +247,8 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
+		if (calculationStack.size() < 2) throw(std::runtime_error("CALCULATION ERROR: division requires two arguments"));
+
 		auto rhs = calculationStack.top(); calculationStack.pop(); //? ÷òî âîçâðàòèò top/pop èç ïóñòîãî ñòåêà
 		auto lhs = (calculationStack.top()); calculationStack.pop();
 
@@ -252,6 +271,8 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
+		if (calculationStack.size() < 2) throw(std::runtime_error("CALCULATION ERROR: mod requires two arguments"));
+
 		auto rhs = calculationStack.top(); calculationStack.pop(); //? ÷òî âîçâðàòèò top/pop èç ïóñòîãî ñòåêà
 		auto lhs = (calculationStack.top()); calculationStack.pop();
 
@@ -273,6 +294,8 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
+		if (calculationStack.size() < 2) throw(std::runtime_error("CALCULATION ERROR: div requires two arguments"));
+
 		auto rhs = calculationStack.top(); calculationStack.pop();
 		auto lhs = (calculationStack.top()); calculationStack.pop();
 
@@ -292,6 +315,8 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
+		if (calculationStack.size() < 2) throw(std::runtime_error("CALCULATION ERROR: equality requires two arguments"));
+
 		auto rhs = calculationStack.top(); calculationStack.pop();
 		auto lhs = (calculationStack.top()); calculationStack.pop();
 
@@ -311,6 +336,8 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
+		if (calculationStack.size() < 2) throw(std::runtime_error("CALCULATION ERROR: not equal requires two arguments"));
+
 		auto rhs = calculationStack.top(); calculationStack.pop();
 		auto lhs = (calculationStack.top()); calculationStack.pop();
 
@@ -330,6 +357,8 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
+		if (calculationStack.size() < 2) throw(std::runtime_error("CALCULATION ERROR: comparison requires two arguments"));
+
 		auto rhs = calculationStack.top(); calculationStack.pop();
 		auto lhs = (calculationStack.top()); calculationStack.pop();
 
@@ -349,6 +378,8 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
+		if (calculationStack.size() < 2) throw(std::runtime_error("CALCULATION ERROR: comparison requires two arguments"));
+
 		auto rhs = calculationStack.top(); calculationStack.pop();
 		auto lhs = (calculationStack.top()); calculationStack.pop();
 
@@ -368,6 +399,8 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
+		if (calculationStack.size() < 2) throw(std::runtime_error("CALCULATION ERROR: comparison requires two arguments"));
+
 		auto rhs = calculationStack.top(); calculationStack.pop();
 		auto lhs = (calculationStack.top()); calculationStack.pop();
 
@@ -387,6 +420,8 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
+		if (calculationStack.size() < 2) throw(std::runtime_error("CALCULATION ERROR: comparison requires two arguments"));
+
 		auto rhs = calculationStack.top(); calculationStack.pop();
 		auto lhs = (calculationStack.top()); calculationStack.pop();
 
@@ -407,6 +442,8 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
+		if (calculationStack.size() < 1) throw(std::runtime_error("CALCULATION ERROR: sin requires one argument"));
+
 		auto rhs = calculationStack.top(); calculationStack.pop(); //? ÷òî âîçâðàòèò top/pop èç ïóñòîãî ñòåêà
 		calculationStack.push(std::make_shared<ValueExpressionElement>(usin(*(rhs->value))));
 	}
@@ -425,6 +462,8 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
+		if (calculationStack.size() < 2) throw(std::runtime_error("CALCULATION ERROR: or requires two arguments"));
+
 		auto rhs = calculationStack.top(); calculationStack.pop();
 		auto lhs = (calculationStack.top()); calculationStack.pop();
 
@@ -443,6 +482,8 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
+		if (calculationStack.size() < 2) throw(std::runtime_error("CALCULATION ERROR: and requires two arguments"));
+
 		auto rhs = calculationStack.top(); calculationStack.pop();
 		auto lhs = (calculationStack.top()); calculationStack.pop();
 
@@ -461,6 +502,8 @@ public:
 	// A virtual method that runs operation's calculations based on the calculation stack, puts the result on top of the stack
 	virtual void Calculate(std::stack<std::shared_ptr<ValueExpressionElement>>& calculationStack) override
 	{
+		if (calculationStack.size() < 1) throw(std::runtime_error("CALCULATION ERROR: not requires one argument!"));
+
 		auto rhs = calculationStack.top(); calculationStack.pop();
 
 		calculationStack.push(std::make_shared<ValueExpressionElement>(not_(*rhs->value)));

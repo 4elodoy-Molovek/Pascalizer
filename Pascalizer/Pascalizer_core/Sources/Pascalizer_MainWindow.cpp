@@ -85,8 +85,9 @@ void Pascalizer_MainWindow::ReceiveUserInput()
 void Pascalizer_MainWindow::Update()
 {
     ui.executionLogList->clear();
-
-    for (auto& logElement : pascalizer->GetCachedLog())
+    
+    auto log = pascalizer->GetCachedLog();
+    for (auto& logElement : log)
         ui.executionLogList->addItem(QString::fromStdString(logElement));
 
     ui.valuesTableTable->clear();
@@ -118,7 +119,7 @@ void Pascalizer_MainWindow::ClearErrors()
 
 void Pascalizer_MainWindow::ClearEverything()
 {
-    console->clear();
+    console->Clear();
     ui.errorList->clear();
     ui.executionLogList->clear();
     ui.valuesTableTable->clear();
@@ -131,7 +132,7 @@ void Pascalizer_MainWindow::OnFailedToLauch()
 
 void Pascalizer_MainWindow::OnLauched()
 {
-    console->clear();
+    console->Clear();
     ui.tabWidget->setCurrentIndex(1);
 }
 
@@ -342,6 +343,12 @@ void ConsoleWidget::printOutput(const QString& text)
 void ConsoleWidget::printPrompt(const QString& prompt) 
 {
     currentPrompt = prompt;
+    insertPrompt();
+}
+
+void ConsoleWidget::Clear()
+{
+    clear();
     insertPrompt();
 }
 

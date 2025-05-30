@@ -23,6 +23,7 @@ class Interpreter
 		currentState->ioProcessor->CallExecutionFinished();
 
 		delete currentState;
+		currentState = nullptr;
 	}
 
 public:
@@ -47,8 +48,29 @@ public:
 		{
 			if (!currentState->instructionPointer)
 			{
-				FinishProgram(); 
-				return;
+				std::shared_ptr<HListNode<std::shared_ptr<Instruction>>> exit = nullptr;
+				
+				if (!currentState->codeBlockExitInstructionPointerStack.empty())
+				{
+					exit = currentState->codeBlockExitInstructionPointerStack.top();
+					currentState->codeBlockExitInstructionPointerStack.pop();
+
+					while (!exit && !currentState->codeBlockExitInstructionPointerStack.empty())
+					{
+						exit = currentState->codeBlockExitInstructionPointerStack.top();
+						currentState->codeBlockExitInstructionPointerStack.pop();
+					}
+
+					currentState->instructionPointer = exit;
+				}
+
+				if (!exit)
+				{
+					cachedLog = currentState->log;
+
+					FinishProgram();
+					return;
+				}
 			}
 
 			try
@@ -59,16 +81,23 @@ public:
 				if (currentState->instructionPointer->pSub)
 				{
 					currentState->instructionPointer = currentState->instructionPointer->pSub;
-					currentState->codeBlockExitInstructionPointerStack.push(currentState->currentInstruction->pNext);
 				}
 
 				else if (currentState->instructionPointer->pNext)
 					currentState->instructionPointer = currentState->instructionPointer->pNext;
 
-				else if (!currentState->codeBlockExitInstructionPointerStack.empty() && currentState->codeBlockExitInstructionPointerStack.top())
+				else if (!currentState->codeBlockExitInstructionPointerStack.empty())
 				{
-					currentState->instructionPointer = currentState->codeBlockExitInstructionPointerStack.top();
+					auto exit = currentState->codeBlockExitInstructionPointerStack.top();
 					currentState->codeBlockExitInstructionPointerStack.pop();
+
+					while (!exit && !currentState->codeBlockExitInstructionPointerStack.empty())
+					{
+						exit = currentState->codeBlockExitInstructionPointerStack.top();
+						currentState->codeBlockExitInstructionPointerStack.pop();
+					}
+					
+					currentState->instructionPointer = exit;
 				}
 
 				else

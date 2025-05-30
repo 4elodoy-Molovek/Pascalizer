@@ -49,6 +49,8 @@ public:
 	void Execute(ProgramState& programState) override
 	{
 		programState.log.push_back("Const block started");
+		if (programState.currentInstruction)
+			programState.codeBlockExitInstructionPointerStack.push(programState.currentInstruction->pNext);
 	};
 
 	std::string GetStringNotation() override
@@ -68,6 +70,8 @@ public:
 	void Execute(ProgramState& programState) override
 	{
 		programState.log.push_back("Var block started");
+		if (programState.currentInstruction)
+			programState.codeBlockExitInstructionPointerStack.push(programState.currentInstruction->pNext);
 	};
 
 	std::string GetStringNotation() override
@@ -475,11 +479,11 @@ public:
 		{
 			programState.log.push_back("Skipping ELSE body");
 			programState.instructionPointer = programState.currentInstruction->pNext;
-			programState.codeBlockExitInstructionPointerStack.pop();
 		}
 		else
 		{
 			programState.log.push_back("Entering ELSE body");
+			programState.codeBlockExitInstructionPointerStack.push(programState.currentInstruction->pNext);
 		}
 	}
 
@@ -552,12 +556,12 @@ public:
 		if (isTrue)
 		{
 			programState.log.push_back("Entering IF body");
+			programState.codeBlockExitInstructionPointerStack.push(programState.currentInstruction->pNext);
 		}
 		else
 		{
 			programState.log.push_back("Skipping IF body");
 			programState.instructionPointer = currentNode->pNext;
-			programState.codeBlockExitInstructionPointerStack.pop();
 		}
 	}
 
@@ -627,13 +631,12 @@ public:
 		{
 			programState.log.push_back("Entering WHILE body");
 
-			programState.codeBlockExitInstructionPointerStack.top() = programState.currentInstruction;
+			programState.codeBlockExitInstructionPointerStack.push(programState.currentInstruction);
 		}
 		else
 		{
 			programState.log.push_back("Skipping WHILE body");
 			programState.instructionPointer = programState.currentInstruction->pNext;
-			programState.codeBlockExitInstructionPointerStack.pop();
 		}
 	}
 

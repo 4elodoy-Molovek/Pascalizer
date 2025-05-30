@@ -111,6 +111,8 @@ public:
     void printOutput(const QString& text);
     void printPrompt(const QString& prompt = "> ");
 
+    void Clear();
+
 signals:
     void commandEntered(const QString& command);
 
