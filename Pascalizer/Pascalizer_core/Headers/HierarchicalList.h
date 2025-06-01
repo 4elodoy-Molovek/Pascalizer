@@ -15,6 +15,9 @@ struct HListNode
 	// Pointer to the next element on the same level
 	std::shared_ptr<HListNode<T>> pNext = nullptr;
 
+	// Pointer to the previous emenet on the same level
+	std::shared_ptr<HListNode<T>> pPrev = nullptr;
+
 	// Pointer to the first element on the sub level
 	std::shared_ptr<HListNode<T>> pSub = nullptr;
 
@@ -63,6 +66,7 @@ public:
 
 		pLast->pNext = std::make_shared<HListNode<T>>(element);
 		pLast->pNext->pUp = pLast->pUp;
+		pLast->pNext->pPrev = pLast;
 
 		pLast = pLast->pNext;
 		
@@ -109,6 +113,7 @@ public:
 
 		targetUp->pNext = std::make_shared<HListNode<T>>(element);
 		targetUp->pNext->pUp = targetUp->pUp;
+		targetUp->pNext->pPrev = targetUp;
 
 		pLast = targetUp->pNext;
 

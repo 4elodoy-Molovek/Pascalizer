@@ -1105,10 +1105,10 @@ public:
 	// If no transition is possible it means that the machine has encountered a syntax error
 	virtual State* ProcessElement(const Token& nextElement) override 
 	{
-		if (!dynamic_cast<IIf*>(parentMachine.GetResult().GetLast()->pUp->value.get()))
-			throw std::exception("ANALYSIS ERROR: Else with no corresponding 'IF' before it!");
-
 		parentMachine.StoreInstruction(accumulator->Collapse()[0]);
+
+		if (!parentMachine.GetResult().GetLast()->pPrev && !dynamic_cast<IIf*>(parentMachine.GetResult().GetLast()->pPrev->value.get()))
+			throw std::exception("ANALYSIS ERROR: Else with no corresponding 'IF' before it!");
 
 		CheckTokenType(nextElement, { IF, WHILE, NAME, BEGIN });
 

@@ -39,8 +39,6 @@ AnalysisMachine::AnalysisMachine()
 	VarDeclarationState* varDeclarationState = new VarDeclarationState(*this, mainBlockBeginState, nullptr);
 	ConstBlockState* cosntBlockState = new ConstBlockState(*this, constDeclarationState);
 	VarBlockState* varBlockState = new VarBlockState(*this, varDeclarationState);
-	BlockExitState* exitToVarBlockState = new BlockExitState(*this, varBlockState);
-	BlockExitState* exitToConstBlockState = new BlockExitState(*this, cosntBlockState);
 
 	ProgramVerificationState* programVerificationState = new ProgramVerificationState(*this, mainBlockBeginState, cosntBlockState, varBlockState);
 
@@ -67,10 +65,10 @@ AnalysisMachine::AnalysisMachine()
 	functionCallState->nameState = nameBlockState;
 
 	// constDeclarationState
-	constDeclarationState->exitToVarBlockState = exitToVarBlockState;
+	constDeclarationState->exitToVarBlockState = varBlockState;
 
 	// varDeclarationState
-	varDeclarationState->exitToConstBlockState = exitToConstBlockState;
+	varDeclarationState->exitToConstBlockState = cosntBlockState;
 
 
 	// Saving states to the state buffer (to delete on exit)
@@ -88,8 +86,6 @@ AnalysisMachine::AnalysisMachine()
 	states.push_back(varDeclarationState);
 	states.push_back(cosntBlockState);
 	states.push_back(varBlockState);
-	states.push_back(exitToVarBlockState);
-	states.push_back(exitToConstBlockState);
 	states.push_back(programVerificationState);
 
 
