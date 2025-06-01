@@ -38,91 +38,93 @@ public:
 
 		currentState->instructionPointer = currentState->code.GetFirst();
 
-		ExecuteNextInstruction();
+		ContinueExectution();
 
 	}
 
-	void ExecuteNextInstruction()
+	void ContinueExectution()
 	{
 		if (currentState)
 		{
-			if (!currentState->instructionPointer)
+			do
 			{
-				std::shared_ptr<HListNode<std::shared_ptr<Instruction>>> exit = nullptr;
-				
-				if (!currentState->codeBlockExitInstructionPointerStack.empty())
+				if (!currentState->instructionPointer)
 				{
-					exit = currentState->codeBlockExitInstructionPointerStack.top();
-					currentState->codeBlockExitInstructionPointerStack.pop();
-
-					while (!exit && !currentState->codeBlockExitInstructionPointerStack.empty())
+					std::shared_ptr<HListNode<std::shared_ptr<Instruction>>> exit = nullptr;
+				
+					if (!currentState->codeBlockExitInstructionPointerStack.empty())
 					{
 						exit = currentState->codeBlockExitInstructionPointerStack.top();
 						currentState->codeBlockExitInstructionPointerStack.pop();
+
+						while (!exit && !currentState->codeBlockExitInstructionPointerStack.empty())
+						{
+							exit = currentState->codeBlockExitInstructionPointerStack.top();
+							currentState->codeBlockExitInstructionPointerStack.pop();
+						}
+
+						currentState->instructionPointer = exit;
 					}
 
-					currentState->instructionPointer = exit;
+					if (!exit)
+					{
+						cachedLog = currentState->log;
+
+						FinishProgram();
+						return;
+					}
 				}
 
-				if (!exit)
+				try
 				{
+					currentState->currentInstruction = currentState->instructionPointer;
+
+					// Modifies instruction pointer, traversing the list in the top to bottom order (default)
+					if (currentState->instructionPointer->pSub)
+					{
+						currentState->instructionPointer = currentState->instructionPointer->pSub;
+					}
+
+					else if (currentState->instructionPointer->pNext)
+						currentState->instructionPointer = currentState->instructionPointer->pNext;
+
+					else if (!currentState->codeBlockExitInstructionPointerStack.empty())
+					{
+						auto exit = currentState->codeBlockExitInstructionPointerStack.top();
+						currentState->codeBlockExitInstructionPointerStack.pop();
+
+						while (!exit && !currentState->codeBlockExitInstructionPointerStack.empty())
+						{
+							exit = currentState->codeBlockExitInstructionPointerStack.top();
+							currentState->codeBlockExitInstructionPointerStack.pop();
+						}
+
+						currentState->instructionPointer = exit;
+					}
+
+					else
+					{
+						currentState->instructionPointer = nullptr;
+					}
+
+					// Executes the instruction
+					currentState->currentInstruction->value->Execute(*currentState);
+
+					// This way, if instruction modifies the intructionPointer or codeBlockExitInstructionPointerStack, the program will work correctly
+
+					// Updating cached log for runtime info in the UI
 					cachedLog = currentState->log;
 
-					FinishProgram();
-					return;
-				}
-			}
-
-			try
-			{
-				currentState->currentInstruction = currentState->instructionPointer;
-
-				// Modifies instruction pointer, traversing the list in the top to bottom order (default)
-				if (currentState->instructionPointer->pSub)
-				{
-					currentState->instructionPointer = currentState->instructionPointer->pSub;
-				}
-
-				else if (currentState->instructionPointer->pNext)
-					currentState->instructionPointer = currentState->instructionPointer->pNext;
-
-				else if (!currentState->codeBlockExitInstructionPointerStack.empty())
-				{
-					auto exit = currentState->codeBlockExitInstructionPointerStack.top();
-					currentState->codeBlockExitInstructionPointerStack.pop();
-
-					while (!exit && !currentState->codeBlockExitInstructionPointerStack.empty())
-					{
-						exit = currentState->codeBlockExitInstructionPointerStack.top();
-						currentState->codeBlockExitInstructionPointerStack.pop();
-					}
 					
-					currentState->instructionPointer = exit;
 				}
 
-				else
+				catch (std::exception e)
 				{
-					currentState->instructionPointer = nullptr;
+					cachedLog.push_back("PROGRAM CRASH DETECTED: " + std::string(e.what()));
+					FinishProgram();
 				}
 
-				// Executes the instruction
-				currentState->currentInstruction->value->Execute(*currentState);
-
-				// This way, if instruction modifies the intructionPointer or codeBlockExitInstructionPointerStack, the program will work correctly
-
-				// Updating cached log for runtime info in the UI
-				cachedLog = currentState->log;
-
-				// Continue execution if we dont have an IO block
-				if (!currentState->ioBlock)
-					ExecuteNextInstruction();
-			}
-
-			catch (std::exception e)
-			{
-				cachedLog.push_back("PROGRAM CRASH DETECTED: " + std::string(e.what()));
-				FinishProgram();
-			}
+			} while (!currentState->ioBlock); 	// Continue execution if we dont have an IO block
 		}
 	}
 
@@ -135,7 +137,7 @@ public:
 				instruction->OnUserInputReceived(input);
 
 				if (!currentState->ioBlock)
-					ExecuteNextInstruction();
+					ContinueExectution();
 			}
 
 			catch (std::exception e)

@@ -135,8 +135,37 @@ void AnalysisMachine::ExpressionAnalysisFinished(std::shared_ptr<Expression> res
 
 void AnalysisMachine::ProcessElement(const Token& element)
 {
-	if (analysisStatus == ONGOING)
+	if ((analysisStatus == ONGOING || analysisStatus == ERROR) && analysisRecoveryStatus != REC_FAILED)
 	{
+		// Recovering after errors
+		if (analysisRecoveryStatus == REC_NEXTELEM_WAIT)
+		{
+			if (!recoveryState) { analysisRecoveryStatus = REC_FAILED; return; }
+
+			try
+			{
+				currentState = recoveryState->RecoverFromState(element);
+				if (!currentState) { analysisRecoveryStatus = REC_ENDLINE_WAIT; return; }
+
+				analysisRecoveryStatus = REC_NONE;
+				currentState->EnterState(element);
+				return;
+			}
+
+			catch (std::exception e)
+			{
+				analysisRecoveryStatus = REC_ENDLINE_WAIT; return;
+			}
+		}
+
+		else if (analysisRecoveryStatus == REC_ENDLINE_WAIT)
+		{
+			if (element.type != END_LINE && element.type != BEGIN && element.type != END && element.type != CONST && element.type != VAR) return;
+
+			analysisRecoveryStatus = REC_NEXTELEM_WAIT;
+		}
+
+		// Processing element
 		try
 		{
 			State* newState = currentState->ProcessElement(element);
@@ -152,6 +181,7 @@ void AnalysisMachine::ProcessElement(const Token& element)
 		{
 			analysisErrorLog.push_back(std::string(e.what()));
 			analysisStatus = ERROR;
+			analysisRecoveryStatus = REC_ENDLINE_WAIT;
 		}
 	}
 }
@@ -168,4 +198,6 @@ void AnalysisMachine::CleanUp()
 
 	analysisErrorLog.clear();
 	analysisStatus = ONGOING;
+	analysisRecoveryStatus = REC_NONE;
+	recoveryState = nullptr;
 }

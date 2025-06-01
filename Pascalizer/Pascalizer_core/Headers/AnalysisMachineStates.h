@@ -52,6 +52,7 @@ public:
 		innerState = 0;
 
 		accumulator = parentMachine.CreateAccumulator<ProgramVerificationAccumulator>();
+		parentMachine.recoveryState = this;
 	}
 
 	// Called when the machine exits this state
@@ -104,6 +105,17 @@ public:
 			return nullptr;
 		}
 	}
+
+	virtual State* RecoverFromState(const Token& element) override
+	{
+		CheckTokenType(element, { CONST, VAR, BEGIN });
+
+		if (element.type == CONST)	return constBlockState;
+		if (element.type == VAR)	return varBlockState;
+		if (element.type == BEGIN)	return mainBlockBeginState;
+
+		return nullptr;
+	}
 };
 
 
@@ -139,6 +151,7 @@ public:
 	virtual void EnterState(const Token& element) override 
 	{
 		parentMachine.CreateAccumulator<GenericInstructionAccumulator<IConstBlock>>();
+		parentMachine.recoveryState = this;
 	}
 
 	// Called when the machine exits this state
@@ -150,6 +163,12 @@ public:
 		parentMachine.StoreInstruction(parentMachine.currentAccumulator->Collapse()[0]);
 
 		parentMachine.levelOffset++;
+		return constDeclarationState;
+	}
+
+	virtual State* RecoverFromState(const Token& element) override
+	{
+		CheckTokenType(element, { NAME });
 		return constDeclarationState;
 	}
 };
@@ -299,6 +318,7 @@ public:
 	virtual void EnterState(const Token& element) override
 	{
 		accumulator = parentMachine.CreateAccumulator<GenericInstructionAccumulator<IVarBlock>>();
+		parentMachine.recoveryState = this;
 	}
 
 	// Called when the machine exits this state
@@ -314,6 +334,12 @@ public:
 			parentMachine.StoreInstruction(instr);
 		
 		parentMachine.levelOffset++;
+		return varDeclarationState;
+	}
+
+	virtual State* RecoverFromState(const Token& element) override
+	{
+		CheckTokenType(element, { NAME });
 		return varDeclarationState;
 	}
 };
@@ -432,48 +458,48 @@ public:
 
 
 
-// ==========
-// Block Exit
-// ==========
-
-/*
- * Processes the transition between const and var blocks
- * No accumulator needed
- * Enters parent-level
- */
-class BlockExitState : public State
-{
-public:
-
-	// Outgoing connections
-	State* nextBlockState;
-
-
-public:
-	BlockExitState(AnalysisMachine& analysisMachine,
-		State* inNextBlockState)
-		: State(analysisMachine)
-	{
-		nextBlockState = inNextBlockState;
-	}
-
-
-	~BlockExitState() {}
-
-	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
-	virtual void EnterState(const Token& element) override
-	{
-		parentMachine.levelOffset--;
-		parentMachine.ForceTransitionToState(nextBlockState, element);
-	}
-
-	// Called when the machine exits this state
-	virtual void ExitState() override {}
-
-	// Determines the next state of the machine based on the incoming element
-	// If no transition is possible it means that the machine has encountered a syntax error
-	virtual State* ProcessElement(const Token& nextElement) override { return nullptr; }
-};
+//// ==========
+//// Block Exit
+//// ==========
+//
+///*
+// * Processes the transition between const and var blocks
+// * No accumulator needed
+// * Enters parent-level
+// */
+//class BlockExitState : public State
+//{
+//public:
+//
+//	// Outgoing connections
+//	State* nextBlockState;
+//
+//
+//public:
+//	BlockExitState(AnalysisMachine& analysisMachine,
+//		State* inNextBlockState)
+//		: State(analysisMachine)
+//	{
+//		nextBlockState = inNextBlockState;
+//	}
+//
+//
+//	~BlockExitState() {}
+//
+//	// Called when the machine enters this state by traversing a connection based on the TokenizedElement 'element'
+//	virtual void EnterState(const Token& element) override
+//	{
+//		parentMachine.levelOffset--;
+//		parentMachine.ForceTransitionToState(nextBlockState, element);
+//	}
+//
+//	// Called when the machine exits this state
+//	virtual void ExitState() override {}
+//
+//	// Determines the next state of the machine based on the incoming element
+//	// If no transition is possible it means that the machine has encountered a syntax error
+//	virtual State* ProcessElement(const Token& nextElement) override { return nullptr; }
+//};
 
 
 
@@ -517,6 +543,7 @@ public:
 	virtual void EnterState(const Token& element) override
 	{
 		accumulator = parentMachine.CreateAccumulator<GenericInstructionAccumulator<IMainBlock>>();
+		parentMachine.recoveryState = this;
 	}
 
 	// Called when the machine exits this state
@@ -534,6 +561,17 @@ public:
 		if (nextElement.type == NAME) return nameState;
 		if (nextElement.type == IF || nextElement.type == WHILE) return branchingState;
 		if (nextElement.type == END) return endBlockState;
+
+		return nullptr;
+	}
+
+	virtual State* RecoverFromState(const Token& element) override
+	{
+		CheckTokenType(element, { NAME, IF, WHILE, END });
+
+		if (element.type == NAME) return nameState;
+		if (element.type == IF || element.type == WHILE) return branchingState;
+		if (element.type == END) return endBlockState;
 
 		return nullptr;
 	}

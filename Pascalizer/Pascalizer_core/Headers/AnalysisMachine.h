@@ -82,11 +82,16 @@ public:
 	 *	entering the given state with the same token as was sent to this function
 	 */
 	virtual State* ProcessElement(const Token& nextElement) = 0;
+
+	// Used to recover the analysis machine after encountering an error
+	virtual State* RecoverFromState(const Token& element) { return nullptr; }
 };
 
 
 
 enum AnalysisStatus { ONGOING, FINISHED, ERROR };
+
+enum AnalysisRecoveryStatus { REC_NONE, REC_ENDLINE_WAIT, REC_NEXTELEM_WAIT, REC_FAILED };
 
 /*
  * A state machine, that analyses tokenized source code step by step
@@ -115,6 +120,8 @@ class AnalysisMachine
 
 	int level = 0;
 
+	// Recovering after encountering an error
+	AnalysisRecoveryStatus analysisRecoveryStatus;
 
 	// EXPRESSION ANALYSIS BLOCK
 
@@ -145,6 +152,9 @@ public:
 
 	// A pointer to the instruction, that was most recently stored
 	std::shared_ptr<Instruction> lastStoredInstruction;
+
+	// State, from which the machine should recover after enocountering an error
+	State* recoveryState = nullptr;
 
 
 	// Creates new a new accumulator, template because Accumulator is just an abstract base class
@@ -207,14 +217,8 @@ public:
 	// Called, when the state machine has reached the end of analysis
 	void AnalysisFinished()
 	{
-		//if (level == 2 || level == 1)
+		if (analysisStatus != ERROR)
 			analysisStatus = FINISHED;
-
-		/*else
-		{
-			analysisStatus = ERROR;
-			analysisErrorLog.push_back("ANALYSIS ERROR: Not all code blocks have an end!");
-		}*/
 	}
 
 

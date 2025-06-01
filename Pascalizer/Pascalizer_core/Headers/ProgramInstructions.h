@@ -10,6 +10,9 @@
 #include "IO_ProcessorInterface.h"
 
 
+#define MAX_LOOP_ITERATIONS 10000
+
+
 static std::string strType[3] = { "INT", "DOUBLE", "STRING" }; //for logs and exceptions
 
 // Head of the program
@@ -582,6 +585,8 @@ class IWhile : public Instruction
 private:
 	std::shared_ptr<Expression> condition;
 
+	int iterationCounter = 0;
+
 public:
 
 	IWhile(std::shared_ptr<Expression> expression)
@@ -629,9 +634,16 @@ public:
 
 		if (isTrue)
 		{
+			if (iterationCounter > MAX_LOOP_ITERATIONS)
+			{
+				programState.log.push_back("FATAL: Maximum number of loop iterations exeeded!");
+				throw(std::runtime_error("FATAL: Infinite loop detected!"));
+			}
+
 			programState.log.push_back("Entering WHILE body");
 
 			programState.codeBlockExitInstructionPointerStack.push(programState.currentInstruction);
+			iterationCounter++;
 		}
 		else
 		{

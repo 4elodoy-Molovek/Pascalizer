@@ -27,8 +27,26 @@ Pascalizer_MainWindow::Pascalizer_MainWindow(Pascalizer* inPascalizer, QWidget* 
     SetupConsole();
     QObject::connect(console, &ConsoleWidget::commandEntered, this, &Pascalizer_MainWindow::OnConsoleEntered);
 
+    // Shortcuts
+    ui.actionSave->setShortcut(QKeySequence("Ctrl+S"));
+    ui.actionSave_As->setShortcut(QKeySequence("Ctrl+Shift+S"));
+    ui.actionRun->setShortcut(QKeySequence("Ctrl+R"));
+    ui.actionOpen->setShortcut(QKeySequence("Ctrl+O"));
+    ui.actionNew->setShortcut(QKeySequence("Ctrl+N"));
+
     // Attach the syntax highlighter to the plain text edit
     new SyntaxHighlighter(ui.codeEditor->document());
+
+    // Values table setup
+    ui.valuesTableTable->clear();
+    ui.valuesTableTable->setRowCount(0);
+
+    QStringList labels;
+    labels.append(QString::fromStdString("Name"));
+    labels.append(QString::fromStdString("Value"));
+    ui.valuesTableTable->setHorizontalHeaderLabels(labels);
+
+    ui.valuesTableTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 void Pascalizer_MainWindow::ShowError(std::string errorMessage)
@@ -65,8 +83,6 @@ void Pascalizer_MainWindow::SetupConsole()
 
     // Optional: keep a reference
     console = consoleNew;
-
-    console->setFontPointSize(25);
 }
 
 void Pascalizer_MainWindow::UpdateSourceCode()
@@ -90,8 +106,22 @@ void Pascalizer_MainWindow::Update()
     ui.executionLogList->clear();
     
     auto log = pascalizer->GetCachedLog();
-    for (auto& logElement : log)
-        ui.executionLogList->addItem(QString::fromStdString(logElement));
+
+    if (log.size() < 100)
+        for (auto& logElement : log)
+            ui.executionLogList->addItem(QString::fromStdString(logElement));
+
+    else
+    {
+        int i = 0;
+        for (i = 0; i < 50; i++)
+            ui.executionLogList->addItem(QString::fromStdString(log[i]));
+
+        ui.executionLogList->addItem(QString::fromStdString("\n\n...\n\n"));
+
+        for (int j = log.size() - 1; j > i && j > log.size() - 51; j--)
+            ui.executionLogList->addItem(QString::fromStdString(log[j]));
+    }
 
     ui.valuesTableTable->clear();
     ui.valuesTableTable->setRowCount(0);
@@ -177,7 +207,7 @@ void Pascalizer_MainWindow::OnClickedSave(bool checked)
 
     catch (std::exception e)
     {
-        ShowError(e.what());
+        OnClickedSaveAs(checked);
     }
 }
 
@@ -259,7 +289,7 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument* parent) : QSyntaxHighlighter
 {
     // Keywords
     keywordFormat.setForeground(QColor(200, 10, 255));
-    keywordFormat.setFontWeight(QFont::Bold);
+    //keywordFormat.setFontWeight(QFont::Bold);
     const QStringList mainKeywords = 
     {
         "\\bprogram\\b", "\\bbegin\\b", "\\bend\\b", "\\bvar\\b", "\\bconst\\b", "\\bif\\b", "\\belse\\b", "\\bwhile\\b", "\\bthen\\b"
@@ -270,7 +300,7 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument* parent) : QSyntaxHighlighter
         rules.append({ QRegularExpression(pattern), keywordFormat });
 
     keywordFormat.setForeground(QColor(255, 100, 0));
-    keywordFormat.setFontWeight(QFont::Bold);
+    //keywordFormat.setFontWeight(QFont::Bold);
     const QStringList typeKeywords =
     {
         "\\bint\\b", "\\bdouble\\b", "\\bstring\\b"
@@ -280,7 +310,7 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument* parent) : QSyntaxHighlighter
         rules.append({ QRegularExpression(pattern), keywordFormat });
 
     keywordFormat.setForeground(QColor(80, 80, 255));
-    keywordFormat.setFontWeight(QFont::Bold);
+    //keywordFormat.setFontWeight(QFont::Bold);
     const QStringList functionKeywords =
     {
         "\\bWrite\\b", "\\bRead\\b"
@@ -288,7 +318,6 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument* parent) : QSyntaxHighlighter
 
     for (const QString& pattern : functionKeywords)
         rules.append({ QRegularExpression(pattern), keywordFormat });
-
 
 
     // Strings
@@ -324,7 +353,12 @@ ConsoleWidget::ConsoleWidget(QWidget* parent) : QTextEdit(parent), inputStartPos
     setAcceptRichText(false);
     setWordWrapMode(QTextOption::WrapAnywhere);
     //setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
-    setFontPointSize(25);
+    //setFontPointSize(25);
+
+    QFont font;
+    font.setFamily("Consolas");
+    font.setPointSize(14);
+    setFont(font);
 
     insertPrompt();
 }

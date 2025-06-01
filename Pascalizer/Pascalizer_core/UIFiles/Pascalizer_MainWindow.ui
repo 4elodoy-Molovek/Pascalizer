@@ -11,7 +11,13 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Pascalizer</string>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -40,7 +46,7 @@
         </size>
        </property>
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="errors">
         <attribute name="title">
@@ -48,7 +54,24 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="QListWidget" name="errorList"/>
+          <widget class="QListWidget" name="errorList">
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: rgb(255, 0, 0)
+</string>
+           </property>
+           <property name="isWrapping" stdset="0">
+            <bool>false</bool>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -58,7 +81,17 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QListWidget" name="executionLogList"/>
+          <widget class="QListWidget" name="executionLogList">
+           <property name="font">
+            <font/>
+           </property>
+           <property name="isWrapping" stdset="0">
+            <bool>false</bool>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -74,6 +107,11 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+            </font>
            </property>
            <column>
             <property name="text">
@@ -97,14 +135,20 @@
        <widget class="QPlainTextEdit" name="codeEditor">
         <property name="font">
          <font>
+          <family>Cascadia Code</family>
           <pointsize>14</pointsize>
+          <bold>false</bold>
          </font>
         </property>
         <property name="plainText">
          <string/>
         </property>
        </widget>
-       <widget class="QTextEdit" name="consoleP"/>
+       <widget class="QTextEdit" name="consoleP">
+        <property name="font">
+         <font/>
+        </property>
+       </widget>
       </widget>
      </widget>
     </item>
