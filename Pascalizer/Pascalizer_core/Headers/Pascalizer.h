@@ -67,6 +67,14 @@ public:
 		// Analysis suceeded case
 		interpreter.RunProgram(analysisMachine.GetResult(), this);
 
+		if (interpreter.GetCachedErrors().size() > 0)
+		{
+			for (auto error : interpreter.GetCachedErrors())
+				AddError(error);
+
+			userInterface->OnFailedToLauch();
+		}
+
 		userInterface->Update();
 	}
 

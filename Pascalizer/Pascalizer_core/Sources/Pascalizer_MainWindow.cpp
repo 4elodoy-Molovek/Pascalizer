@@ -119,7 +119,7 @@ void Pascalizer_MainWindow::Update()
 
         ui.executionLogList->addItem(QString::fromStdString("\n\n...\n\n"));
 
-        for (int j = log.size() - 1; j > i && j > log.size() - 51; j--)
+        for (int j = std::max(int(log.size() - 50), i); j < log.size(); j++)
             ui.executionLogList->addItem(QString::fromStdString(log[j]));
     }
 

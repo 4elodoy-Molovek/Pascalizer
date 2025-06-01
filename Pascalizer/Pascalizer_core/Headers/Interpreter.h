@@ -14,6 +14,8 @@ class Interpreter
 	std::vector<std::string> cachedLog;
 	std::map<std::string, std::shared_ptr<Value>> cachedTable;
 
+	std::vector<std::string> cachedErrors;
+
 	ProgramState* currentState;
 
 	void FinishProgram()
@@ -34,6 +36,8 @@ public:
 	// Executes the program
 	void RunProgram(const HierarchicalList<std::shared_ptr<Instruction>>& code, class IO_ProcessorInterface* ioProcessor)
 	{
+		cachedErrors.clear();
+
 		currentState = new ProgramState(code, ioProcessor);
 
 		currentState->instructionPointer = currentState->code.GetFirst();
@@ -121,10 +125,11 @@ public:
 				catch (std::exception e)
 				{
 					cachedLog.push_back("PROGRAM CRASH DETECTED: " + std::string(e.what()));
+					cachedErrors.push_back("PROGRAM CRASH DETECTED: " + std::string(e.what()));
 					FinishProgram();
 				}
 
-			} while (!currentState->ioBlock); 	// Continue execution if we dont have an IO block
+			} while (currentState && !currentState->ioBlock); 	// Continue execution if we dont have an IO block
 		}
 	}
 
@@ -153,6 +158,12 @@ public:
 		if (currentState) return currentState->log;
 		return cachedLog; 
 	}
+
+	const std::vector<std::string>& GetCachedErrors()
+	{
+		return cachedErrors;
+	}
+
 	const std::map<std::string, std::shared_ptr<Value>>& GetCachedTable()
 	{
 		//if (currentState) return currentState->valuesTable;

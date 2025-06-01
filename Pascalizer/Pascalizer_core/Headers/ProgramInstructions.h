@@ -10,7 +10,7 @@
 #include "IO_ProcessorInterface.h"
 
 
-#define MAX_LOOP_ITERATIONS 10000
+#define MAX_LOOP_ITERATIONS 1000
 
 
 static std::string strType[3] = { "INT", "DOUBLE", "STRING" }; //for logs and exceptions
