@@ -1,0 +1,17 @@
+program IfTest;
+
+begin
+
+	if (1) then
+	begin
+		Write("Condition");
+	end
+
+	else
+	begin
+		Write("Aahaha");
+	end
+
+	Write("Oh noooo");
+
+end.

@@ -213,11 +213,18 @@ public:
 
 		programState.log.push_back("Calculation succeded");
 
-		if (programState.valuesTable[_name]->GetType() != value->GetType())
+		if (programState.valuesTable.count(_name) == 0)
+		{
+			programState.log.push_back("FATAL: tried to assign to an invalid var");
+			throw(std::runtime_error("FATAL: tried to assign to an invalid var"));
+		}
+
+		else if (programState.valuesTable[_name]->GetType() != value->GetType())
 		{
 			programState.log.push_back("FATAL: tried to assign " + strType[programState.valuesTable[_name]->GetType()] + " to " + strType[value->GetType()]);
 			throw(std::runtime_error("FATAL: tried to assign " + strType[programState.valuesTable[_name]->GetType()] + " to " + strType[value->GetType()]));
 		}
+
 
 		programState.valuesTable[_name] = value;
 	}

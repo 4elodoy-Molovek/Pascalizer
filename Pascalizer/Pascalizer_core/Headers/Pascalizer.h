@@ -118,6 +118,13 @@ public:
 			cachedIOCaller = nullptr;
 			interpreter.ProcessInstructionUserInput(localIOCaller, userInput);
 			
+			if (interpreter.GetCachedErrors().size() > 0)
+			{
+				for (auto error : interpreter.GetCachedErrors())
+					AddError(error);
+
+				userInterface->OnFailedToLauch();
+			}
 		}
 	}
 

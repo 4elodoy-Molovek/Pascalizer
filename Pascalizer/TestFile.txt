@@ -1,0 +1,16 @@
+program calc;
+
+var
+	first, second : double;
+
+begin
+
+	Write("Enter first: ");
+	Read("first");
+
+	Write("Enter second: ");
+	Read("second");
+
+	Write(first, " + ", second, " = ", first + second);
+
+end.

@@ -1,0 +1,6 @@
+program Test;
+
+begin
+	a := 1;
+	Write("Hello world");
+end.

@@ -1,0 +1,31 @@
+program Test;
+var 
+	lb, rb, mid, x: int;
+begin
+	Write("Input number:");
+	Read("x");
+
+	lb := 0;
+	rb := 100;
+	while (lb =< rb)
+	begin 
+		Write(lb, "<->", rb);
+		mid := (lb + rb) / 2;
+		if (x = mid) then
+		begin
+			Write("Found it!");
+			rb := -1;
+		end 
+		
+		if (mid < x) then
+		begin
+			lb := mid + 1;
+		end
+		if (mid > x) then
+		begin
+			rb := mid - 1;
+		end
+	end
+
+	Write("Finished");
+end.
